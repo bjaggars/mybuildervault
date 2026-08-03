@@ -115,3 +115,15 @@ The product requires a complete greenfield rebuild on the JSH doctrine stack.
 The portal is the UX reference and Eric demo vehicle. It is not the shipping artifact.
 
 The gap is real. STATE does not hide it.
+
+---
+
+## Supabase Projects (added 2026-08-03)
+
+| Environment | Project | URL |
+|---|---|---|
+| Production | mybuildervault-prod | https://nicikqkqpuyqqpojqbkh.supabase.co |
+| Test/Dev | mybuildervault-dev | TBD — not yet created |
+
+Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
+Script 001 (foundation + RLS at birth) is the first task when product build starts (BOARD-005).
