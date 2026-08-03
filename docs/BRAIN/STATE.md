@@ -127,3 +127,17 @@ The gap is real. STATE does not hide it.
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
 Script 001 (foundation + RLS at birth) is the first task when product build starts (BOARD-005).
+
+---
+
+## Netlify Sites (added 2026-08-03)
+
+| Environment | Netlify Site | Branch | Domain |
+|---|---|---|---|
+| Production | mybuildervault-prod | main | mybuildervault.com |
+| Test/Dev | mybuildervault-dev | dev | mybuildervault.dev |
+
+Both sites wired to github.com/bjaggars/mybuildervault via Netlify Git integration.
+Env vars set per site (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY).
+No React app exists yet — deploys will fail until scaffold is built (BOARD-010).
+mybuildervault.app purchased and held in reserve (future PWA or marketing landing page).
