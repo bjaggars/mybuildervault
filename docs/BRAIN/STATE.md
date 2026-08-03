@@ -123,7 +123,7 @@ The gap is real. STATE does not hide it.
 | Environment | Project | URL |
 |---|---|---|
 | Production | mybuildervault-prod | https://nicikqkqpuyqqpojqbkh.supabase.co |
-| Test/Dev | mybuildervault-dev | TBD — not yet created |
+| Test/Dev | mybuildervault-dev | https://yglwpguxikulymciosdf.supabase.co |
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
 Script 001 (foundation + RLS at birth) is the first task when product build starts (BOARD-005).
