@@ -135,8 +135,12 @@ Both under JSH Supabase org. No DB change scripts written yet — schema is gree
 Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4).
 Script 002 RUN on dev 2026-08-04 (Brice; prove-it numbers not captured — original
 ss_select applied). 002-PATCH (L4 invisibility, drop/recreate ss_select) delivered
-in chat, PENDING Brice run. Script 003 (support ticketing) written, PENDING Brice
-run after the patch. NOTE: clients cannot file tickets until job_participants
+in chat, PENDING Brice run. Script 003 (support ticketing) AMENDED pre-run 2026-08-04 — adds ticket types
+(defect/feature_request/how_to/other), Concierge intake channel, feature_requests
+table + ticket→FR conversion, SLA timestamps, v_ticket_stats dashboard view.
+PENDING Brice run after the 002-patch. Concierge intake flow (answer how-tos
+first, ticket on failure, FR conversion at triage, GH Issues dual-write) is a
+SCAFFOLD-PHASE app requirement. NOTE: clients cannot file tickets until job_participants
 lands (jobs script) — widen t_insert policy then. Supersedes org_entitlements; FIXES 001's is_platform_owner
 (was org-derived = latent cross-tenant escalation at tenant #2). After Brice's
 first app signup: run `select grant_platform_owner('<brice email>');` via console.
