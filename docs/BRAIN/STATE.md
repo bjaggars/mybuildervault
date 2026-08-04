@@ -132,7 +132,12 @@ The gap is real. STATE does not hide it.
 | Test/Dev | mybuildervault-dev | https://yglwpguxikulymciosdf.supabase.co |
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
-Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4). Prod runs it via release ritual at first release.
+Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4).
+Script 002 (JSH Access Model — see jsh-brain PATTERNS) written 2026-08-04, PENDING
+Brice run on dev. Supersedes org_entitlements; FIXES 001's is_platform_owner
+(was org-derived = latent cross-tenant escalation at tenant #2). After Brice's
+first app signup: run `select grant_platform_owner('<brice email>');` via console.
+Prod runs 001+002 via release ritual at first release.
 
 ---
 
