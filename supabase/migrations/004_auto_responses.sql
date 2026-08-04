@@ -14,6 +14,9 @@ alter table ticket_events add constraint ticket_events_kind_check
                   'type_change','reopen','conversion','auto_response'));
 
 -- Humans always identified; only system auto-responses may be actor-less.
+-- (drop-if-exists added 2026-08-04: a historical partial run left this
+-- constraint in place; idempotent form converges any prior state.)
+alter table ticket_events drop constraint if exists ticket_events_actor_required;
 alter table ticket_events add constraint ticket_events_actor_required
   check (actor is not null or kind = 'auto_response');
 

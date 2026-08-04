@@ -145,9 +145,13 @@ Both under JSH Supabase org.
   by script 005 (idempotent reconciliation to the amended shape).
 - 004 (auto-response events) — NOT RUN as of the check above (Brice's "004"
   recollection was 003). Run order: 005 first, then 004.
-- 005 (ticketing reconciliation) WRITTEN 2026-08-04, pasted in chat, PENDING
-  Brice run on dev. Prove-it: amendment_cols=4, fr_table=1, stats_view=1,
-  ticket_fns=2, kind_check=1.
+- 005 (ticketing reconciliation) RUN on dev 2026-08-04, prove-it PASSED
+  (amendment_cols=4, fr_table=1, stats_view=1, ticket_fns=2, kind_check=1).
+- 004 first attempt post-005 errored 42710: ticket_events_actor_required
+  ALREADY EXISTED — evidence a historical partial 004 ran; the errored batch
+  rolled back, so auto_response was momentarily absent from kind_check.
+  004 amended to idempotent form (drop-if-exists) same day; awaiting rerun +
+  prove-it row.
 
 **E2E agent seeded on dev 2026-08-04, prove-it PASSED** (org=1, member_role=admin,
 cost_codes=37): auth user e2e-robot@mybuildervault.dev (auto-confirmed), org
