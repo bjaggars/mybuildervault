@@ -147,6 +147,12 @@ Hardware ladder: day one = single large screen (fullscreen browser +
 presentation mode, tablet as controller); future = floor-to-ceiling wrap
 ("VR without goggles") in the existing office. Same mechanics, same code.
 
+Buyer validation (2026-08-04): Brice's wife — a real Brije custom-build
+client, mid-build — on hearing the concept, unprompted: "would have loved
+that for our house, it's hard to imagine what the options you're choosing
+are going to look like." Second buyer's-chair data point from inside the
+Jaggars build; use verbatim in the Eric meeting.
+
 ### 8. Concierge is JSH doctrine, not a feature
 The ❓ AI assist from MyRealtyVault (how-to answers + feature requests + bug
 reports in one conversational surface) is the OCM answer and the requirements
