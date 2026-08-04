@@ -17,11 +17,35 @@ Schedule the meeting only after MyBuilderVault has a demo-ready tenant at mybuil
 personas — see VISION.md thesis 7. Talking point: "Bridgette's Studio ships first;
 the architecture for yours is already in place" — not a watered-down single studio.
 
+## ROLE CORRECTION (2026-08-04) — read before anything below
+Eric's total involvement to date is ONE fleeting moment: he happened to be in
+the room when Brice showed Wendy MyRealtyVault, and raised a design-AI idea.
+Brice mentioned he was building an end-to-end platform for Brije with a design
+AI module. That is ALL Eric knows. He has not seen the Ocala portal, the
+Jaggars build tracking, or anything else. Assume zero context in the meeting.
+
+**MICAH is the person who lived the Jaggars build with Brice** — "the project
+manager": designed the house and RV garage with Brice, worked with the
+architects, priced the build and every option, keys estimate amounts manually
+from haphazard written fragments. He appears to be the PM across all ~100
+builds/year, is overworked and wearing many hats, and is DYING to see the
+system to get organized.
+
+**Meeting strategy implication:** Eric is the economic buyer (co-owner,
+licensing decision). Micah is the user champion — the person whose daily pain
+the product solves and the likeliest internal advocate. Whether Micah is in
+the room for the Eric meeting, sees it first, or sees it after is Brice's
+call; his enthusiasm is an asset either way, and a demo that speaks to
+Micah's drowning-in-100-builds reality will land harder than one aimed only
+at the owner's ROI. Do NOT oversell Ops Hub features that are Phase E — show
+the spine, name what's coming honestly.
+
 ## Context
 
-**Who:** Eric is co-principal of Brije LLC alongside Wendy Fisher. Brije builds ~70 spec
+**Who:** Eric is co-owner of Brije LLC alongside Wendy Fisher. Brije builds ~70 spec
 homes/year and ~30 custom homes/year in Central Florida. Ocala market. Builder of the
-Jaggars custom home (the eat-our-own-dog-dog proof).
+Jaggars custom home (the eat-our-own-dog-food proof). Eric was NOT hands-on with the
+Jaggars build — Micah (PM) was. See ROLE CORRECTION above.
 
 **What this meeting is:** A licensing conversation — Brice would license MyBuilderVault
 to Brije. Brije pays a license fee; Brice owns and develops the platform. Brije gets a
@@ -57,7 +81,8 @@ These are different bars.
 
 ### 1. The proof is real — and it's running on your build
 "I built the concept for our own home — your build. Every feature I'm about to show you
-came from tracking our change orders, our meetings, our decisions together. I built it
+came from tracking the real change orders, meetings, and decisions on that build —
+the ones Micah and I worked through together. I built it
 because I wanted it. Now it's a product."
 
 ### 2. The problem it solves
@@ -89,9 +114,10 @@ Brije's own marketing content from the data inside the platform. Every build mil
 becomes a social post. Every completed spec home triggers a listing."
 
 ### 6. Why Brije specifically
-"You're the right first partner for three reasons: you already have a reputation for
-quality, your volume (100 homes/year) is big enough to stress-test every feature, and
-you have Bridgette. The design center I want to build is built around how she actually
+"You're the right first partner for four reasons: you already have a reputation for
+quality, your volume (100 homes/year) is big enough to stress-test every feature,
+you have Micah — who's carrying that whole volume and deserves a system built around
+how he actually works — and you have Bridgette. The design center I want to build is built around how she actually
 works — material pairings, vendor catalog, lookbook generation. I can't build that without
 a real designer using it on real projects."
 
@@ -142,6 +168,10 @@ Ask these — don't answer them for him:
 
 1. **How do you currently handle change order tracking and client communication?**
 2. **What's your biggest operational headache at 100 homes/year?**
+   (Do not lead the witness — if HE names estimating or PM overload, the pitch
+   writes itself. Micah's reality suggests he will.)
+2b. **How is project management structured across the 100 builds — who covers what?**
+   (We believe it's largely Micah; let Eric describe it in his own terms.)
 3. **How does Bridgette currently manage selections across active builds?**
 4. **Do you use any builder software today?** (CoConstruct? Buildertrend? BuilderPad?)
    If yes: "What does it do well? What does it miss?"
