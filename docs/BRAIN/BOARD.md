@@ -118,7 +118,8 @@ Eric's Studio (track B). Non-Anthropic tools expected — Claude orchestrates, d
 **What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,
 options, upgrades with approved/included states. Kills re-keying; feeds accretive
 selections catalog. Jaggars 7/23/26 estimate PDF is the test fixture.
-INTEL 2026-08-04: the .xlsx has NO formulas — Eric keys amounts manually. Ingestion
+INTEL 2026-08-04: the .xlsx has NO formulas — MICAH (PM) keys amounts manually
+(attribution corrected same day: pricing is Micah's work, not Eric's). Ingestion
 is pure extraction; PDF fixture is sufficient. Ingestion must also sum lines and
 flag mismatch vs. stated totals (hand-keyed math can drift) — builder-facing flag
 only, never surfaced to the client.

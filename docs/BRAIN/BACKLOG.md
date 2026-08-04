@@ -136,7 +136,8 @@ Items graduate to BOARD when they're actively planned.
   reassembles the price book from ingested/authored estimates and suggests
   prices when authoring ("you priced this at $X on the last 3 jobs"). Incumbent
   cost catalogs demand upfront setup (OCM killer); ours accretes from documents
-  Eric already writes. Lands post-BOARD-014 once 2+ estimates are in
+  Micah (PM) already writes — he is the estimator (corrected 2026-08-04).
+  Lands post-BOARD-014 once 2+ estimates are in
 - Photo library intelligence — ingest/auto-tag/search with job provenance
   (BOARD-015, thesis 6)
 - Self-feeding ops — schedule updates from superintendent texted photos, POs from

@@ -106,7 +106,7 @@ three ports.
 
 Port Ocala portal features to product stack in this sequence (highest demo value first):
 1. Dashboard
-2. Change Orders (highest Eric interest based on pitch deck)
+2. Change Orders (core spine value; note 2026-08-04 — Eric's only known interest is design AI; the ops/organization pain is MICAH's, and he's the daily-use champion)
 3. Document Vault
 4. Budget / Base Price Breakdown
 5. Meetings + Decisions

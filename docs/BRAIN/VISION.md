@@ -71,8 +71,8 @@ their existing Excel/PDF) is the on-ramp that avoids re-keying.
 Brije's estimate carries ~$150K+ of allowances (well, septic, driveway,
 landscaping, grading, filtration…) with notes like "Will not know until well is
 tested." An allowance = placeholder with a reconciliation lifecycle:
-estimated → actual → variance → client conversation. Today that lives in Eric's
-head and email. **Allowance tracker with budgeted/actual/variance surfaced in the
+estimated → actual → variance → client conversation. Today that lives in the
+PM's (Micah's) head and email (attribution corrected 2026-08-04). **Allowance tracker with budgeted/actual/variance surfaced in the
 client portal BEFORE it becomes a dispute** — the emotional center of the custom
 relationship; no incumbent treats it that way.
 
@@ -99,6 +99,11 @@ One ingestion, four products. Zero process change to adopt. Fastest wow.
 
 ### 7. Two studios, two personas (the design center split)
 Clarified by Brice 2026-08-03: **Eric = architectural; Bridgette = interior.**
+(Correction 2026-08-04: Eric's total involvement to date is ONE conversation —
+he was in the room during a MyRealtyVault demo to Wendy and raised a design-AI
+idea. The persona naming stands because that idea IS his one known interest,
+but do not assume familiarity with the platform, the Jaggars build details, or
+prior context. Everything must be introduced fresh.)
 - **Bridgette's Studio (interior):** materials, finishes, palettes, room
   visualization, lookbooks, finish schedules. Maps to image-generation grounded in
   selections + tagged photo library. Track A: ships first, buys credibility.
@@ -142,7 +147,11 @@ draws and lien waivers noted as the Florida pain point to revisit.
 ## Open unknowns (as of 2026-08-03)
 - Brije's accounting system and books process
 - Brije headcount / superintendents / active trade count (design for add/remove
-  crews without assuming numbers)
+  crews without assuming numbers). PARTIALLY ANSWERED 2026-08-04: Micah is
+  "the project manager" — apparently the PM across all ~100 builds/year,
+  overworked, many hats: designed/priced the Jaggars house + RV garage, works
+  with architects, prices builds and options. He is asking to see the system.
+  Remaining unknown: supers, trades, anyone else in the office
 - Whether subs will log in vs. SMS/email worksheet flows (bias: SMS-first adoption)
 - ~~Brije estimate .xlsx (formulas/tabs)~~ RESOLVED 2026-08-04: no formulas — Eric keys every amount manually. No computation to replicate; ingestion is pure extraction, and the computed budget view is a genuine upgrade over his current process, not a replication of it
 - Pricing tiers — deferred pending competitor pricing survey
