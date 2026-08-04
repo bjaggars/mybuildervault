@@ -97,13 +97,14 @@ Phases: Dashboard → Changes → Documents → Budget → remaining pages.
 
 ## 🟣 VISION SESSION OUTPUTS (2026-08-03) — pre-build gates
 
-### BOARD-012 · Architecture & phasing proposal
-**What:** Full product architecture from VISION.md theses: unified Job model
-(1..n structures, spec→buyer state change), Estimate→Contract→CO→Selections→Actuals
-spine, tier-toggle entitlements, Concierge, photo intelligence, two-studio plan.
-Written proposal for Brice approval BEFORE BOARD-010/005 build starts.
-**Dependency:** VISION.md (done). Competitor schema survey (BOARD-008 note) folds in here.
-**Owner:** Claude · **Effort:** 1 session
+### BOARD-012 · Architecture & phasing proposal — ✅ PROPOSAL DELIVERED 2026-08-03, ⏳ AWAITING BRICE APPROVAL
+**What:** Full product architecture from VISION.md theses. Delivered as
+`docs/BRAIN/ARCHITECTURE.md` (status PROPOSED). Includes competitor schema
+survey (JobTread / Buildertrend / Hyphen-MarkSystems), full domain model,
+app architecture, phasing with the Eric demo line, and a 7-item approval
+checklist. NO BUILD until Brice approves; on approval, flip header to
+APPROVED and start Phase A (script 001 + scaffold).
+**Owner:** Claude (done) → Brice (approval decision)
 
 ### BOARD-013 · AI tooling evaluation for the Design Studios
 **What:** Research spike (doctrine: kill riskiest unknown first). Evaluate image-gen
