@@ -99,7 +99,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
             style={{ width: '100%', padding: '7px 0', borderRadius: 8, border: '1px solid var(--navy-soft)', background: 'transparent', color: 'var(--cream)', fontSize: 12 }}>
             Sign out
           </button>
-          <div style={{ marginTop: 10, fontSize: 10, opacity: 0.6 }} title={BUILD.at}>build {BUILD.sha}</div>
+          <div data-testid="build-stamp" style={{ marginTop: 10, fontSize: 10, opacity: 0.6 }} title={BUILD.at}>build {BUILD.sha}</div>
         </div>
       </aside>
 

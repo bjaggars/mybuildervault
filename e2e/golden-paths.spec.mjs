@@ -31,7 +31,7 @@ test('compliance pages serve full text without JavaScript', async ({ request }) 
 test('builder login reaches the shell with the org visible', async ({ page }) => {
   await login(page);
   await expect(page.getByTestId('org-name')).toContainText('E2E Robot Builder');
-  await expect(page.locator('text=build ')).toBeVisible(); // build stamp present
+  await expect(page.getByTestId('build-stamp')).toContainText('build'); // stamp present with sha
 });
 
 test('ticket queue renders stats from v_ticket_stats', async ({ page }) => {
