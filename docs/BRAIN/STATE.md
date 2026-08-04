@@ -139,11 +139,15 @@ Both under JSH Supabase org.
 - 002-PATCH (L4 invisibility, drop/recreate ss_select) RUN — confirmed by Brice
   2026-08-04 in the Phase A scaffold session. The 002-patch/003 ordering question
   is RESOLVED: patch is in effect on dev.
-- 003 RUN (Brice; prove-it numbers not captured). Ticketing + FR pipeline +
-  v_ticket_stats live.
-- 004 (auto-response events) — Brice reports run 2026-08-04; prove-it row NOT
-  captured (the screenshot provided was the E2E seed prove-it). Expected PASS:
-  actor_nullable=YES, kinds_has_auto=1, guard=1. Capture on next console visit.
+- 003 RUN — but the PRE-AMENDMENT version (proven 2026-08-04: amendment
+  presence check returned 0/0/0/0 for channel/type/feature_requests/SLA; the
+  E2E robot surfaced it as "no 'channel' column in schema cache"). Corrected
+  by script 005 (idempotent reconciliation to the amended shape).
+- 004 (auto-response events) — NOT RUN as of the check above (Brice's "004"
+  recollection was 003). Run order: 005 first, then 004.
+- 005 (ticketing reconciliation) WRITTEN 2026-08-04, pasted in chat, PENDING
+  Brice run on dev. Prove-it: amendment_cols=4, fr_table=1, stats_view=1,
+  ticket_fns=2, kind_check=1.
 
 **E2E agent seeded on dev 2026-08-04, prove-it PASSED** (org=1, member_role=admin,
 cost_codes=37): auth user e2e-robot@mybuildervault.dev (auto-confirmed), org
@@ -157,7 +161,7 @@ intake stub SHIPPED in the Phase A scaffold (see Product environment below); AI
 answering, auto-acks, and dual-write are still open. NOTE: clients cannot file
 tickets until job_participants lands (jobs script) — widen t_insert policy then.
 After Brice's first app signup: run `select grant_platform_owner('<brice email>');`
-via console. Prod runs 001+002(+patch)+003+004 via release ritual at first release.
+via console. Prod runs 001+002(+patch)+003+005+004 in that order via release ritual at first release.
 
 ---
 

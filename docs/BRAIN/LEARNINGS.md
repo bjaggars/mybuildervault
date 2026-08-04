@@ -101,3 +101,17 @@ only supports plain text in the body.
 (1) Copy Rich Text button copies HTML to clipboard, (2) user opens Outlook and pastes.
 Platform-sent email (comms rail, Resend) is the only path to reliably formatted email
 without clipboard friction. Build the comms rail early in the product.
+
+---
+
+## 9. "Prove-it numbers not captured" is a live defect, not a formality
+**Incident:** Script 003 was amended pre-run, but the version actually executed on
+dev was the pre-amendment one. Because the prove-it output was never captured, the
+gap stayed invisible until the E2E robot hit "Could not find the 'channel' column"
+— three sessions later. A second recollection error ("004 was the tickets one")
+compounded it.
+**Root cause:** Run-confirmation by memory instead of by prove-it output. The
+prove-it query exists precisely to make "which version ran" a fact, not a memory.
+**Rule:** A DB change script is not RUN until its prove-it row is in the chat.
+STATE records scripts without captured prove-its as UNVERIFIED, and reconciliation
+scripts (005 pattern) converge idempotently rather than assuming any prior shape.
