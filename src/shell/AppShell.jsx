@@ -6,6 +6,7 @@ import Concierge from './Concierge.jsx';
 import Dashboard from '../pages/Dashboard.jsx';
 import Tickets from '../pages/Tickets.jsx';
 import Settings from '../pages/Settings.jsx';
+import MissionControl from '../pages/MissionControl.jsx';
 
 // eslint-disable-next-line no-undef
 const BUILD = typeof __BUILD_INFO__ !== 'undefined' ? __BUILD_INFO__ : { sha: 'dev', at: '' };
@@ -24,17 +25,19 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
 
   // Surface gating — resolve_entitlement (002) for feature surfaces,
   // can_see_ticket_queue (003) for the queue. Loaded per active org.
-  const [gates, setGates] = useState({ tickets: false, concierge: true, settings: true });
+  const [gates, setGates] = useState({ tickets: false, concierge: true, settings: true, missionControl: false });
   useEffect(() => {
     if (!activeOrgId) return;
     let cancelled = false;
     (async () => {
-      const [tickets, concierge, settings] = await Promise.all([
+      const [tickets, concierge, settings, staffRow] = await Promise.all([
         canSeeTicketQueue(activeOrgId),
         resolveEntitlement(activeOrgId, personId, 'concierge.enabled'),
         resolveEntitlement(activeOrgId, personId, 'settings.members'),
+        // platform_staff self-read is allowed by pstaff_select RLS; tenants get null.
+        supabase.from('platform_staff').select('role').eq('person_id', personId).maybeSingle(),
       ]);
-      if (!cancelled) setGates({ tickets, concierge, settings });
+      if (!cancelled) setGates({ tickets, concierge, settings, missionControl: !!staffRow?.data });
     })();
     return () => { cancelled = true; };
   }, [activeOrgId, personId]);
@@ -91,6 +94,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <NavLink to="/" end style={navLink} data-testid="nav-dashboard">Dashboard</NavLink>
           {gates.tickets && <NavLink to="/tickets" style={navLink} data-testid="nav-tickets">Tickets</NavLink>}
           {gates.settings && <NavLink to="/settings" style={navLink} data-testid="nav-settings">Settings</NavLink>}
+          {gates.missionControl && <NavLink to="/mission-control" style={navLink} data-testid="nav-mission-control">Mission Control</NavLink>}
         </nav>
 
         <div style={{ color: 'var(--cream)', fontSize: 12, opacity: 0.85, padding: '0 4px' }}>
@@ -109,6 +113,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <Route path="/" element={<Dashboard orgId={activeOrgId} orgName={org?.name} role={active?.role} />} />
           <Route path="/tickets" element={gates.tickets ? <Tickets orgId={activeOrgId} /> : <Navigate to="/" replace />} />
           <Route path="/settings" element={gates.settings ? <Settings orgId={activeOrgId} role={active?.role} session={session} /> : <Navigate to="/" replace />} />
+          <Route path="/mission-control" element={gates.missionControl ? <MissionControl /> : <Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

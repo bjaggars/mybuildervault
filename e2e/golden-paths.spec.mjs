@@ -54,3 +54,14 @@ test('concierge files a defect ticket that appears in the queue', async ({ page 
   await expect(page.getByTestId('tickets-title')).toBeVisible();
   await expect(page.locator(`text=${subject}`)).toBeVisible();
 });
+
+test('mission control is invisible to a tenant seat', async ({ page }) => {
+  // The e2e-robot is org admin but NOT platform staff. The nav must not
+  // offer Mission Control, and forcing the route must bounce to dashboard.
+  // (Platform identity never derives from tenant membership — 002 doctrine.)
+  await login(page);
+  await expect(page.getByTestId('nav-mission-control')).toHaveCount(0);
+  await page.goto(BASE + '/mission-control');
+  await expect(page.getByTestId('dashboard-title')).toBeVisible();
+  await expect(page.getByTestId('mc-title')).toHaveCount(0);
+});
