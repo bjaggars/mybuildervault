@@ -69,6 +69,20 @@ Current Firebase/single-file state diverges from doctrine at every point — cos
 
 ---
 
+## Phase 1.5 — Vision Gates (added 2026-08-03)
+**Goal:** Architecture approved before code. VISION.md now governs product shape.
+1. BOARD-012 architecture & phasing proposal (Claude) → Brice approval
+2. Competitor schema survey folded into BOARD-012 (doctrine: incumbent field
+   shapes = a decade of corrections)
+3. BOARD-013 AI tooling evaluation runs before Studio build (not before core)
+
+**Sequencing note (2026-08-03):** Netlify sites + Supabase projects + env vars
+completed by Brice ahead of schedule — Phase 1 steps 1–2 are done except script
+001, which ships with the Phase 2 schema per the approved architecture.
+The estimate-as-spine thesis (VISION 3) reshapes Phase 3's port order: Change
+Orders, Budget, and Selections are one continuous Estimate→Actuals thread, not
+three ports.
+
 ## Phase 2 — React/Vite Scaffold + Schema
 **Goal:** Empty but correctly structured React app running at mybuildervault.dev.
 **Timeline:** 1 week after Phase 1.

@@ -11,6 +11,12 @@ Schedule the meeting only after MyBuilderVault has a demo-ready tenant at mybuil
 
 ---
 
+## Design Center split (clarified by Brice 2026-08-03)
+**Eric's interest is ARCHITECTURAL** (move walls, add rooms, massing) — distinct from
+**Bridgette's, which is INTERIOR** (materials, palettes, lookbooks). Two studios, two
+personas — see VISION.md thesis 7. Talking point: "Bridgette's Studio ships first;
+the architecture for yours is already in place" — not a watered-down single studio.
+
 ## Context
 
 **Who:** Eric is co-principal of Brije LLC alongside Wendy Fisher. Brije builds ~70 spec

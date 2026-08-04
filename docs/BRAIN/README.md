@@ -12,6 +12,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 
 ## Files
 - `README.md` — this file; orientation and precedence rules
+- `VISION.md` — why the product wins: category claim, market gap, core theses
 - `STATE.md` — honest current state: what works, what's half-done, what's aspirational
 - `BOARD.md` — active work items and priorities
 - `BACKLOG.md` — captured ideas and future work

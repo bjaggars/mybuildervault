@@ -1,6 +1,10 @@
 # MyBuilderVault — Current State
 Last updated: 2026-08-03
 
+## Vision
+VISION.md (added 2026-08-03) defines the category claim and ten core theses.
+Product architecture (BOARD-012) must trace to it.
+
 ## Identity
 Multi-tenant SaaS for residential builders. Target: Brije LLC (70 spec + 30 custom homes/year,
 Ocala FL) as Lighthouse licensee, then broader builder market.

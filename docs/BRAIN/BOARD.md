@@ -36,14 +36,14 @@ section in ERIC-MEETING.md. Confirm nothing breaks.
 
 ## 🟢 PRODUCT SETUP — Environments checklist (STACK.md §Environments)
 
-### BOARD-004 · Wire Netlify sites to GitHub
+### BOARD-004 · Wire Netlify sites to GitHub ✅ DONE 2026-08-03 (Brice)
 **What:** Create two Netlify sites — mybuildervault-prod (main branch → mybuildervault.com)
 and mybuildervault-dev (dev branch → mybuildervault.dev). Connect to this repo.
 **Dependency:** Domains purchased ✅ (2026-08-03)
 **Owner:** Brice (Netlify console) + Claude (netlify.toml)
 **Effort:** 1 hour
 
-### BOARD-005 · Supabase projects
+### BOARD-005 · Supabase projects — consoles ✅ DONE 2026-08-03 (Brice); script 001 PENDING (Claude)
 **What:** Two projects under JSH org: mybuildervault-prod and mybuildervault-dev.
 Script 001 with RLS at birth (copy from MyRealtyVault).
 **Owner:** Brice (Supabase console) + Claude (script 001)
@@ -92,3 +92,33 @@ MyBuilderVault palette (navy/gold/cream per Brije branding). "Scrolling is not y
 Phases: Dashboard → Changes → Documents → Budget → remaining pages.
 **Dependency:** BOARD-008, BOARD-009, BOARD-010
 **Effort:** 3-4 weeks
+
+---
+
+## 🟣 VISION SESSION OUTPUTS (2026-08-03) — pre-build gates
+
+### BOARD-012 · Architecture & phasing proposal
+**What:** Full product architecture from VISION.md theses: unified Job model
+(1..n structures, spec→buyer state change), Estimate→Contract→CO→Selections→Actuals
+spine, tier-toggle entitlements, Concierge, photo intelligence, two-studio plan.
+Written proposal for Brice approval BEFORE BOARD-010/005 build starts.
+**Dependency:** VISION.md (done). Competitor schema survey (BOARD-008 note) folds in here.
+**Owner:** Claude · **Effort:** 1 session
+
+### BOARD-013 · AI tooling evaluation for the Design Studios
+**What:** Research spike (doctrine: kill riskiest unknown first). Evaluate image-gen
+APIs for Bridgette's Studio (track A) and parametric floor-plan/geometry engines for
+Eric's Studio (track B). Non-Anthropic tools expected — Claude orchestrates, doesn't render.
+**Owner:** Claude · **Effort:** 1 research session · **When:** before Studio build, not before core
+
+### BOARD-014 · Estimate ingestion (the on-ramp)
+**What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,
+options, upgrades with approved/included states. Kills re-keying; feeds accretive
+selections catalog. Jaggars 7/23/26 estimate PDF is the test fixture (in chat archive;
+request .xlsx from Brije for formula/tab structure).
+**Dependency:** BOARD-012 schema
+
+### BOARD-015 · Photo library intelligence
+**What:** Bulk ingest + AI auto-tag (room/feature/style/material/color) + job
+provenance + instant search. Fastest wow, zero process change. See VISION thesis 6.
+**Dependency:** BOARD-010 scaffold, Cloudinary setup

@@ -43,8 +43,14 @@ Items graduate to BOARD when they're actively planned.
   contractor finish schedule export
 - Landscape Design module — Zone 9B plant library, HOA compliance checker,
   hardscape designer, irrigation planning, AI lot analysis
-- AI Lot Analysis — upload survey → AI maps setbacks/wetlands/orientation → preliminary site plan
-- 3D Home Visualizer — floor plan PDF → 3D exterior rendering
+- Eric's Studio (architectural) — geometry-true design manipulation: move walls,
+  add rooms, massing, lot placement; floor plans as structured data so changes
+  update sqft and cost; photoreal renders on top of geometry (VISION thesis 7,
+  track B). Consolidates the two fragments below:
+  - AI Lot Analysis — upload survey → AI maps setbacks/wetlands/orientation → preliminary site plan
+  - 3D Home Visualizer — floor plan PDF → 3D exterior rendering
+- Studio presentation mode — full-screen dark touch-first layout for Eric's future
+  design-room touchscreen wall (hardware not yet purchased; CSS-cheap, demo-rich)
 - Builder's AI Assistant — natural language queries across all builds
 - AI Contract & Change Order draft generator
 - Predictive Cost Modeling — material price feeds → margin impact across active builds
@@ -113,3 +119,30 @@ Items graduate to BOARD when they're actively planned.
 - All data in single Firestore document — architectural limit, resolved in product rebuild
 - No tests of any kind — resolved in product rebuild
 - Secrets in client JS — redacted in public repo copy; live deploy still has them inline
+
+---
+
+## Vision-session captures (2026-08-03) — see VISION.md for full theses
+- Allowance tracker — budgeted/actual/variance per allowance, reconciliation
+  lifecycle, surfaced in client portal before it becomes a dispute (thesis 4)
+- Accretive selections — capture-anything record (link scrape / photo / library
+  pick) per room+job with price+status; catalog accretes, AI normalizes;
+  Brije standards emerge from repetition (thesis 5)
+- Estimate ingestion — AI parse of builder's existing estimate → structured spine
+  (BOARD-014)
+- Photo library intelligence — ingest/auto-tag/search with job provenance
+  (BOARD-015, thesis 6)
+- Self-feeding ops — schedule updates from superintendent texted photos, POs from
+  takeoffs, auto-written client updates from job activity (thesis 1, the moat)
+- Multi-structure Jobs — 1..n structures per Job (house + shop), split allowances
+  (proven by Jaggars estimate)
+- Tier toggles — builder entitlements + client portal interactivity toggles at
+  schema birth (thesis 9; copy MRV entitlements pattern when board-66 lands there)
+- Sub adoption bias — SMS/email worksheet flows before login-required portals
+  (open unknown: will Brije subs log in?)
+- Finance posture — no finance module; pull/push interface to external accounting
+  (system unknown); draws + lien waivers = FL pain point to revisit
+- Regulatory time-bombs — dated code changes repricing work (e.g. "New ATU
+  Requirement Starting 6/1/26" in the estimate); track as dated conditions
+- Contingency notes as conditions — estimate notes carry risk/sequencing
+  ("assuming Geo Tech allows...", "location TBD after framing"), not comments
