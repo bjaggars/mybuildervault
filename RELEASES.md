@@ -22,7 +22,7 @@ Target: first deploy of mybuildervault.com.
 - Static compliance pages (privacy / terms / about)
 - CI / Smoke / E2E workflows; e2e-report + e2e-purge functions
 
-**Prod DB change scripts to run, in order:** 001, 002, 002-patch, 003, 005, 004
+**Prod DB change scripts to run, in order:** 001, 002, 002-patch, 003, 005, 004, 006
 (005 before 004 — 004 depends on the reconciled ticket_events shape).
 
 **Prod prerequisites before merge:**

@@ -115,3 +115,14 @@ prove-it query exists precisely to make "which version ran" a fact, not a memory
 **Rule:** A DB change script is not RUN until its prove-it row is in the chat.
 STATE records scripts without captured prove-its as UNVERIFIED, and reconciliation
 scripts (005 pattern) converge idempotently rather than assuming any prior shape.
+
+---
+
+## 10. Void-returning admin functions fail silently — make them speak
+**Incident:** grant_platform_owner (002) matched email case-sensitively and
+returned void. Run before the auth user existed, it matched zero rows,
+"succeeded," and granted nothing — the founder hit "No workspace yet" instead
+of Mission Control.
+**Rule:** Admin/one-shot functions raise on zero effect and RETURN a
+human-readable result. Case-insensitive email matching everywhere emails are
+compared. Fixed in script 006.

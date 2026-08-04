@@ -169,7 +169,7 @@ intake stub SHIPPED in the Phase A scaffold (see Product environment below); AI
 answering, auto-acks, and dual-write are still open. NOTE: clients cannot file
 tickets until job_participants lands (jobs script) — widen t_insert policy then.
 After Brice's first app signup: run `select grant_platform_owner('<brice email>');`
-via console. Prod runs 001+002(+patch)+003+005+004 in that order via release ritual at first release.
+via console. Prod runs 001+002(+patch)+003+005+004+006 in that order via release ritual at first release.
 
 ---
 
