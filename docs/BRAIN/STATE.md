@@ -132,7 +132,7 @@ The gap is real. STATE does not hide it.
 | Test/Dev | mybuildervault-dev | https://yglwpguxikulymciosdf.supabase.co |
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
-Script 001 written 2026-08-04 (supabase/migrations/001_foundation.sql) — pending Brice run on dev, then prod via release ritual.
+Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4). Prod runs it via release ritual at first release.
 
 ---
 

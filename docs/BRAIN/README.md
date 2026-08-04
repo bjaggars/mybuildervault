@@ -28,6 +28,8 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 3. Consult jsh-brain for process questions
 4. Update BRAIN in the same commits as the work
 5. Never push to main — dev branch only; main moves via release ritual
+6. DB change scripts are PASTED IN FULL IN CHAT at delivery, not just
+   committed — Brice runs from the chat, no repo hunting (adopted 2026-08-04)
 
 ## Key distinction (read every session)
 **OCALA PORTAL** = the single-file Firebase app running Brice's own home build.

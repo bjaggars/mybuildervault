@@ -43,7 +43,7 @@ and mybuildervault-dev (dev branch → mybuildervault.dev). Connect to this repo
 **Owner:** Brice (Netlify console) + Claude (netlify.toml)
 **Effort:** 1 hour
 
-### BOARD-005 · Supabase projects — consoles ✅ DONE 2026-08-03 (Brice); script 001 PENDING (Claude)
+### BOARD-005 · Supabase projects ✅ DONE — consoles 2026-08-03; script 001 run on dev 2026-08-04, prove-it PASSED
 **What:** Two projects under JSH org: mybuildervault-prod and mybuildervault-dev.
 Script 001 with RLS at birth (copy from MyRealtyVault).
 **Owner:** Brice (Supabase console) + Claude (script 001)
@@ -103,9 +103,9 @@ Phases: Dashboard → Changes → Documents → Budget → remaining pages.
 survey (JobTread / Buildertrend / Hyphen-MarkSystems), full domain model,
 app architecture, phasing with the Eric demo line, and a 7-item approval
 checklist. Approved with amendment 0058e1e (geometry slot, selection↔schedule
-deadline+lag, variance-reveal toggle). Phase A STARTED: script 001 written
-(supabase/migrations/001_foundation.sql) — Brice runs it on mybuildervault-dev
-and eyeballs the prove-it (PASS: rls=8, policies>=14, templates=37, fns=4).
+deadline+lag, variance-reveal toggle). Phase A UNDERWAY: script 001 RUN
+on mybuildervault-dev 2026-08-04, prove-it PASSED. Next: React scaffold +
+auth flows + CI copy (BOARD-006/009/010) in a fresh session.
 **Owner:** Claude (build) + Brice (run script 001 on dev Supabase)
 
 ### BOARD-013 · AI tooling evaluation for the Design Studios
