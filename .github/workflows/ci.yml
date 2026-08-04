@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Predeploy gate (syntax, env contract, migration sequence)
+        run: npm run validate
+
+      - name: Build
+        run: npm run build
+
+      - name: SQL parse check (PostgreSQL grammar)
+        run: |
+          pip install pglast --quiet
+          python3 - <<'PY'
+          import pglast, glob, sys
+          failed = False
+          for f in sorted(glob.glob('supabase/migrations/*.sql')):
+              try:
+                  n = len(pglast.parse_sql(open(f).read()))
+                  print(f"  {f}: {n} statements OK")
+              except Exception as e:
+                  print(f"  {f}: PARSE FAILED — {e}"); failed = True
+          sys.exit(1 if failed else 0)
+          PY

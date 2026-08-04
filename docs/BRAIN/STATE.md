@@ -1,5 +1,5 @@
 # MyBuilderVault — Current State
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 ## Vision
 VISION.md (added 2026-08-03) defines the category claim and ten core theses.
@@ -89,10 +89,10 @@ Documents and deletes now write directly to Firestore (not debounced) after 2026
 | Prod URL | mybuildervault.com (domain purchased 2026-08-03, not yet wired) |
 | Test URL | mybuildervault.dev (domain purchased 2026-08-03, not yet wired) |
 | Reserve URL | mybuildervault.app (purchased, held for future PWA/marketing) |
-| Stack | React/Vite + Supabase + Netlify (per JSH doctrine) — NOT YET BUILT |
-| Auth | Supabase Auth + RLS (per JSH doctrine) — NOT YET BUILT |
-| CI/CD | GitHub Actions + Netlify Git integration — NOT YET WIRED |
-| Status | **GREENFIELD — zero product code exists** |
+| Stack | React/Vite + Supabase + Netlify (per JSH doctrine) — Phase A scaffold SHIPPED 2026-08-04 |
+| Auth | Supabase Auth + RLS — builder login + staff magic-link invite SHIPPED; client invites await job_participants (Phase B) |
+| CI/CD | CI/Smoke/E2E workflows copied from MRV (Node 24, all on dev+main) SHIPPED 2026-08-04 |
+| Status | **PHASE A SCAFFOLD LIVE ON DEV** — shell, auth, design system, compliance pages, Concierge intake stub, ticket dashboard, Mission Control reporters |
 
 ### What the BRAIN history says about Supabase v2
 Earlier session notes referenced "Firebase legacy app (active), Supabase v2 schema (parallel,
@@ -131,24 +131,33 @@ The gap is real. STATE does not hide it.
 | Production | mybuildervault-prod | https://nicikqkqpuyqqpojqbkh.supabase.co |
 | Test/Dev | mybuildervault-dev | https://yglwpguxikulymciosdf.supabase.co |
 
-Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
-Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4).
-Script 002 RUN on dev 2026-08-04 (Brice; prove-it numbers not captured — original
-ss_select applied). 002-PATCH (L4 invisibility, drop/recreate ss_select) delivered
-in chat, PENDING Brice run. Script 003 (support ticketing) AMENDED pre-run 2026-08-04 — adds ticket types
-(defect/feature_request/how_to/other), Concierge intake channel, feature_requests
-table + ticket→FR conversion, SLA timestamps, v_ticket_stats dashboard view.
-003 RUN on dev 2026-08-04 (Brice; prove-it numbers not captured). Script 004
-(auto-response events) written, PENDING Brice run. UNCONFIRMED: whether the
-002-PATCH (L4 invisibility ss_select) was run before 003 — verify with Brice;
-if unrun, dev still shows L4 sessions to builder admins. Concierge intake flow
-(answer how-tos first, ticket on failure, FR conversion at triage, GH Issues
-dual-write) and system auto-acks on ticket creation + resolution (comms rail,
-service-role event inserts) are SCAFFOLD-PHASE app requirements. NOTE: clients cannot file tickets until job_participants
-lands (jobs script) — widen t_insert policy then. Supersedes org_entitlements; FIXES 001's is_platform_owner
-(was org-derived = latent cross-tenant escalation at tenant #2). After Brice's
-first app signup: run `select grant_platform_owner('<brice email>');` via console.
-Prod runs 001+002 via release ritual at first release.
+Both under JSH Supabase org.
+
+**DB change script status on mybuildervault-dev (as of 2026-08-04):**
+- 001 RUN, prove-it PASSED (rls=8, policies=14, templates=37, fns=4).
+- 002 RUN (Brice; original ss_select applied; prove-it numbers not captured).
+- 002-PATCH (L4 invisibility, drop/recreate ss_select) RUN — confirmed by Brice
+  2026-08-04 in the Phase A scaffold session. The 002-patch/003 ordering question
+  is RESOLVED: patch is in effect on dev.
+- 003 RUN (Brice; prove-it numbers not captured). Ticketing + FR pipeline +
+  v_ticket_stats live.
+- 004 (auto-response events) — Brice reports run 2026-08-04; prove-it row NOT
+  captured (the screenshot provided was the E2E seed prove-it). Expected PASS:
+  actor_nullable=YES, kinds_has_auto=1, guard=1. Capture on next console visit.
+
+**E2E agent seeded on dev 2026-08-04, prove-it PASSED** (org=1, member_role=admin,
+cost_codes=37): auth user e2e-robot@mybuildervault.dev (auto-confirmed), org
+"E2E Robot Builder" slug e2e-robot, role admin, cost codes seeded. E2E- prefix
+convention governs purge.
+
+Concierge intake flow (answer how-tos first, ticket on failure, FR conversion at
+triage, GH Issues dual-write) and system auto-acks on ticket creation + resolution
+(comms rail, service-role event inserts) are SCAFFOLD-PHASE app requirements —
+intake stub SHIPPED in the Phase A scaffold (see Product environment below); AI
+answering, auto-acks, and dual-write are still open. NOTE: clients cannot file
+tickets until job_participants lands (jobs script) — widen t_insert policy then.
+After Brice's first app signup: run `select grant_platform_owner('<brice email>');`
+via console. Prod runs 001+002(+patch)+003+004 via release ritual at first release.
 
 ---
 
@@ -160,6 +169,9 @@ Prod runs 001+002 via release ritual at first release.
 | Test/Dev | mybuildervault-dev | dev | mybuildervault.dev |
 
 Both sites wired to github.com/bjaggars/mybuildervault via Netlify Git integration.
-Env vars set per site (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY).
-No React app exists yet — deploys will fail until scaffold is built (BOARD-010).
+Env vars set per site (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY,
+SUPABASE_SERVICE_ROLE_KEY) + E2E_REPORT_SECRET added to the dev site (Functions
+scope) 2026-08-04. GitHub Actions secrets set: TEST_E2E_AGENT_EMAIL/PASSWORD,
+E2E_REPORT_SECRET; variables: TEST_BASE_URL, PROD_BASE_URL, TEST_SMOKE_SLUG
+(e2e-robot). PROD_E2E_* secrets deferred to first release.
 mybuildervault.app purchased and held in reserve (future PWA or marketing landing page).

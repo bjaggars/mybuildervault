@@ -1,5 +1,5 @@
 # MyBuilderVault — Board
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 Active work items in priority order. Unstarted items have no assignee.
 Claude pushes to dev only. Main moves via release ritual after Brice approves.
@@ -49,7 +49,12 @@ Script 001 with RLS at birth (copy from MyRealtyVault).
 **Owner:** Brice (Supabase console) + Claude (script 001)
 **Effort:** 2 hours
 
-### BOARD-006 · CI / Smoke / E2E workflows
+### BOARD-006 · CI / Smoke / E2E workflows ✅ SHIPPED 2026-08-04 (Phase A session)
+**Done:** ci/smoke/e2e copied from MRV, adapted (Node 24 everywhere; CI runs on dev+main;
+e2e agent seat renamed). e2e-report + e2e-purge functions written (Mission Control
+e2e_runs insert via service role; purge scoped to e2e-robot org AND E2E- prefix).
+PAT Workflows RW verified by probe before push. First green run pending this push.
+Mission Control UI tabs (Quality/Releases) NOT yet built — reporters land first.
 **What:** Copy GitHub Actions workflows from MyRealtyVault. Adapt for MyBuilderVault.
 Static gates + behavioral smokes + E2E robot. Mission Control (Quality + Releases tabs).
 **Dependency:** BOARD-004, BOARD-005
@@ -76,13 +81,22 @@ Survey competitor products (CoConstruct, Buildertrend, BuilderPad) before finali
 schema — per JSH doctrine, competitor field shapes encode a decade of corrections.
 **Effort:** 1 day (design) + 1 day (script 001 + RLS)
 
-### BOARD-009 · Auth flows
+### BOARD-009 · Auth flows — PARTIAL 2026-08-04
+**Done:** builder email+password login, magic-link fallback, staff invite rail
+(invite-member function: caller-role verified server-side, inviteUserByEmail,
+existing-user attach path, org_members upsert), /accept-invite completion page.
+**Open:** client (homeowner) magic-link invites — blocked on job_participants (Phase B);
+clients attach to jobs, never the org roster.
 **What:** Builder signup/login, client invite (magic link), role-based UI gates.
 Copy identity layering pattern from MyRealtyVault (PATTERNS §2).
 **Dependency:** BOARD-005, BOARD-008
 **Effort:** 2 days
 
-### BOARD-010 · React/Vite scaffold + design system
+### BOARD-010 · React/Vite scaffold + design system ✅ SHIPPED 2026-08-04
+**Done:** Vite+React scaffold, navy/gold/cream CSS variables, build stamp +
+dist/build.json, 100vh no-page-scroll shell, entitlement-gated nav
+(resolve_entitlement + can_see_ticket_queue), Concierge ? intake stub (003 contract),
+ticket dashboard on v_ticket_stats, Settings roster+invite, static compliance pages.
 **What:** Greenfield React app. Copy Vite config + build stamp from MyRealtyVault.
 MyBuilderVault palette (navy/gold/cream per Brije branding). "Scrolling is not your friend."
 **Effort:** 1 day

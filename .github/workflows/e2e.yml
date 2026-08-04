@@ -1,0 +1,109 @@
+name: E2E
+on:
+  push:
+    branches: [dev, main]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+
+jobs:
+  golden-paths:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Wait for deploy (poll until the deployed sha matches this commit)
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+        run: |
+          want="${GITHUB_SHA:0:7}"
+          for i in $(seq 1 40); do
+            got=$(curl -s --max-time 10 "$BASE_URL/build.json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('sha',''))" 2>/dev/null || echo "")
+            if [ "$got" = "$want" ]; then echo "deploy live: $got"; exit 0; fi
+            echo "waiting for deploy ($i/40): site=$got want=$want"; sleep 15
+          done
+          echo "deploy never matched after 10m — running anyway (build.json may predate this feature)"
+      - name: Install Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Purge prior E2E data (clean floor)
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+          E2E_REPORT_SECRET: ${{ secrets.E2E_REPORT_SECRET }}
+        run: |
+          curl -s -X POST "$BASE_URL/.netlify/functions/e2e-purge" -H "x-e2e-secret: $E2E_REPORT_SECRET" || echo "purge unavailable — continuing"
+      - name: Run golden paths (e2e-robot admin seat)
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+          E2E_AGENT_EMAIL: ${{ github.ref_name == 'main' && secrets.PROD_E2E_AGENT_EMAIL || secrets.TEST_E2E_AGENT_EMAIL }}
+          E2E_AGENT_PASSWORD: ${{ github.ref_name == 'main' && secrets.PROD_E2E_AGENT_PASSWORD || secrets.TEST_E2E_AGENT_PASSWORD }}
+        run: |
+          set -o pipefail
+          PLAYWRIGHT_JSON_OUTPUT_NAME=e2e-results.json npx playwright test --reporter=list,json 2>&1 | tee e2e-output.txt
+      - name: Report results to Mission Control
+        if: always()
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+          E2E_REPORT_SECRET: ${{ secrets.E2E_REPORT_SECRET }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -f e2e-results.json ] && [ -n "$E2E_REPORT_SECRET" ]; then
+            node -e '
+              const r = require("./e2e-results.json");
+              const cases = [];
+              const walk = (s) => { (s.suites??[]).forEach(walk); (s.specs??[]).forEach(sp => {
+                const res = sp.tests?.[0]?.results?.slice(-1)[0] ?? {};
+                cases.push({ title: sp.title, status: sp.ok ? "passed" : (res.status ?? "failed"), ms: res.duration ?? 0 });
+              }); };
+              (r.suites??[]).forEach(walk);
+              const st = r.stats ?? {};
+              const payload = { branch: process.env.GITHUB_REF_NAME, sha: (process.env.GITHUB_SHA||"").slice(0,7),
+                run_url: process.env.RUN_URL, passed: st.expected??0, failed: st.unexpected??0,
+                flaky: st.flaky??0, skipped: st.skipped??0, duration_ms: Math.round(st.duration??0), cases };
+              fetch(process.env.BASE_URL + "/.netlify/functions/e2e-report", { method: "POST",
+                headers: { "content-type": "application/json", "x-e2e-secret": process.env.E2E_REPORT_SECRET },
+                body: JSON.stringify(payload) }).then(res => console.log("report:", res.status));
+            '
+          else
+            echo "no results file or secret — skipping report"
+          fi
+      - name: Report failure as issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MASK_EMAIL: ${{ github.ref_name == 'main' && secrets.PROD_E2E_AGENT_EMAIL || secrets.TEST_E2E_AGENT_EMAIL }}
+          MASK_PASSWORD: ${{ github.ref_name == 'main' && secrets.PROD_E2E_AGENT_PASSWORD || secrets.TEST_E2E_AGENT_PASSWORD }}
+        run: |
+          {
+            echo "E2E golden paths failed on \`${{ github.ref_name }}\` @ \`${GITHUB_SHA::7}\`"
+            echo
+            echo '```'
+            cat e2e-output.txt 2>/dev/null || echo "(no output)"
+            echo '```'
+            echo "### What the robot saw (ARIA snapshots at failure)"
+            for f in $(find test-results -name error-context.md | head -4); do
+              echo "<details><summary>$f</summary>"
+              echo
+              head -c 3000 "$f"
+              echo
+              echo "</details>"
+            done
+          } > body.md
+          # ARIA snapshots capture textbox VALUES — scrub creds before publishing
+          python3 -c "
+          import os
+          b = open('body.md').read()
+          for k in ('MASK_PASSWORD','MASK_EMAIL'):
+              v = os.environ.get(k) or ''
+              if v: b = b.replace(v, '[REDACTED]')
+          open('body.md','w').write(b)
+          "
+          gh issue create --repo "${{ github.repository }}" \
+            --title "[E2E-FAIL] ${{ github.ref_name }} @ ${GITHUB_SHA::7}" \
+            --body-file body.md

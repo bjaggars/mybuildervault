@@ -1,0 +1,64 @@
+name: Smoke
+on:
+  push:
+    branches: [dev, main]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+
+jobs:
+  api-smoke:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      # Give Netlify time to build the deploy this push triggered,
+      # then the smoke itself retries each check for a few minutes.
+      - name: Wait for deploy
+        run: sleep 150
+      - name: Network probe
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+        run: |
+          {
+            echo "== probe $BASE_URL =="
+            curl -sS -o /dev/null -w "HTTP %{http_code} | dns %{time_namelookup}s | connect %{time_connect}s | tls %{time_appconnect}s | total %{time_total}s | ip %{remote_ip}\n" "$BASE_URL/" || echo "curl failed: $?"
+            echo "== headers =="
+            curl -sSI "$BASE_URL/" | head -15 || true
+          } | tee probe.txt
+      - name: Run API smoke
+        env:
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+          SMOKE_SLUG: ${{ github.ref_name == 'main' && vars.PROD_SMOKE_SLUG || vars.TEST_SMOKE_SLUG }}
+        run: |
+          set -o pipefail
+          node scripts/smoke-api.mjs 2>&1 | tee smoke-output.txt
+      # Failures file an Issue with full diagnostics — readable by Claude
+      # (api.github.com is on its allowlist; Actions log downloads are not)
+      # and it pings the GitHub mobile app.
+      - name: Report failure as issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_URL: ${{ github.ref_name == 'main' && vars.PROD_BASE_URL || vars.TEST_BASE_URL }}
+        run: |
+          {
+            echo "Smoke failed on \`${{ github.ref_name }}\` @ \`${GITHUB_SHA::7}\` against $BASE_URL"
+            echo
+            echo "### Network probe"
+            echo '```'
+            cat probe.txt 2>/dev/null || echo "(no probe output)"
+            echo '```'
+            echo "### Smoke output"
+            echo '```'
+            cat smoke-output.txt 2>/dev/null || echo "(smoke produced no output)"
+            echo '```'
+          } > body.md
+          gh issue create --repo "${{ github.repository }}" \
+            --title "[SMOKE-FAIL] ${{ github.ref_name }} @ ${GITHUB_SHA::7}" \
+            --body-file body.md
