@@ -4,7 +4,8 @@ Last updated: 2026-08-03
 ## Vision
 VISION.md (added 2026-08-03) defines the category claim and ten core theses.
 Product architecture (BOARD-012) traces to it: see ARCHITECTURE.md —
-status PROPOSED as of 2026-08-03, awaiting Brice approval before any build.
+APPROVED by Brice 2026-08-04 (incl. amendment 0058e1e). Phase A underway:
+script 001 written, awaiting Brice run on mybuildervault-dev.
 
 ## Identity
 Multi-tenant SaaS for residential builders. Target: Brije LLC (70 spec + 30 custom homes/year,
@@ -131,7 +132,7 @@ The gap is real. STATE does not hide it.
 | Test/Dev | mybuildervault-dev | https://yglwpguxikulymciosdf.supabase.co |
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
-Script 001 (foundation + RLS at birth) is the first task when product build starts (BOARD-005).
+Script 001 written 2026-08-04 (supabase/migrations/001_foundation.sql) — pending Brice run on dev, then prod via release ritual.
 
 ---
 

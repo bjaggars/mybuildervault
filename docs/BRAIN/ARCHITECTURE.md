@@ -1,7 +1,9 @@
 # MyBuilderVault — Architecture & Phasing Proposal (BOARD-012)
 
-**Status: PROPOSED — awaiting Brice approval. Do not build from this document.**
-Authored: 2026-08-03 session. Traces to VISION.md theses 1–10.
+**Status: APPROVED — Brice, 2026-08-04, inclusive of amendment 0058e1e**
+(plan_versions.geometry reserved slot; selection↔schedule decision deadline+lag;
+allowance variance-reveal builder-controlled per allowance).
+Authored: 2026-08-03 session. Traces to VISION.md theses 1–10. Build authorized.
 Competitor schema survey folded in per JSH doctrine §7 and BOARD-008 note.
 
 ---
@@ -287,5 +289,6 @@ plans-as-data. Presentation mode ships with track A.
    internal comments — the client-inclusive default posture generally.
 7. **BOARD-014 fixture:** proceed with PDF; .xlsx from Brije when available.
 
-On approval: this header flips to APPROVED, script 001 is written, and
-Phase A begins. Until then, zero product code.
+Approved 2026-08-04 with amendment 0058e1e resolving decision #6 (variance
+reveal builder-controlled). Decisions 1–5, 7 approved as proposed. Phase A
+begins with script 001.

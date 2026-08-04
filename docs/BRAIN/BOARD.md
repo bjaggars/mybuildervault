@@ -97,14 +97,16 @@ Phases: Dashboard → Changes → Documents → Budget → remaining pages.
 
 ## 🟣 VISION SESSION OUTPUTS (2026-08-03) — pre-build gates
 
-### BOARD-012 · Architecture & phasing proposal — ✅ PROPOSAL DELIVERED 2026-08-03, ⏳ AWAITING BRICE APPROVAL
+### BOARD-012 · Architecture & phasing proposal — ✅ APPROVED BY BRICE 2026-08-04 (incl. amendment 0058e1e)
 **What:** Full product architecture from VISION.md theses. Delivered as
 `docs/BRAIN/ARCHITECTURE.md` (status PROPOSED). Includes competitor schema
 survey (JobTread / Buildertrend / Hyphen-MarkSystems), full domain model,
 app architecture, phasing with the Eric demo line, and a 7-item approval
-checklist. NO BUILD until Brice approves; on approval, flip header to
-APPROVED and start Phase A (script 001 + scaffold).
-**Owner:** Claude (done) → Brice (approval decision)
+checklist. Approved with amendment 0058e1e (geometry slot, selection↔schedule
+deadline+lag, variance-reveal toggle). Phase A STARTED: script 001 written
+(supabase/migrations/001_foundation.sql) — Brice runs it on mybuildervault-dev
+and eyeballs the prove-it (PASS: rls=8, policies>=14, templates=37, fns=4).
+**Owner:** Claude (build) + Brice (run script 001 on dev Supabase)
 
 ### BOARD-013 · AI tooling evaluation for the Design Studios
 **What:** Research spike (doctrine: kill riskiest unknown first). Evaluate image-gen
