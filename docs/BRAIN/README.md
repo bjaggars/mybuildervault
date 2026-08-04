@@ -20,7 +20,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 - `ROADMAP.md` — sequenced build plan with environments checklist
 - `LEARNINGS.md` — hard-won lessons specific to this product
 - `JSH.md` — pointer to cross-product doctrine
-- `ERIC-MEETING.md` — prep for Brije licensing conversation
+- `BRIJE-MEETING.md` — prep for the Brije leadership meeting (licensing conversation; Eric design-AI segment)
 
 ## Session protocol
 1. Clone repo with fresh fine-grained PAT (Contents RW + Issues RW + Actions RW)

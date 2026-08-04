@@ -22,7 +22,7 @@ gated on BOARD-013.
 
 Build order: Foundation → the Spine (as one thread, not three ports) →
 Collaboration surfaces → Photo intelligence (parallel) → Spec pipeline →
-Studios. The **Eric demo line** (Dashboard + Change Orders + Budget +
+Studios. The **Brije demo line** (Dashboard + Change Orders + Budget +
 Documents in a Brije-seeded tenant at mybuildervault.com) cuts through the
 first three phases and is the scheduling gate for the meeting.
 
@@ -158,7 +158,7 @@ ever (MRV 019/020 scar).
 - **actuals** — v1 is deliberately light: actual-cost entries per cost code /
   allowance (manual or ingested), feeding variance. **No PO/bill module in
   v1** — finance posture is pull/push interface to external accounting
-  (system unknown until the Eric meeting). The schema leaves room; we do not
+  (system unknown until the Brije leadership meeting). The schema leaves room; we do not
   build purchasing until Brije's back office is known. Draws and lien waivers
   revisit here (FL pain point).
 
@@ -251,7 +251,7 @@ tenant with real categories and the Jaggars job.
 Dashboard (stat cards, clickable), documents, meetings + decisions +
 actions, timeline/phases, contacts, reports hub. Concierge ships here.
 
-**⟶ THE ERIC DEMO LINE.** Gate check (ERIC-MEETING.md): Dashboard, Change
+**⟶ THE BRIJE DEMO LINE.** Gate check (BRIJE-MEETING.md): Dashboard, Change
 Orders, Budget, Documents live in the Brije-seeded tenant at
 mybuildervault.com, clean on a fresh browser. Reached at A + B + the first
 two items of C — roughly 5–6 weeks of sessions. Meeting gets scheduled
@@ -283,7 +283,7 @@ plans-as-data. Presentation mode ships with track A.
 3. **No PO/bill/purchasing module in v1** — actuals-lite + external
    accounting interface posture, pending Brije back-office discovery.
 4. **One job status engine, two funnel views** for spec/custom.
-5. **Phasing order and the Eric demo line** as the meeting gate (~5–6 weeks
+5. **Phasing order and the Brije demo line** as the meeting gate (~5–6 weeks
    of sessions from approval).
 6. **Client visibility ON by default for allowances**, off by default for
    internal comments — the client-inclusive default posture generally.

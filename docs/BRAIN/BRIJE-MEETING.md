@@ -17,6 +17,15 @@ Schedule the meeting only after MyBuilderVault has a demo-ready tenant at mybuil
 personas — see VISION.md thesis 7. Talking point: "Bridgette's Studio ships first;
 the architecture for yours is already in place" — not a watered-down single studio.
 
+## MEETING REFRAME (2026-08-04, Brice) — read first
+This is the BRIJE LEADERSHIP MEETING, not "the Eric meeting." Audience:
+Brije owners and leadership (Wendy + Eric as owners; Micah likely present
+as PM) seeing the MyBuilderVault being built FOR THEM. Eric is a natural
+subset of the audience — the AI design portion is shown to HIM specifically
+as his segment. Structure: platform story for the room, design-AI moment
+for Eric, ops reality for Micah. All gate checks below now apply to this
+leadership meeting.
+
 ## ROLE CORRECTION (2026-08-04) — read before anything below
 Eric's total involvement to date is ONE fleeting moment: he happened to be in
 the room when Brice showed Wendy MyRealtyVault, and raised a design-AI idea.
@@ -34,7 +43,7 @@ system to get organized.
 **Meeting strategy implication:** Eric is the economic buyer (co-owner,
 licensing decision). Micah is the user champion — the person whose daily pain
 the product solves and the likeliest internal advocate. Whether Micah is in
-the room for the Eric meeting, sees it first, or sees it after is Brice's
+the room for the leadership meeting, sees it first, or sees it after is Brice's
 call; his enthusiasm is an asset either way, and a demo that speaks to
 Micah's drowning-in-100-builds reality will land harder than one aimed only
 at the owner's ROI. Do NOT oversell Ops Hub features that are Phase E — show
@@ -64,13 +73,13 @@ real build, real data.
 
 ## Meeting Readiness Gate
 
-Do NOT schedule the Eric meeting until ALL of these are true:
+Do NOT schedule the Brije leadership meeting until ALL of these are true:
 
 - [ ] MyBuilderVault.com is live and accessible
 - [ ] At least one tenant (Brije or a Jaggars seed tenant) is set up with real data
 - [ ] Dashboard, Change Orders, Budget, Documents are working in the product
 - [ ] Demo runs cleanly on a fresh browser with no errors
-- [ ] ERIC-MEETING.md demo plan rehearsed end-to-end
+- [ ] BRIJE-MEETING.md demo plan rehearsed end-to-end
 
 The Ocala portal proved the concept to Brice. MyBuilderVault.com proves it to Eric.
 These are different bars.

@@ -20,15 +20,15 @@ Claude pushes to dev only. Main moves via release ritual after Brice approves.
 
 ## 🟡 PRE-MEETING — Eric prep
 
-### BOARD-002 · Schedule Eric meeting
+### BOARD-002 · Schedule Brije leadership meeting (reframed 2026-08-04; Eric design-AI segment a subset)
 **What:** Meeting is NOT YET SCHEDULED per session brief. We prep first, then schedule
 from strength.
-**Dependency:** BOARD-001 fixed; ERIC-MEETING.md reviewed; demo rehearsed.
+**Dependency:** BOARD-001 fixed; BRIJE-MEETING.md reviewed; demo rehearsed.
 **Owner:** Brice
 
 ### BOARD-003 · Demo rehearsal on non-Brice device
 **What:** Open portal on a fresh browser (not logged into Firebase). Walk every demo
-section in ERIC-MEETING.md. Confirm nothing breaks.
+section in BRIJE-MEETING.md. Confirm nothing breaks.
 **Owner:** Brice
 **Effort:** 30 minutes
 
@@ -101,7 +101,7 @@ Phases: Dashboard → Changes → Documents → Budget → remaining pages.
 **What:** Full product architecture from VISION.md theses. Delivered as
 `docs/BRAIN/ARCHITECTURE.md` (status PROPOSED). Includes competitor schema
 survey (JobTread / Buildertrend / Hyphen-MarkSystems), full domain model,
-app architecture, phasing with the Eric demo line, and a 7-item approval
+app architecture, phasing with the Brije demo line, and a 7-item approval
 checklist. Approved with amendment 0058e1e (geometry slot, selection↔schedule
 deadline+lag, variance-reveal toggle). Phase A UNDERWAY: script 001 RUN
 on mybuildervault-dev 2026-08-04, prove-it PASSED. Next: React scaffold +

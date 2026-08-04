@@ -1,7 +1,7 @@
 # MyBuilderVault — Roadmap
 Last updated: 2026-08-03
 
-## Phase 0 — Fix & Prep (before Eric meeting)
+## Phase 0 — Fix & Prep (before Brije leadership meeting)
 **Goal:** Eric sees a working, polished demo. Not a broken portal.
 **Timeline:** This week.
 
@@ -10,16 +10,16 @@ Last updated: 2026-08-03
    Verify on a non-Brice device before considering done.
 
 2. **Demo rehearsal** (BOARD-003, 30 min, Brice)
-   Walk ERIC-MEETING.md demo plan on fresh browser. Fix anything that breaks.
+   Walk BRIJE-MEETING.md demo plan on fresh browser. Fix anything that breaks.
 
-3. **Schedule Eric meeting** (BOARD-002, Brice)
+3. **Schedule Brije leadership meeting** (BOARD-002, Brice)
    From strength: portal working, BRAIN written, talking points clear.
 
 ---
 
 ## Phase 1 — Environments Setup (JSH doctrine, STACK.md checklist)
 **Goal:** Proper development infrastructure before writing a line of product code.
-**Timeline:** 1-2 days after Eric meeting.
+**Timeline:** 1-2 days after the Brije leadership meeting.
 
 This is the STACK.md "new product environments checklist" as concrete steps.
 Current Firebase/single-file state diverges from doctrine at every point — costs noted.

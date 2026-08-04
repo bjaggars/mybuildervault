@@ -151,7 +151,7 @@ Buyer validation (2026-08-04): Brice's wife — a real Brije custom-build
 client, mid-build — on hearing the concept, unprompted: "would have loved
 that for our house, it's hard to imagine what the options you're choosing
 are going to look like." Second buyer's-chair data point from inside the
-Jaggars build; use verbatim in the Eric meeting.
+Jaggars build; use verbatim in the Brije leadership meeting.
 
 ### 8. Concierge is JSH doctrine, not a feature
 The ❓ AI assist from MyRealtyVault (how-to answers + feature requests + bug
