@@ -144,7 +144,7 @@ create policy ent_jsh_write on entitlements for all
 create policy ss_select on support_sessions for select
   using (actor_person = auth.uid()
          or is_platform_owner()
-         or org_role(org_id) in ('owner','admin'));
+         or (org_role(org_id) in ('owner','admin') and actor_layer <> 'jsh_owner'));
 create policy ss_insert_builder on support_sessions for insert
   with check (actor_layer = 'builder_admin'
               and actor_person = auth.uid()
