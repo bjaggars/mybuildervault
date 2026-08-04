@@ -133,8 +133,11 @@ The gap is real. STATE does not hide it.
 
 Both under JSH Supabase org. No DB change scripts written yet — schema is greenfield.
 Script 001 RUN on mybuildervault-dev 2026-08-04, prove-it PASSED (rls=8, policies=14, templates=37, fns=4).
-Script 002 (JSH Access Model — see jsh-brain PATTERNS) written 2026-08-04, PENDING
-Brice run on dev. Supersedes org_entitlements; FIXES 001's is_platform_owner
+Script 002 RUN on dev 2026-08-04 (Brice; prove-it numbers not captured — original
+ss_select applied). 002-PATCH (L4 invisibility, drop/recreate ss_select) delivered
+in chat, PENDING Brice run. Script 003 (support ticketing) written, PENDING Brice
+run after the patch. NOTE: clients cannot file tickets until job_participants
+lands (jobs script) — widen t_insert policy then. Supersedes org_entitlements; FIXES 001's is_platform_owner
 (was org-derived = latent cross-tenant escalation at tenant #2). After Brice's
 first app signup: run `select grant_platform_owner('<brice email>');` via console.
 Prod runs 001+002 via release ritual at first release.
