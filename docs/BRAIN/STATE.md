@@ -169,7 +169,13 @@ intake stub SHIPPED in the Phase A scaffold (see Product environment below); AI
 answering, auto-acks, and dual-write are still open. NOTE: clients cannot file
 tickets until job_participants lands (jobs script) — widen t_insert policy then.
 After Brice's first app signup: run `select grant_platform_owner('<brice email>');`
-via console. Prod runs 001+002(+patch)+003+005+004+006 in that order via release ritual at first release.
+via console. Prod runs 001+002(+patch)+003+005+004+006+007 in that order via release ritual
+at first release.
+- 007 (job container: contacts/parties, communities/lots/plans+versions with
+  reserved geometry slot, one-engine jobs + job_events, structures,
+  job_participants, t_insert widened for clients) WRITTEN 2026-08-04, pasted
+  in chat, PENDING Brice run on dev. Prove-it: new_tables=10, helper_fns=3,
+  status_values=12, t_insert_client=1. Estimates/lines/conditions = script 008.
 
 ---
 

@@ -78,7 +78,7 @@ full-access keys per env, branded Supabase auth templates.
 
 Items here are post-Eric-meeting. Sequence depends on licensing agreement shape.
 
-### BOARD-008 · Multi-tenant schema design
+### BOARD-008 · Multi-tenant schema design — IN PROGRESS (007 job container written 2026-08-04; 008 = estimates spine)
 **What:** Builder accounts, build (project) records, client sub-accounts, role model
 (builder-admin, builder-staff, homeowner). RLS from birth.
 Survey competitor products (CoConstruct, Buildertrend, BuilderPad) before finalizing
