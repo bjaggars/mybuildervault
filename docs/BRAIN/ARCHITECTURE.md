@@ -95,8 +95,10 @@ ever (MRV 019/020 scar).
 - **lots** — community-optional, address, county, survey document ref.
 - **plans** — floor plan as a record from day one (name, base sqft,
   bed/bath, elevation variants), with **plan_versions** holding structured
-  metadata (rooms, areas) as it becomes available. Plans enter as DATA, never
-  just PDFs — the thesis 7 track-B on-ramp, cheap now, priceless later.
+  metadata (rooms, areas) as it becomes available, including a reserved
+  `geometry` JSONB slot — empty until track B, but the column exists at birth
+  so Eric's Studio starts with data, not a schema change. Plans enter as DATA,
+  never just PDFs — the thesis 7 track-B on-ramp, cheap now, priceless later.
 - **jobs** — the core entity. `lifecycle = spec | custom`, `lot_id`,
   `plan_id` (nullable for full custom), status state machine:
 
@@ -137,13 +139,18 @@ ever (MRV 019/020 scar).
 - **allowances** — first-class lifecycle (thesis 4): origin estimate_line,
   budgeted amount, structure scope, status `open → quoted → actual_known →
   reconciled`, actual amount, computed variance, linked selections, client
-  visibility ON by default. The variance conversation happens in the portal
-  BEFORE it becomes a dispute. This table is the emotional center of the
-  product.
+  visibility ON by default for allowance AMOUNTS (the client signed them in
+  the contract); VARIANCE reveal as actuals land is builder-controlled per
+  allowance (one entitlement flag) — a builder may deliver a $9K well overage
+  in a conversation before it appears in the portal. The variance conversation
+  happens with the builder in control of timing, in the portal BEFORE it
+  becomes a dispute. This table is the emotional center of the product.
 - **selections** (thesis 5) — accretive capture: `capture_kind = link |
   photo | library`, scraped title/image/price at capture, room, structure,
   linked allowance (optional), status `proposed → shown → approved`,
-  approval evidence. Background AI normalization fills `normalized_product`
+  approval evidence, and an optional schedule-item link with decision
+  deadline + lag ("choose N days before task start" — Buildertrend's
+  proven correction; the deadline moves when the schedule moves). Background AI normalization fills `normalized_product`
   fields (brand, model, category) — best-effort, never blocking. Standards
   accrete: repetition across jobs surfaces "Brije Standard" candidates.
 - **actuals** — v1 is deliberately light: actual-cost entries per cost code /
