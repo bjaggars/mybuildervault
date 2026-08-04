@@ -78,6 +78,10 @@ export default function Login() {
           disabled={busy} onClick={sendLink}>
           Email me a sign-in link instead
         </button>
+        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--line)', fontSize: 12, color: 'var(--ink-soft)', textAlign: 'center' }}>
+          MyBuilderVault is invitation-only. Builder teams are invited by their admin;
+          homeowners by their builder. Questions: support@mybuildervault.com
+        </div>
       </div>
     </div>
   );
