@@ -130,6 +130,13 @@ Items graduate to BOARD when they're actively planned.
   Brije standards emerge from repetition (thesis 5)
 - Estimate ingestion — AI parse of builder's existing estimate → structured spine
   (BOARD-014)
+- Accretive price book (intel 2026-08-04): Brije's estimate components exist as
+  haphazard written fragments + memory — no maintained catalog. Thesis 5 applies
+  to estimate lines, not just selections: cross-estimate line-item memory
+  reassembles the price book from ingested/authored estimates and suggests
+  prices when authoring ("you priced this at $X on the last 3 jobs"). Incumbent
+  cost catalogs demand upfront setup (OCM killer); ours accretes from documents
+  Eric already writes. Lands post-BOARD-014 once 2+ estimates are in
 - Photo library intelligence — ingest/auto-tag/search with job provenance
   (BOARD-015, thesis 6)
 - Self-feeding ops — schedule updates from superintendent texted photos, POs from
