@@ -53,7 +53,9 @@ Script 001 with RLS at birth (copy from MyRealtyVault).
 **Done:** ci/smoke/e2e copied from MRV, adapted (Node 24 everywhere; CI runs on dev+main;
 e2e agent seat renamed). e2e-report + e2e-purge functions written (Mission Control
 e2e_runs insert via service role; purge scoped to e2e-robot org AND E2E- prefix).
-PAT Workflows RW verified by probe before push. First green run pending this push.
+PAT Workflows RW verified by probe before push. FIRST FULL GREEN 2026-08-04 @ 39b0806 (after 005 reconciliation + idempotent 004).
+OPEN SUB-ITEM: custom-domain DNS for mybuildervault.dev/.com never wired (BOARD-004
+was Netlify-side only) — Brice to add DNS records, then flip TEST_BASE_URL back.
 Mission Control UI tabs (Quality/Releases) NOT yet built — reporters land first.
 **What:** Copy GitHub Actions workflows from MyRealtyVault. Adapt for MyBuilderVault.
 Static gates + behavioral smokes + E2E robot. Mission Control (Quality + Releases tabs).

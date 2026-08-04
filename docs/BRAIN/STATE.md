@@ -150,8 +150,12 @@ Both under JSH Supabase org.
 - 004 first attempt post-005 errored 42710: ticket_events_actor_required
   ALREADY EXISTED — evidence a historical partial 004 ran; the errored batch
   rolled back, so auto_response was momentarily absent from kind_check.
-  004 amended to idempotent form (drop-if-exists) same day; awaiting rerun +
-  prove-it row.
+  004 amended to idempotent form (drop-if-exists) same day; RUN on dev,
+  prove-it PASSED (actor_nullable=YES, kinds_has_auto=1, guard=1).
+- FIRST FULL GREEN BOARD 2026-08-04 @ 39b0806: CI + Smoke + E2E (all 4 golden
+  paths) green against mybuildervault-dev.netlify.app. Stale failure issues
+  #1-#4 closed. TEST_BASE_URL temporarily points at the netlify.app subdomain;
+  flip to https://mybuildervault.dev once Brice wires DNS (open item).
 
 **E2E agent seeded on dev 2026-08-04, prove-it PASSED** (org=1, member_role=admin,
 cost_codes=37): auth user e2e-robot@mybuildervault.dev (auto-confirmed), org
