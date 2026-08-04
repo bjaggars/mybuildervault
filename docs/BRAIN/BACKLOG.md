@@ -49,6 +49,9 @@ Items graduate to BOARD when they're actively planned.
   track B). Consolidates the two fragments below:
   - AI Lot Analysis — upload survey → AI maps setbacks/wetlands/orientation → preliminary site plan
   - 3D Home Visualizer — floor plan PDF → 3D exterior rendering
+- Design Lobby immersive shell (2026-08-04) — spatial navigation lobby with
+  studio rooms; walkthrough emits selections events priced live against
+  allowances (see VISION thesis 7 for full concept + constraints)
 - Studio presentation mode — full-screen dark touch-first layout for Eric's future
   design-room touchscreen wall (hardware not yet purchased; CSS-cheap, demo-rich)
 - Builder's AI Assistant — natural language queries across all builds

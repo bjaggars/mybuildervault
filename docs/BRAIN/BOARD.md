@@ -108,11 +108,19 @@ on mybuildervault-dev 2026-08-04, prove-it PASSED. Next: React scaffold +
 auth flows + CI copy (BOARD-006/009/010) in a fresh session.
 **Owner:** Claude (build) + Brice (run script 001 on dev Supabase)
 
-### BOARD-013 · AI tooling evaluation for the Design Studios
-**What:** Research spike (doctrine: kill riskiest unknown first). Evaluate image-gen
-APIs for Bridgette's Studio (track A) and parametric floor-plan/geometry engines for
-Eric's Studio (track B). Non-Anthropic tools expected — Claude orchestrates, doesn't render.
-**Owner:** Claude · **Effort:** 1 research session · **When:** before Studio build, not before core
+### BOARD-013 · Design Lobby pipeline evaluation (rescoped 2026-08-04)
+**What:** Research spike (doctrine: kill riskiest unknown first). Target experience
+is now the Design Lobby (VISION thesis 7): one 3D scene layer serving walkthrough,
+wall-stretch, and live finish-swap. Evaluate: (a) plan→3D tooling (floor plan to
+modeled interior; feeds plan_versions.geometry), (b) rendering path — web engine
+(Three.js/Babylon) vs. Unreal pixel-streaming vs. hosted walkthrough platforms —
+on a single large screen (fullscreen browser, tablet controller), (c) material/PBR
+libraries mappable to real SKUs (ties to accretive selections normalized_product),
+(d) image-gen retained for lookbooks/stills only (Bridgette's non-walkthrough
+outputs). Deliverable: recommended pipeline + per-plan content cost estimate for
+Brije's standard spec plans. Non-Anthropic tools expected — Claude orchestrates,
+doesn't render.
+**Owner:** Claude · **Effort:** 1-2 research sessions · **When:** before Studio build, not before core
 
 ### BOARD-014 · Estimate ingestion (the on-ramp)
 **What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,

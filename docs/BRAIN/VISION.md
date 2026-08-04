@@ -117,8 +117,35 @@ Rendering/3D is not an Anthropic superpower — Claude orchestrates; a dedicated
 tooling evaluation (image-gen APIs, parametric floor-plan engines) is its own
 workstream before Studio build starts.
 Roadmap theater: Studio ships with a **presentation mode** (full-screen, dark,
-touch-first) so Eric's future sci-fi touchscreen wall is satisfied by CSS the day
-he buys the hardware. His dedicated AI design room currently has no hardware.
+touch-first) so the future sci-fi screen wall is satisfied by CSS the day
+Brije buys the hardware. The dedicated design office exists TODAY — empty,
+confirmed 2026-08-04.
+
+**The Design Lobby (Brice, 2026-08-04) — the unifying experience:**
+An immersive spatial shell: client enters a rendered "design lobby," sees
+doors — Architectural Design Center (Eric's room), Interior Design (Bridgette's
+room) — touches to enter. Eric's room: pick a plan from the wall, be immersed
+in a photoreal walkthrough, stretch a wall / add a room and walk the result.
+Bridgette's room: enter the house you're buying at the front door, walk to the
+kitchen, change cabinet color / countertop and watch it change in place, room
+by room. **Behind the scenes, every swap is a selections record with product +
+price, rolling silently into allowances and the budget view — the showroom
+writes the database.** That integration (experience → spine) is the moat; no
+incumbent wires visual selection into live builder financials.
+
+Key architectural consequence: the two studios converge on ONE 3D scene layer
+— walkthrough, wall-stretch, and finish-swap are three interaction modes on
+the same geometry + materials substrate (the plan_versions.geometry slot).
+Honest constraint: real-time swap-while-walking is a 3D-engine capability,
+not image-gen (image-gen = stills, seconds of latency, angle drift — right
+for lookbooks, wrong for walkthroughs). The cost driver is content-per-plan
+(plan → modeled, material-mapped 3D); Brije's spec volume amortizes this —
+model the standard plans once, reuse across dozens of builds. Lead with spec
+plans; customs are per-job modeling cost.
+
+Hardware ladder: day one = single large screen (fullscreen browser +
+presentation mode, tablet as controller); future = floor-to-ceiling wrap
+("VR without goggles") in the existing office. Same mechanics, same code.
 
 ### 8. Concierge is JSH doctrine, not a feature
 The ❓ AI assist from MyRealtyVault (how-to answers + feature requests + bug
