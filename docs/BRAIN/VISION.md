@@ -144,5 +144,5 @@ draws and lien waivers noted as the Florida pain point to revisit.
 - Brije headcount / superintendents / active trade count (design for add/remove
   crews without assuming numbers)
 - Whether subs will log in vs. SMS/email worksheet flows (bias: SMS-first adoption)
-- Brije estimate .xlsx (formulas/tabs = how they compute) — requested, PDF in hand
+- ~~Brije estimate .xlsx (formulas/tabs)~~ RESOLVED 2026-08-04: no formulas — Eric keys every amount manually. No computation to replicate; ingestion is pure extraction, and the computed budget view is a genuine upgrade over his current process, not a replication of it
 - Pricing tiers — deferred pending competitor pricing survey

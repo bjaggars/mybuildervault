@@ -117,9 +117,12 @@ Eric's Studio (track B). Non-Anthropic tools expected — Claude orchestrates, d
 ### BOARD-014 · Estimate ingestion (the on-ramp)
 **What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,
 options, upgrades with approved/included states. Kills re-keying; feeds accretive
-selections catalog. Jaggars 7/23/26 estimate PDF is the test fixture (in chat archive;
-request .xlsx from Brije for formula/tab structure).
-**Dependency:** BOARD-012 schema
+selections catalog. Jaggars 7/23/26 estimate PDF is the test fixture.
+INTEL 2026-08-04: the .xlsx has NO formulas — Eric keys amounts manually. Ingestion
+is pure extraction; PDF fixture is sufficient. Ingestion must also sum lines and
+flag mismatch vs. stated totals (hand-keyed math can drift) — builder-facing flag
+only, never surfaced to the client.
+**Dependency:** BOARD-012 schema ✅ (approved 2026-08-04)
 
 ### BOARD-015 · Photo library intelligence
 **What:** Bulk ingest + AI auto-tag (room/feature/style/material/color) + job
