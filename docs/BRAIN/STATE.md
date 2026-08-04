@@ -138,9 +138,13 @@ ss_select applied). 002-PATCH (L4 invisibility, drop/recreate ss_select) deliver
 in chat, PENDING Brice run. Script 003 (support ticketing) AMENDED pre-run 2026-08-04 — adds ticket types
 (defect/feature_request/how_to/other), Concierge intake channel, feature_requests
 table + ticket→FR conversion, SLA timestamps, v_ticket_stats dashboard view.
-PENDING Brice run after the 002-patch. Concierge intake flow (answer how-tos
-first, ticket on failure, FR conversion at triage, GH Issues dual-write) is a
-SCAFFOLD-PHASE app requirement. NOTE: clients cannot file tickets until job_participants
+003 RUN on dev 2026-08-04 (Brice; prove-it numbers not captured). Script 004
+(auto-response events) written, PENDING Brice run. UNCONFIRMED: whether the
+002-PATCH (L4 invisibility ss_select) was run before 003 — verify with Brice;
+if unrun, dev still shows L4 sessions to builder admins. Concierge intake flow
+(answer how-tos first, ticket on failure, FR conversion at triage, GH Issues
+dual-write) and system auto-acks on ticket creation + resolution (comms rail,
+service-role event inserts) are SCAFFOLD-PHASE app requirements. NOTE: clients cannot file tickets until job_participants
 lands (jobs script) — widen t_insert policy then. Supersedes org_entitlements; FIXES 001's is_platform_owner
 (was org-derived = latent cross-tenant escalation at tenant #2). After Brice's
 first app signup: run `select grant_platform_owner('<brice email>');` via console.
