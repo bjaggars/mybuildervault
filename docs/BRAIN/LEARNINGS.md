@@ -163,3 +163,17 @@ SURFACE or SUBSYSTEM boundary: domain research + incumbent table-stakes
 audit before design. (3) Rich UI is a requirement, not polish. (4) The
 trigger loop: when a design feels like filling in a template, stop — that
 feeling is the signal.
+
+---
+
+## 14. Chat-pasted scripts must be GENERATED from the committed file, never retyped
+**Incident (8/5/26):** Script 013 was committed correctly, then re-typed into
+chat for Brice to run. The final prove-it column got mangled in transcription
+(`where tg_op is null`), the batch errored at line 442, and the whole
+transaction rolled back — zero DDL applied despite 440 correct lines.
+**Root cause:** the chat paste was authored a second time instead of copied
+from the verified file. Two sources of truth, one keyboard.
+**Rule:** the chat delivery of a DB change script is produced by cat-ing the
+committed file and pasting THAT output — byte-identical, checksum noted.
+If chat and file ever diverge, the file wins and the chat paste is
+regenerated, not patched by hand.
