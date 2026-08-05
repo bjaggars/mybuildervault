@@ -165,7 +165,7 @@ test('schedule engine: items, dependency cascade, publish baseline, reasoned shi
   await page.getByTestId('si-dep-add').click();
   await expect(page.getByTestId('si-dep-row')).toContainText('E2E-si-A');
   await page.getByTestId('si-drawer-close').click();
-  await expect(rowB).not.toContainText('—');            // B start/end now computed
+  await expect(rowB).toContainText(/[A-Z][a-z]{2} \d+/);  // B start/end now computed (e.g. "Aug 7")
   const bBefore = await rowB.textContent();
 
   // Publish stamps the baseline and flips the job gate.
