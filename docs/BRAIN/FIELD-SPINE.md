@@ -1,6 +1,9 @@
 # MyBuilderVault — Field Spine Step-Back Brief (Work Orders / Superintendent / Crew)
 
-**Status: PROPOSED — awaiting Brice approval before any schema (DOCTRINE §8)**
+**Status: APPROVED — Brice, 2026-08-05, all 5 rulings as recommended**
+(schedule deferred to next named subsystem; sub WOs carry money; time posts
+to actuals on approval via labor_rate; punch = WO kind; weather manual v1).
+Script 013 written same day.
 Authored 2026-08-05. Research basis: Buildertrend (schedule/to-dos/daily logs/time
 clock), JobTread (POs & work orders, vendor portal, time tracking, daily logs),
 Raken (field-capture specialist), ServiceTitan (dispatch-board specialist),

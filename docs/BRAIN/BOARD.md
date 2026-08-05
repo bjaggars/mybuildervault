@@ -183,6 +183,8 @@ brief — research across Buildertrend, JobTread, Raken, ServiceTitan, Hyphen
 BuildPro — delivered as `docs/BRAIN/FIELD-SPINE.md` (status PROPOSED) naming
 table stakes, the next level, proposed 013 scope, and 5 open rulings
 (schedule deferral, sub WO money, time→actuals, punch-as-WO-kind, weather).
-**Gate:** NO SCHEMA until Brice approves the brief. Then: script 013, super/
-crew surfaces, time entries if supported.
+**Gate:** CLEARED — brief APPROVED 8/5 (all 5 rulings as recommended).
+Script 013 (field spine) WRITTEN 8/5, pasted in chat, awaiting Brice run on
+mybuildervault-dev + prove-it capture. Then: super board, WO detail, crew
+Today view, daily log compose, time approval queue; golden path 8.
 **Owner:** Claude (brief ✅ delivered 8/5) + Brice (rulings)

@@ -249,4 +249,9 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
 - FIELD SPINE SESSION OPENED 8/5 PM per DOCTRINE §8: step-back brief
   delivered as docs/BRAIN/FIELD-SPINE.md (PROPOSED) — table stakes + next
   level from Buildertrend/JobTread/Raken/ServiceTitan/BuildPro research;
-  5 rulings await Brice. Script 013 NOT WRITTEN — gated on brief approval.
+  Brief APPROVED same day, all 5 rulings as recommended. Script 013 (field
+  spine: work_orders + items + events w/ acceptance-as-event trigger,
+  daily_logs segmented + typed entries, time_entries w/ approval→actuals
+  labor posting via org_members.labor_rate, discipline attr, actuals source
+  +labor) WRITTEN 8/5, pasted in chat — NOT RUN until Brice's prove-it row
+  lands (LEARNINGS #9). Surfaces + golden path 8 follow the prove-it.
