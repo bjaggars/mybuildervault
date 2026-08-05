@@ -55,15 +55,29 @@ deadlines. Emotional register: reassurance + agency, never a ledger dump.
 
 ---
 
-## Dashboard routing rule
-The dashboard renders BY PERSONA, defaulting from role (owner→P1, pm/super→P2,
-sales→P3, admin→P4) with a persona switcher for multi-hat seats. Small builders
-see P1 with a P2 strip — the owner-who-is-also-the-PM reality.
+## Dashboard routing rule (AMENDED 8/4 per Brice)
+Personas define DEFAULTS, not prescriptions. Model:
+- **Widget catalog**: every dashboard panel is a registered widget (id, title,
+  personas it serves, minimum role, data contract). Margin board, exposure
+  strip, sales funnel, burn chart, pipeline, needs-attention, ticket stats,
+  money-in-motion — all catalog entries.
+- **Persona defaults**: role→persona mapping (owner→P1, pm/super→P2, sales→P3,
+  admin→P4) selects the starting widget set + order.
+- **Seat-scoped customization**: an edit-dashboard mode lets the user add,
+  remove, and reorder widgets from the catalog (filtered to their role's
+  ceiling). Choices persist in org_members.dashboard_prefs (jsonb) — per seat,
+  so one person can run different layouts at different orgs. Reset-to-persona-
+  default always available.
+- Widgets a role cannot feed (e.g. margin for a seat without financial read)
+  never appear in that seat's catalog.
+Small-builder reality preserved: the owner-who-is-also-the-PM adds P2 widgets
+onto the P1 canvas rather than switching back and forth.
 
 ## Immediate build order (pending approval)
-1. Script 011 — cost basis: `cost numeric(12,2)` on estimate_lines +
-   change_order_lines; contracts snapshot picks it up automatically; margin
-   becomes real, not proxy.
+1. Script 011 — cost basis + dashboard prefs: `cost numeric(12,2)` on
+   estimate_lines + change_order_lines (contracts snapshot picks it up
+   automatically; margin becomes real, not proxy), AND
+   `dashboard_prefs jsonb` on org_members (seat-scoped widget layout).
 2. Owner dashboard (P1) — margin board, exposure strip, sales/conversion,
    sparkline trends. Stock-ticker density. Charting via recharts (adds a
    dependency — approved stack addition?).
