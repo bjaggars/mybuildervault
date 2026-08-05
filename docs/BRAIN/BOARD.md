@@ -249,6 +249,7 @@ contribution + tooltip math), Gantt rail chip, List 'Prog' column
 (sort + behind/on-pace/no-signal filter per #15), drawer readout +
 manual % fallback. Drift stub: Anderson windows 1/6 + Reyes sitework
 1/5 flagged, Lot 7 framing 2/8 on pace unflagged (no false alarms).
-Awaiting Brice: run 015 + drift addendum, capture prove-its.
-**Owner:** Claude (build ✅) + Brice (run scripts)
+RUN 8/5 PM: 015 prove-it 1/1/1/4;
+drift stub 2/1/1/0/3 — both exact. LIVE.
+**Owner:** ✅ shipped (Claude build, Brice scripts)
 

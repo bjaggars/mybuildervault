@@ -370,6 +370,9 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   smoke 23/23 + surfaces + drift stub, all proven pre-push on the
   fresh-chain scratch DB (015 prove-it 1/1/1/4; stub 2/1/1/0/3).
   Demo line: 'the incumbents ask your super for a percent — we compute
-  drift from the field checklists.' AWAITING BRICE: 015 on
-  mybuildervault-dev, then addendum #4 on jaggars-dev.
+  drift from the field checklists.' RUN 8/5 PM (Brice, prove-its in chat):
+  015 on mybuildervault-dev 1/1/1/4 exact; drift addendum on jaggars-dev
+  2/1/1/0/3 exact. Drift engine live end to end — Anderson windows +
+  Reyes sitework flagged from checklists, Lot 7 framing on pace
+  unflagged. Nothing pending.
 
