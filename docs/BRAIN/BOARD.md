@@ -190,3 +190,14 @@ Today / Daily Log / Time on /field, WO drawer, golden path 8.
 auto-assembled log draft (thesis 1), date-window board view. Schedule
 engine = next named subsystem (own §8 step-back).
 **Owner:** Claude (brief ✅ delivered 8/5) + Brice (rulings)
+
+### BOARD-032 · Schedule engine (session 8/5 PM, block 2)
+**What:** The dependency schedule engine — the subsystem FIELD-SPINE ruling
+#1 named as next. Step-back brief delivered per §8 as
+`docs/BRAIN/SCHEDULE.md` (PROPOSED): incumbent mechanics researched
+(Buildertrend/JobTread/BuildPro), table stakes + next level named, proposed
+014 scope (items, FS deps + lag, workday calendar, templates, draft→publish
+baseline, DB recalc engine, WO + selections linkage), 6 rulings open.
+**Gate:** NO SCHEMA until Brice rules. Note: schedule notices depend on the
+comms rail — elevates BOARD-007.
+**Owner:** Claude (brief ✅ 8/5) + Brice (rulings)
