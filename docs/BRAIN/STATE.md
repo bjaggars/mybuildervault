@@ -208,7 +208,12 @@ at first release.
   dashboards precede the estimate editor. Script 011 scope GREW: cost basis
   + dashboard_prefs + expanded org_members roles (estimator/selections/
   warranty/field/accounting/office) + expanded job_participants roles
-  (architect/engineer/lender/owners_rep). 011 RUN on dev 8/4, prove-it PASSED (2/1/11/9). recharts DECIDED YES 8/4
+  (architect/engineer/lender/owners_rep). 011 RUN on dev 8/4, prove-it PASSED (2/1/11/9).
+  012 (save_dashboard_prefs, column-scoped) RUN on dev 8/5 AM, prove-it PASSED
+  (1/1). Stub cost addendum RUN 8/5 AM, prove-it PASSED (15/4/396255.00) —
+  margin board live with real forecast math. Dashboard widget-catalog shell
+  SHIPPED @ cce1be9 all green (P1 default for owner seats, edit mode, seat
+  persistence, recharts burn chart). recharts DECIDED YES 8/4
   (Brice deferred to recommendation). Reports surface added as BOARD-030.
   Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
   persona switcher. Estimate editor + BOARD-014 follow.
