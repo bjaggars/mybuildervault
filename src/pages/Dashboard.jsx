@@ -144,7 +144,7 @@ function TicketStatsWidget({ shared, nav }) {
    Draft schedules sit dim at the bottom. Every tile and row is a door. */
 const HEALTH = {
   late:     { label: 'Late',     caption: 'past baseline',   fg: '#8F2730', tint: '#FBE9E9', txt: '#fff' },
-  at_risk:  { label: 'At risk',  caption: 'behind window',   fg: '#8A5A00', tint: '#FBF3E4', txt: '#fff' },
+  at_risk:  { label: 'At risk',  caption: 'behind window',   fg: '#9A6E00', fill: '#EFB100', tint: '#FBF0C8', txt: '#3D3000' },
   tracking: { label: 'On track', caption: 'holding baseline', fg: '#1F6B3A', tint: '#E7F6EC', txt: '#fff' },
   draft:    { label: 'Draft',    caption: 'not published',   fg: '#5A6478', tint: '#EEEEEA', txt: '#5A6478' },
 };
@@ -211,7 +211,7 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
           return (
             <div key={k} className="clickable" data-testid={`sched-health-pill-${k}`}
               onClick={() => setPick(selected ? '' : k)}
-              style={{ background: k === 'draft' ? h.tint : h.fg, color: k === 'draft' ? h.fg : h.txt,
+              style={{ background: k === 'draft' ? h.tint : (h.fill ?? h.fg), color: k === 'draft' ? h.fg : h.txt,
                 borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
                 outline: selected ? '3px solid var(--gold)' : 'none',
                 opacity: pick && !selected ? 0.55 : 1 }}>
