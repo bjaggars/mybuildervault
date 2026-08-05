@@ -174,8 +174,8 @@ at first release.
 - 007 (job container: contacts/parties, communities/lots/plans+versions with
   reserved geometry slot, one-engine jobs + job_events, structures,
   job_participants, t_insert widened for clients) WRITTEN 2026-08-04, pasted
-  in chat, PENDING Brice run on dev. Prove-it: new_tables=10, helper_fns=3,
-  status_values=12, t_insert_client=1. Estimates/lines/conditions = script 008.
+  in chat, RUN on dev 2026-08-04, prove-it PASSED (new_tables=10, helper_fns=3,
+  status_values=12, t_insert_client=1). Estimates/lines/conditions = script 008.
 
 ---
 
