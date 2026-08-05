@@ -324,7 +324,10 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   moving deadline (paint − 10 workdays); Lot 9 imported, DRAFT. Seed
   impersonates Brice via the auth GUC so the REAL engine fns run their
   own role checks.
-  AWAITING BRICE: run 014 on mybuildervault-dev + the seed addendum on
-  jaggars-dev, capture both prove-its. devDependency added: pg (smoke
+  RUN 8/5 PM (Brice, prove-its in chat): script 014 on mybuildervault-dev
+  — 7/4/4/2/2/2/1/1/1 exact PASS. Seed addendum on jaggars-dev — visible
+  columns 1/15/16/15/1/15/4/15 exact PASS; tail columns (lot9_draft/
+  linked_wos/sel_deadline/weekend_dates, expected 1/2/1/0) off-screen in
+  the capture, Brice confirming. devDependency added: pg (smoke
   harness only). Open follow-ups on BOARD-032.
 
