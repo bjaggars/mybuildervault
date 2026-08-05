@@ -136,3 +136,11 @@ programming project." Rule: wide list rows are columnar grids filled with the
 information the user actually scans (client, location, status, recency), with
 a header row. Sibling law to "scrolling is not your friend"; candidate for
 graduation to jsh-brain PATTERNS.
+
+---
+
+## 12. Design law: every count is a door
+**Feedback (Brice, 2026-08-04):** any box showing a count must be clickable
+through to the details behind the count. A number you can't open is a dead
+end. Applied to dashboard stat cards, pipeline rows, money-in-motion rows,
+attention items. Candidate for jsh-brain PATTERNS alongside #11.

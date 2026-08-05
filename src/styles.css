@@ -28,3 +28,7 @@ body {
 }
 button { font: inherit; cursor: pointer; }
 input, select, textarea { font: inherit; }
+
+/* No-voids law companion: clickable cards + rows lift subtly on hover. */
+.clickable { transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease; }
+.clickable:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(28, 43, 74, 0.14); background: #FFFDF9; }
