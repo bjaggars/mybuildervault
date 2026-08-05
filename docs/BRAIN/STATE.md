@@ -202,6 +202,12 @@ at first release.
   Golden path 6 (job lifecycle) proves the spine schema through the UI.
   e2e-purge widened to E2E- jobs (cascade sweeps the spine) + contacts.
   Next fronts: estimate editor UI, then BOARD-014 ingestion.
+- DEV STUB DATA seeded on jaggars-dev sandbox 2026-08-04, prove-it PASSED
+  exactly (jobs=5, baseline=490250.00, revised=508000.00,
+  hidden_well_variance=9400.00, selections=4) — first live proof of the
+  allowance sync trigger + generated variance + v_job_budget arithmetic
+  against realistic data. Seed at supabase/seeds/dev-stub.sql (data seed,
+  never prod).
 
 ---
 
