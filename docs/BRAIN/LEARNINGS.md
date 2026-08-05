@@ -177,3 +177,18 @@ from the verified file. Two sources of truth, one keyboard.
 committed file and pasting THAT output — byte-identical, checksum noted.
 If chat and file ever diverge, the file wins and the chat paste is
 regenerated, not patched by hand.
+
+---
+
+## 15. Design law: grids sort and filter (candidate for jsh-brain §9)
+**Feedback (Brice, 2026-08-05):** the field board shipped as a columnar grid
+with a header row (law #11 honored) but no click-to-sort and no job filter —
+he could not answer "show me the board for one job," the most basic question
+a dispatch board exists to answer.
+**Root cause:** §8 slippage inside a single surface: the grid grammar was
+copied without the interactivity every grid has had for decades.
+**Rule:** every columnar grid ships with (a) click-to-sort on every header,
+ascending/descending toggle, and (b) filter controls for its primary
+dimensions (the columns a user would say "just show me the X ones" about).
+A grid you cannot sort or filter is a screenshot, not a tool. Sibling to
+#11 (no voids) and #12 (every count is a door).

@@ -83,6 +83,9 @@ export default function Field({ role, personId, orgId }) {
 function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
   const [wos, setWos] = useState([]);
   const [filter, setFilter] = useState('active'); // active | a status | all
+  const [jobFilter, setJobFilter] = useState('all');
+  const [discFilter, setDiscFilter] = useState('all');
+  const [sort, setSort] = useState({ key: 'created_at', dir: 'desc' });
   const [open, setOpen] = useState(null); // WO id for the drawer
   const [err, setErr] = useState('');
   // create form
@@ -121,10 +124,38 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
     return c;
   }, [wos]);
 
-  const shown = useMemo(() => wos.filter((w) =>
-    filter === 'all' ? true
-      : filter === 'active' ? !['closed','cancelled','declined'].includes(w.status)
-      : w.status === filter), [wos, filter]);
+  const SORT_VAL = {
+    number: (w) => w.number ?? 0,
+    title: (w) => (w.title ?? '').toLowerCase(),
+    job: (w) => (w.jobs?.name ?? '').toLowerCase(),
+    discipline: (w) => w.discipline ?? '~', // nulls last
+    assignee: (w) => w.assignee_kind ?? '',
+    code: (w) => w.cost_codes?.code ?? '~',
+    status: (w) => WO_STATUSES.indexOf(w.status),
+    created_at: (w) => w.created_at,
+  };
+  const shown = useMemo(() => {
+    const rows = wos.filter((w) =>
+      (filter === 'all' ? true
+        : filter === 'active' ? !['closed','cancelled','declined'].includes(w.status)
+        : w.status === filter)
+      && (jobFilter === 'all' || w.job_id === jobFilter)
+      && (discFilter === 'all' || w.discipline === discFilter));
+    const val = SORT_VAL[sort.key] ?? SORT_VAL.created_at;
+    const mul = sort.dir === 'asc' ? 1 : -1;
+    return [...rows].sort((a, b) => {
+      const av = val(a), bv = val(b);
+      return av < bv ? -mul : av > bv ? mul : 0;
+    });
+  }, [wos, filter, jobFilter, discFilter, sort]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const headerCell = (key, label) => (
+    <span data-testid={`wo-sort-${key}`} onClick={() => setSort((p) =>
+        p.key === key ? { key, dir: p.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' })}
+      style={{ cursor: 'pointer', userSelect: 'none' }}>
+      {label}{sort.key === key ? (sort.dir === 'asc' ? ' \u25B4' : ' \u25BE') : ''}
+    </span>
+  );
 
   const create = async () => {
     setErr('');
@@ -175,6 +206,15 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
             onClick={() => setFilter(s)} testid={`wo-count-${s}`} />
         ))}
         <CountChip label="All" n={wos.length} active={filter === 'all'} onClick={() => setFilter('all')} testid="wo-count-all" />
+        <span style={{ flex: 1 }} />
+        <select data-testid="wo-filter-job" style={input} value={jobFilter} onChange={(e) => setJobFilter(e.target.value)}>
+          <option value="all">All jobs</option>
+          {jobs.map((j) => <option key={j.id} value={j.id}>{j.name}</option>)}
+        </select>
+        <select data-testid="wo-filter-discipline" style={input} value={discFilter} onChange={(e) => setDiscFilter(e.target.value)}>
+          <option value="all">All disciplines</option>
+          {DISCIPLINES.map((d) => <option key={d} value={d}>{nice(d)}</option>)}
+        </select>
       </div>
 
       {canDispatch && (
@@ -224,7 +264,7 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
       {/* columnar grid, header row — no voids */}
       <div style={{ ...card, flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 }}>
         <div style={{ display: 'grid', gridTemplateColumns: grid, gap: 8, padding: '10px 16px', borderBottom: '2px solid var(--navy)', fontSize: 11, fontWeight: 800, color: 'var(--navy)', textTransform: 'uppercase' }}>
-          <span>#</span><span>Title</span><span>Job</span><span>Discipline</span><span>Assignee</span><span>Code</span><span>Status</span><span>Advance</span>
+          {headerCell('number', '#')}{headerCell('title', 'Title')}{headerCell('job', 'Job')}{headerCell('discipline', 'Discipline')}{headerCell('assignee', 'Assignee')}{headerCell('code', 'Code')}{headerCell('status', 'Status')}<span>Advance</span>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {shown.length === 0 && <div style={{ padding: 16, color: 'var(--ink-soft)', fontSize: 13 }}>No work orders in this view.</div>}
