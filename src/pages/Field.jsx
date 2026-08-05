@@ -85,6 +85,10 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
   const [filter, setFilter] = useState('active'); // active | a status | all
   const [jobFilter, setJobFilter] = useState('all');
   const [discFilter, setDiscFilter] = useState('all');
+  const [numQ, setNumQ] = useState('');
+  const [titleQ, setTitleQ] = useState('');
+  const [assigneeFilter, setAssigneeFilter] = useState('all');
+  const [codeFilter, setCodeFilter] = useState('all');
   const [sort, setSort] = useState({ key: 'created_at', dir: 'desc' });
   const [open, setOpen] = useState(null); // WO id for the drawer
   const [err, setErr] = useState('');
@@ -140,14 +144,18 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
         : filter === 'active' ? !['closed','cancelled','declined'].includes(w.status)
         : w.status === filter)
       && (jobFilter === 'all' || w.job_id === jobFilter)
-      && (discFilter === 'all' || w.discipline === discFilter));
+      && (discFilter === 'all' || w.discipline === discFilter)
+      && (assigneeFilter === 'all' || w.assignee_kind === assigneeFilter)
+      && (codeFilter === 'all' || w.cost_code_id === codeFilter)
+      && (numQ === '' || String(w.number ?? '').startsWith(numQ.trim()))
+      && (titleQ === '' || (w.title ?? '').toLowerCase().includes(titleQ.trim().toLowerCase())));
     const val = SORT_VAL[sort.key] ?? SORT_VAL.created_at;
     const mul = sort.dir === 'asc' ? 1 : -1;
     return [...rows].sort((a, b) => {
       const av = val(a), bv = val(b);
       return av < bv ? -mul : av > bv ? mul : 0;
     });
-  }, [wos, filter, jobFilter, discFilter, sort]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [wos, filter, jobFilter, discFilter, assigneeFilter, codeFilter, numQ, titleQ, sort]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const headerCell = (key, label) => (
     <span data-testid={`wo-sort-${key}`} onClick={() => setSort((p) =>
@@ -206,15 +214,6 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
             onClick={() => setFilter(s)} testid={`wo-count-${s}`} />
         ))}
         <CountChip label="All" n={wos.length} active={filter === 'all'} onClick={() => setFilter('all')} testid="wo-count-all" />
-        <span style={{ flex: 1 }} />
-        <select data-testid="wo-filter-job" style={input} value={jobFilter} onChange={(e) => setJobFilter(e.target.value)}>
-          <option value="all">All jobs</option>
-          {jobs.map((j) => <option key={j.id} value={j.id}>{j.name}</option>)}
-        </select>
-        <select data-testid="wo-filter-discipline" style={input} value={discFilter} onChange={(e) => setDiscFilter(e.target.value)}>
-          <option value="all">All disciplines</option>
-          {DISCIPLINES.map((d) => <option key={d} value={d}>{nice(d)}</option>)}
-        </select>
       </div>
 
       {canDispatch && (
@@ -265,6 +264,39 @@ function Board({ orgId, personId, jobs, members, codes, canDispatch }) {
       <div style={{ ...card, flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 }}>
         <div style={{ display: 'grid', gridTemplateColumns: grid, gap: 8, padding: '10px 16px', borderBottom: '2px solid var(--navy)', fontSize: 11, fontWeight: 800, color: 'var(--navy)', textTransform: 'uppercase' }}>
           {headerCell('number', '#')}{headerCell('title', 'Title')}{headerCell('job', 'Job')}{headerCell('discipline', 'Discipline')}{headerCell('assignee', 'Assignee')}{headerCell('code', 'Code')}{headerCell('status', 'Status')}<span>Advance</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: grid, gap: 8, padding: '7px 16px', borderBottom: '1px solid var(--line)', background: '#fff', alignItems: 'center' }}>
+          <input data-testid="wo-filter-num" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} placeholder="#"
+            value={numQ} onChange={(e) => setNumQ(e.target.value)} />
+          <input data-testid="wo-filter-title" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} placeholder="Contains…"
+            value={titleQ} onChange={(e) => setTitleQ(e.target.value)} />
+          <select data-testid="wo-filter-job" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} value={jobFilter} onChange={(e) => setJobFilter(e.target.value)}>
+            <option value="all">All</option>
+            {jobs.map((j) => <option key={j.id} value={j.id}>{j.name}</option>)}
+          </select>
+          <select data-testid="wo-filter-discipline" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} value={discFilter} onChange={(e) => setDiscFilter(e.target.value)}>
+            <option value="all">All</option>
+            {DISCIPLINES.map((d) => <option key={d} value={d}>{nice(d)}</option>)}
+          </select>
+          <select data-testid="wo-filter-assignee" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="member">member</option>
+            <option value="discipline">discipline pool</option>
+            <option value="sub">sub</option>
+          </select>
+          <select data-testid="wo-filter-code" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} value={codeFilter} onChange={(e) => setCodeFilter(e.target.value)}>
+            <option value="all">All</option>
+            {codes.map((c) => <option key={c.id} value={c.id}>{c.code}</option>)}
+          </select>
+          <select data-testid="wo-filter-status" style={{ ...input, padding: '5px 7px', fontSize: 12, width: '100%', minWidth: 0 }} value={filter} onChange={(e) => setFilter(e.target.value)}>
+            <option value="active">Active</option>
+            <option value="all">All</option>
+            {WO_STATUSES.map((st) => <option key={st} value={st}>{nice(st)}</option>)}
+          </select>
+          <button data-testid="wo-filter-clear" style={{ ...btnGhost, padding: '5px 8px', fontSize: 12 }}
+            onClick={() => { setNumQ(''); setTitleQ(''); setJobFilter('all'); setDiscFilter('all'); setAssigneeFilter('all'); setCodeFilter('all'); setFilter('active'); }}>
+            Clear
+          </button>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {shown.length === 0 && <div style={{ padding: 16, color: 'var(--ink-soft)', fontSize: 13 }}>No work orders in this view.</div>}

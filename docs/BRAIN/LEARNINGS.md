@@ -187,8 +187,10 @@ he could not answer "show me the board for one job," the most basic question
 a dispatch board exists to answer.
 **Root cause:** §8 slippage inside a single surface: the grid grammar was
 copied without the interactivity every grid has had for decades.
-**Rule:** every columnar grid ships with (a) click-to-sort on every header,
-ascending/descending toggle, and (b) filter controls for its primary
-dimensions (the columns a user would say "just show me the X ones" about).
+**Rule (amended same day per Brice):** every columnar grid ships with
+(a) click-to-sort on every header, ascending/descending toggle, and (b) a
+filter row with a control for EVERY column — text-contains for free text,
+selects for enumerables — plus a one-click Clear. "Primary dimensions" was
+the first draft; ALL columns is the standard.
 A grid you cannot sort or filter is a screenshot, not a tool. Sibling to
 #11 (no voids) and #12 (every count is a door).
