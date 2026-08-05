@@ -189,10 +189,13 @@ at first release.
   baseline + approved COs + allowance variance = revised_price;
   approved_selections_total informational only, NOT summed into revised_price
   to avoid double-count via allowance actuals — revisit with real Brije data)
-  WRITTEN 2026-08-04, pasted in chat, PENDING Brice run on dev. Prove-it:
-  new_tables=2, budget_view=1, capture_kinds=3, sel_statuses=3, alw_sync_trig=1.
-  FINANCIAL SPINE SCHEMA COMPLETE AT 010 — UI + estimate ingestion (BOARD-014)
-  are the next build fronts.
+  RUN on dev 2026-08-04, prove-it PASSED (2/1/3/3/1).
+  FINANCIAL SPINE SCHEMA COMPLETE — scripts 001-010 all converged on dev with
+  captured prove-its. OPEN RULING for Brice: v_job_budget omits selections from
+  revised_price (double-count avoidance; approved_selections_total is
+  informational) — deviation from §2.3's "+ selection overages" wording,
+  revisit with real Brije data. UI + estimate ingestion (BOARD-014) are the
+  next build fronts.
 
 ---
 
