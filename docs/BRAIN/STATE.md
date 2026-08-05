@@ -266,3 +266,10 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   surface (events-based), photo upload via Cloudinary on items/logs,
   auto-assembled daily log draft (thesis 1), day/week date-window board
   view — schedule engine remains the next named subsystem.
+- FIELD SPINE GREEN 8/5 PM @ b5dcfca: CI + Smoke + E2E, all 8 golden paths.
+  One robot-caught fix en route: controlled checklist checkbox never flipped
+  on click (issue #7, closed) → optimistic toggle w/ revert-on-error — the
+  right field UX anyway. Session PAT: JSH-session token valid ~Sep 1
+  (Contents/Actions/Issues/Workflows RW). NEXT SESSION CANDIDATES: schedule
+  engine step-back (§8) · sub acceptance portal surface · estimate editor ·
+  BOARD-014 ingestion · Cloudinary photos on WO items + logs.
