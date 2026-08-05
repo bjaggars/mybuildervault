@@ -208,8 +208,8 @@ at first release.
   dashboards precede the estimate editor. Script 011 scope GREW: cost basis
   + dashboard_prefs + expanded org_members roles (estimator/selections/
   warranty/field/accounting/office) + expanded job_participants roles
-  (architect/engineer/lender/owners_rep). Still pending Brice: run 011 (to
-  be pasted), approve recharts.
+  (architect/engineer/lender/owners_rep). 011 pasted, awaiting prove-it. recharts DECIDED YES 8/4
+  (Brice deferred to recommendation). Reports surface added as BOARD-030.
   Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
   persona switcher. Estimate editor + BOARD-014 follow.
 - DEV STUB DATA seeded on jaggars-dev sandbox 2026-08-04, prove-it PASSED

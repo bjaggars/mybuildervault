@@ -155,3 +155,17 @@ only, never surfaced to the client.
 **What:** Bulk ingest + AI auto-tag (room/feature/style/material/color) + job
 provenance + instant search. Fastest wow, zero process change. See VISION thesis 6.
 **Dependency:** BOARD-010 scaffold, Cloudinary setup
+
+---
+
+### BOARD-030 · Reports surface (Brice, 8/4/26)
+**What:** A Reports tab housing a REPORT CATALOG — each report a registered
+definition (title, personas served, params, columns, query) rendered as a
+printable table + Excel export (SheetJS). Persona-filtered like the dashboard
+widget catalog. Starting set: Job cost detail (cost code × structure), Budget
+vs actual, Change order log (home of the Brije 3-column Excel export,
+LEARNINGS §7), Allowance reconciliation, Sales funnel + conversion, WIP
+summary; Timesheet summary once time entries land (PERSONAS v2).
+**Depends:** 011 (cost basis) for cost reports; recharts DECIDED YES 8/4
+(Brice deferred to recommendation) — charts allowed inside reports too.
+**Sequence:** after dashboard shell, before or alongside estimate editor.
