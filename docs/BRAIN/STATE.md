@@ -196,6 +196,12 @@ at first release.
   informational) — deviation from §2.3's "+ selection overages" wording,
   revisit with real Brije data. UI + estimate ingestion (BOARD-014) are the
   next build fronts.
+- JOBS SURFACE SHIPPED 2026-08-04 @ 44fcb6d, all green: jobs list + create
+  (client-UUID insert), job detail (12-status engine writing job_events,
+  structures panel, computed budget card on v_job_budget w/ revised price).
+  Golden path 6 (job lifecycle) proves the spine schema through the UI.
+  e2e-purge widened to E2E- jobs (cascade sweeps the spine) + contacts.
+  Next fronts: estimate editor UI, then BOARD-014 ingestion.
 
 ---
 
