@@ -284,3 +284,186 @@ select
   (select round(sum(el.cost), 2) from estimate_lines el join estimates e on e.id = el.estimate_id
     join builder_orgs o on o.id = e.org_id
    where o.slug = 'jaggars-dev' and e.status = 'accepted') as accepted_forecast_base;
+
+-- ============================================================
+-- FIELD SPINE STUB (added 8/5 — script 013 demo data)
+-- Populates /field for visual effect on the jaggars-dev sandbox:
+--   crew seat gets discipline+labor_rate · a sub party on the
+--   Anderson job · 10 work orders across statuses/disciplines
+--   (one sub WO accepted VIA the acceptance-event trigger, one
+--   punch WO with a half-done checklist) · two days of daily
+--   logs with typed entries · time entries: 3 pending for the
+--   approval queue + 2 approved (labor trigger posts actuals).
+-- Idempotent: bails if the marker WO exists.
+-- ============================================================
+do $$
+declare
+  v_org uuid; v_me uuid;
+  v_job1 uuid; v_job2 uuid; v_job3 uuid; v_house uuid;
+  v_code1 uuid; v_code2 uuid; v_code3 uuid;
+  v_subco uuid; v_subpart uuid;
+  v_wo_sub uuid; v_wo_punch uuid; v_wo_prog uuid;
+  v_log1 uuid; v_log2 uuid;
+begin
+  select id into v_org from builder_orgs where slug = 'jaggars-dev';
+  if v_org is null then raise exception 'jaggars-dev org missing'; end if;
+  select id into v_me from people where lower(email) = 'brice@jaggars.com';
+
+  if exists (select 1 from work_orders where org_id = v_org
+             and title = 'Frame interior walls — Main House') then
+    raise notice 'field stub already seeded — nothing to do';
+    return;
+  end if;
+
+  select id into v_job1 from jobs where org_id = v_org and name = 'Anderson Custom — Lot 4';
+  select id into v_job2 from jobs where org_id = v_org and name = 'Reyes Custom — Hilltop';
+  select id into v_job3 from jobs where org_id = v_org and name = 'Summercrest Lot 7 Spec';
+  select id into v_house from structures where job_id = v_job1 and kind = 'house' limit 1;
+  select id into v_code1 from cost_codes where org_id = v_org order by code limit 1;
+  select id into v_code2 from cost_codes where org_id = v_org order by code limit 1 offset 8;
+  select id into v_code3 from cost_codes where org_id = v_org order by code limit 1 offset 16;
+
+  -- Crew identity on the founder's sandbox seat: framing pool + a rate so
+  -- the approval→actuals trigger has something to multiply.
+  update org_members set discipline = 'framing', labor_rate = 58.00
+   where org_id = v_org and person_id = v_me;
+
+  -- Sub party on the Anderson job.
+  insert into contacts (org_id, kind, display_name, notes)
+  values (v_org, 'entity', 'Ocala Elite Electric LLC', 'Preferred electrical sub; Marion + Levy')
+  returning id into v_subco;
+  insert into contact_members (contact_id, full_name, email, phone, is_primary)
+  values (v_subco, 'Tony Delgado', 'tony@ocalaelite.example.com', '(352) 555-0190', true);
+  insert into job_participants (job_id, contact_id, role)
+  values (v_job1, v_subco, 'sub') returning id into v_subpart;
+
+  -- ---------- work orders ----------
+  insert into work_orders (org_id, job_id, structure_id, cost_code_id, discipline, kind,
+                           title, scope, status, assignee_kind, assigned_person,
+                           planned_start, planned_end, created_by)
+  values (v_org, v_job1, v_house, v_code2, 'framing', 'work',
+          'Frame interior walls — Main House', 'Per Magnolia mod plan v1; garage depth +2ft CO applies.',
+          'in_progress', 'member', v_me,
+          current_date - 3, current_date + 4, v_me)
+  returning id into v_wo_prog;
+  update work_orders set actual_start = current_date - 3 where id = v_wo_prog;
+
+  insert into work_orders (org_id, job_id, structure_id, cost_code_id, discipline,
+                           title, scope, status, assignee_kind, assigned_participant_id,
+                           amount, planned_start, planned_end, created_by)
+  values (v_org, v_job1, v_house, v_code3, 'electrical',
+          'Electrical rough-in — Main House', 'Rough per plan; outdoor kitchen conduit NOT in scope (CO pending).',
+          'issued', 'sub', v_subpart, 14850.00,
+          current_date + 7, current_date + 12, v_me)
+  returning id into v_wo_sub;
+  -- Sub acceptance arrives as an EVENT; the trigger flips issued → accepted.
+  insert into work_order_events (work_order_id, kind, body, visibility, actor)
+  values (v_wo_sub, 'acceptance', 'Scope reviewed and accepted — Tony', 'all', v_me);
+
+  insert into work_orders (org_id, job_id, cost_code_id, discipline, kind, title, scope,
+                           status, assignee_kind, planned_start, planned_end, created_by)
+  values
+    (v_org, v_job1, v_code1, 'well_septic', 'work', 'Well drilling — north easement',
+     'Location TBD after framing; ATU condition applies if permit slips.',
+     'draft', 'discipline', current_date + 20, current_date + 24, v_me),
+    (v_org, v_job1, v_code1, 'sitework', 'work', 'Final grade + swale correction',
+     'Rework swale per county comment #2.', 'issued', 'discipline',
+     current_date + 2, current_date + 3, v_me),
+    (v_org, v_job2, v_code1, 'sitework', 'work', 'Clear & grub — Hilltop pad',
+     'Design phase site prep; save specimen oaks flagged orange.',
+     'complete', 'discipline', current_date - 14, current_date - 12, v_me),
+    (v_org, v_job2, v_code2, 'foundation_concrete', 'work', 'Form & pour footers',
+     'Assumes Geo Tech allows standard footers (condition open).',
+     'verified', 'discipline', current_date - 9, current_date - 7, v_me),
+    (v_org, v_job3, v_code2, 'roofing', 'work', 'Dry-in — Magnolia B',
+     'Felt + peel-and-stick valleys before Thursday rain.',
+     'in_progress', 'discipline', current_date - 1, current_date + 1, v_me),
+    (v_org, v_job3, v_code3, 'plumbing', 'work', 'Top-out plumbing',
+     null, 'issued', 'discipline', current_date + 3, current_date + 5, v_me),
+    (v_org, v_job3, v_code1, 'landscape_irrigation', 'work', 'Irrigation sleeve rough',
+     'Sleeves under drive before pour.', 'cancelled', 'discipline',
+     current_date - 5, current_date - 5, v_me);
+
+  insert into work_orders (org_id, job_id, structure_id, cost_code_id, discipline, kind,
+                           title, scope, status, assignee_kind, assigned_person,
+                           planned_start, planned_end, created_by)
+  values (v_org, v_job2, v_code2, 'punch_clean', 'punch',
+          'Pre-drywall punch — Hilltop', 'Walk with Micah before insulation.',
+          'in_progress', 'member', v_me, current_date, current_date + 1, v_me)
+  returning id into v_wo_punch;
+
+  insert into work_order_items (work_order_id, label, sort, done, done_by, done_at) values
+    (v_wo_punch, 'Nail plates on all top-plate penetrations', 0, true,  v_me, now() - interval '3 hours'),
+    (v_wo_punch, 'Blocking for master bath grab bars',         1, true,  v_me, now() - interval '2 hours'),
+    (v_wo_punch, 'Re-strap HVAC chase at bonus room',          2, false, null, null),
+    (v_wo_punch, 'Photo doc: window flashing all elevations',  3, false, null, null);
+
+  insert into work_order_items (work_order_id, label, sort, done, done_by, done_at) values
+    (v_wo_prog, 'Layout walls per plan sheet A-3', 0, true, v_me, now() - interval '2 days'),
+    (v_wo_prog, 'Set headers — garage depth CO',   1, false, null, null);
+
+  insert into work_order_events (work_order_id, kind, body, actor) values
+    (v_wo_prog, 'status_change', 'issued → in_progress', v_me),
+    (v_wo_prog, 'comment', 'Lumber drop staged at NW corner; count verified.', v_me);
+
+  -- ---------- daily logs ----------
+  insert into daily_logs (org_id, job_id, log_date, author_kind, weather, notes, created_by)
+  values (v_org, v_job1, current_date, 'staff',
+          '{"summary": "94° clear, breeze after 2pm"}'::jsonb,
+          'Framing crew of 5; garage CO headers set. County framing inspection requested for Thursday.',
+          v_me)
+  returning id into v_log1;
+  insert into daily_log_entries (daily_log_id, kind, body, qty, work_order_id) values
+    (v_log1, 'crew_count', '5 on site (framing)', 5, v_wo_prog),
+    (v_log1, 'delivery', 'Truss package delivered — tally matches BOL', null, v_wo_prog),
+    (v_log1, 'note', 'Anderson walkthrough moved to Friday 9am per Dana', null, null);
+
+  insert into daily_logs (org_id, job_id, log_date, author_kind, weather, notes, created_by)
+  values (v_org, v_job1, current_date - 1, 'staff',
+          '{"summary": "91° pm storms"}'::jsonb,
+          'Lost the afternoon to lightning; crew pulled at 1:30.',
+          v_me)
+  returning id into v_log2;
+  insert into daily_log_entries (daily_log_id, kind, body, qty) values
+    (v_log2, 'delay', 'Weather stop 1:30pm — 3.5 crew-hours lost', 3.5),
+    (v_log2, 'safety', 'Toolbox talk: heat + lightning protocol, 5 signatures on paper', null);
+
+  -- ---------- time entries ----------
+  -- 3 pending → visible in the approval queue.
+  insert into time_entries (org_id, person_id, job_id, cost_code_id, work_order_id,
+                            worked_on, hours, entry_source, status, notes)
+  values
+    (v_org, v_me, v_job1, v_code2, v_wo_prog, current_date, 6.5, 'manual', 'pending', 'Interior wall framing'),
+    (v_org, v_me, v_job2, v_code2, v_wo_punch, current_date, 2.0, 'manual', 'pending', 'Punch walk prep'),
+    (v_org, v_me, v_job3, v_code2, null, current_date, 1.5, 'manual', 'pending', 'Dry-in supervision');
+  -- 2 approved at insert → the 013 trigger posts hours × 58.00 into actuals.
+  insert into time_entries (org_id, person_id, job_id, cost_code_id, work_order_id,
+                            worked_on, hours, entry_source, status, approved_by, approved_at, notes)
+  values
+    (v_org, v_me, v_job1, v_code2, v_wo_prog, current_date - 1, 4.0, 'manual', 'approved', v_me, now(), 'Pre-storm framing'),
+    (v_org, v_me, v_job1, v_code2, v_wo_prog, current_date - 2, 8.0, 'manual', 'approved', v_me, now(), 'Full framing day');
+
+  raise notice 'field stub seeded';
+end $$;
+
+-- PROVE-IT (field stub) — PASS on jaggars-dev:
+--   wos = 10 · items = 6 · accepted_via_event = 1 · logs = 2 ·
+--   log_entries = 5 · time_pending = 3 · labor_actuals = 2 · labor_total = 696.00
+select
+  (select count(*) from work_orders wo join builder_orgs o on o.id = wo.org_id
+     where o.slug = 'jaggars-dev') as wos,
+  (select count(*) from work_order_items i join work_orders wo on wo.id = i.work_order_id
+     join builder_orgs o on o.id = wo.org_id where o.slug = 'jaggars-dev') as items,
+  (select count(*) from work_orders wo join builder_orgs o on o.id = wo.org_id
+     where o.slug = 'jaggars-dev' and wo.status = 'accepted'
+       and wo.accepted_at is not null) as accepted_via_event,
+  (select count(*) from daily_logs d join builder_orgs o on o.id = d.org_id
+     where o.slug = 'jaggars-dev') as logs,
+  (select count(*) from daily_log_entries e join daily_logs d on d.id = e.daily_log_id
+     join builder_orgs o on o.id = d.org_id where o.slug = 'jaggars-dev') as log_entries,
+  (select count(*) from time_entries t join builder_orgs o on o.id = t.org_id
+     where o.slug = 'jaggars-dev' and t.status = 'pending') as time_pending,
+  (select count(*) from actuals a join builder_orgs o on o.id = a.org_id
+     where o.slug = 'jaggars-dev' and a.source = 'labor') as labor_actuals,
+  (select coalesce(sum(a.amount),0) from actuals a join builder_orgs o on o.id = a.org_id
+     where o.slug = 'jaggars-dev' and a.source = 'labor') as labor_total;
