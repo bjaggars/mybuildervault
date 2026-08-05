@@ -178,8 +178,8 @@ at first release.
   status_values=12, t_insert_client=1).
 - 008 (estimate document: versioned estimates, Brije-format estimate_lines,
   conditions, immutable contract snapshots, transactional accept_estimate)
-  WRITTEN 2026-08-04, pasted in chat, PENDING Brice run on dev. Prove-it:
-  new_tables=4, accept_fn=1, line_kinds=5, contract_frozen=0.
+  RUN on dev 2026-08-04, prove-it PASSED (new_tables=4, accept_fn=1,
+  line_kinds=5, contract_frozen=0).
   Spine part 2 (009): change_orders + allowances. Part 3 (010): selections +
   actuals + computed budget view.
 
