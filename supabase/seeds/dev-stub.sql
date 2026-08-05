@@ -649,3 +649,97 @@ select
      where j.name in ('Summercrest Lot 7 Spec','Summercrest Lot 9 Spec')
        and i.ignore_workdays = false
        and (extract(isodow from i.start_date) > 5 or extract(isodow from i.end_date) > 5)) as weekend_dates;
+
+-- ============================================================
+-- SCHEDULE HEALTH STUB (dashboard widget session, 2026-08-05)
+-- Gives the Schedule-health card all three colors on real data:
+--   · Anderson Custom — Lot 4 (construction): imported 30 workdays
+--     back, published, built through roof dry-in on plan, then
+--     insulation/drywall pushed 5 workdays with a reason
+--     (material backorder) → projected finish past baseline = LATE.
+--   · Reyes Custom — Hilltop: imported 8 workdays back, published,
+--     permitting done, sitework still open past its baseline
+--     window while the finish still holds = AT RISK.
+--   · (Lot 7 stays ON TRACK a day ahead; Lot 9 stays DRAFT.)
+-- Same rails as before: impersonates Brice via the auth GUC and
+-- uses the REAL engine functions. Idempotent: bails if Anderson
+-- already has schedule items.
+-- ============================================================
+do $$
+declare
+  v_org uuid; v_me uuid; v_tpl uuid;
+  v_and uuid; v_rey uuid;
+  v_ins uuid; v_site uuid;
+begin
+  select id into v_org from builder_orgs where slug = 'jaggars-dev';
+  select id into v_me  from people where lower(email) = 'brice@jaggars.com';
+  select id into v_tpl from schedule_templates
+   where org_id = v_org and name = 'The Magnolia — Standard Build';
+  if v_tpl is null then
+    raise exception 'Magnolia template missing — run the schedule stub above first';
+  end if;
+  select id into v_and from jobs where org_id = v_org and name = 'Anderson Custom — Lot 4';
+  select id into v_rey from jobs where org_id = v_org and name = 'Reyes Custom — Hilltop';
+
+  if exists (select 1 from schedule_items where job_id = v_and) then
+    raise notice 'schedule health stub already seeded — nothing to do';
+    return;
+  end if;
+
+  perform set_config('request.jwt.claim.sub', v_me::text, true);
+
+  -- ---------- Anderson: LATE ----------
+  perform import_schedule_template(v_and, v_tpl, sub_workdays(v_org, current_date, 30));
+  perform publish_schedule(v_and);
+  update schedule_items set status = 'complete',
+         actual_start = start_date, actual_end = end_date
+   where job_id = v_and
+     and title in ('Permitting complete','Sitework & pad','Underground plumbing',
+                   'Foundation & slab pour','Framing','Roof dry-in');
+  select id into v_ins from schedule_items
+   where job_id = v_and and title = 'Insulation & drywall';
+  perform shift_schedule_item(v_ins,
+            add_workdays(v_org, (select start_date from schedule_items where id = v_ins), 5),
+            'Drywall crew delayed — material backorder');
+
+  -- ---------- Reyes: AT RISK ----------
+  perform import_schedule_template(v_rey, v_tpl, sub_workdays(v_org, current_date, 8));
+  perform publish_schedule(v_rey);
+  update schedule_items set status = 'complete',
+         actual_start = start_date, actual_end = end_date
+   where job_id = v_rey and title = 'Permitting complete';
+  update schedule_items set status = 'in_progress', actual_start = start_date
+   where job_id = v_rey and title = 'Sitework & pad';
+
+  raise notice 'schedule health stub seeded';
+end $$;
+
+-- PROVE-IT (schedule health stub) — PASS on jaggars-dev:
+--   late = 1 (Anderson) · at_risk = 1 (Reyes) · tracking = 1 (Lot 7) ·
+--   draft_sched = 1 (Lot 9) · anderson_slip > 0 · reyes_slip = 0
+with health as (
+  select j.id, j.name, j.schedule_status,
+         max(coalesce(i.actual_end, i.end_date))                     as proj_finish,
+         max(i.baseline_end)                                          as base_finish,
+         bool_or(i.status <> 'complete' and i.baseline_end is not null
+                 and (i.baseline_end < current_date
+                      or i.end_date > i.baseline_end))                as behind_window
+    from jobs j
+    join schedule_items i on i.job_id = j.id
+    join builder_orgs o on o.id = j.org_id
+   where o.slug = 'jaggars-dev'
+   group by j.id, j.name, j.schedule_status
+)
+select
+  count(*) filter (where schedule_status = 'published'
+                     and proj_finish > base_finish)                          as late,
+  count(*) filter (where schedule_status = 'published'
+                     and proj_finish <= base_finish and behind_window)       as at_risk,
+  count(*) filter (where schedule_status = 'published'
+                     and proj_finish <= base_finish and not behind_window)   as tracking,
+  count(*) filter (where schedule_status = 'draft')                          as draft_sched,
+  (select proj_finish - base_finish from health
+    where name = 'Anderson Custom — Lot 4')                                  as anderson_slip,
+  (select proj_finish - base_finish from health
+    where name = 'Reyes Custom — Hilltop')                                   as reyes_slip
+from health;

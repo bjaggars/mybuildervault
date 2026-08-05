@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useSearchParams } from 'react-router-dom';
 
 // The schedule engine surface (script 014, SCHEDULE.md APPROVED 8/5, all 6
 // rulings). One page, three tabs per job: Gantt (drag-cascade + baseline
@@ -39,6 +40,7 @@ function phaseColor(phase, i) {
 }
 
 export default function Schedule({ orgId, role, personId }) {
+  const [searchParams] = useSearchParams();     // dashboard rows deep-link ?job=
   const [jobs, setJobs] = useState([]);
   const [jobId, setJobId] = useState('');
   const [tab, setTab] = useState('gantt');
@@ -60,7 +62,10 @@ export default function Schedule({ orgId, role, personId }) {
         .order('created_at', { ascending: false });
       if (cancelled) return;
       setJobs(data ?? []);
-      setJobId((cur) => cur || data?.[0]?.id || '');
+      const wanted = searchParams.get('job');
+      setJobId((cur) => cur
+        || (wanted && data?.some((j) => j.id === wanted) ? wanted : '')
+        || data?.[0]?.id || '');
     })();
     return () => { cancelled = true; };
   }, [orgId]);

@@ -203,10 +203,10 @@ export const CATALOG = [
   { id: 'sales_funnel', title: 'Sales funnel', span: 1, component: SalesFunnel },
 ];
 export const PERSONA_DEFAULTS = {
-  P1: ['exposure_strip', 'margin_board', 'burn_chart', 'sales_funnel'],
-  P2: ['pipeline', 'needs_attention', 'money_in_motion', 'ticket_stats'],
+  P1: ['schedule_health', 'exposure_strip', 'margin_board', 'burn_chart', 'sales_funnel'],
+  P2: ['schedule_health', 'pipeline', 'needs_attention', 'money_in_motion', 'ticket_stats'],
   P3: ['sales_funnel', 'pipeline', 'ticket_stats'],
-  P4: ['ticket_stats', 'pipeline', 'needs_attention'],
+  P4: ['schedule_health', 'ticket_stats', 'pipeline', 'needs_attention'],
 };
 export const ROLE_PERSONA = {
   owner: 'P1', accounting: 'P1', estimator: 'P1',

@@ -190,4 +190,13 @@ test('schedule engine: items, dependency cascade, publish baseline, reasoned shi
   await page.getByTestId('schedule-tab-gantt').click();
   await expect(page.getByTestId('gantt-row').first()).toBeVisible();
   await expect(page.getByTestId('gantt-baseline-toggle')).toBeVisible();
+
+  // Dashboard schedule-health card: pills + at least one job row, and a
+  // row is a door back into /schedule on that job.
+  await page.getByTestId('nav-dashboard').click();
+  await expect(page.getByTestId('widget-schedule_health')).toBeVisible();
+  await expect(page.getByTestId('sched-health-pill-late')).toBeVisible();
+  await expect(page.getByTestId('sched-health-row').first()).toBeVisible();
+  await page.getByTestId('sched-health-row').first().click();
+  await expect(page.getByTestId('schedule-title')).toBeVisible();
 });

@@ -212,6 +212,8 @@ Templates (catalog + Day-N import). Magnolia stub schedule seeded
 draft). Golden path 9 added. Script 014 RUN on
 mybuildervault-dev 8/5 PM (prove-it 7/4/4/2/2/2/1/1/1); seed RUN with full
 prove-it captured (1/15/16/15/1/15/4/15/1/2/1/0).
+**Also shipped 8/5 PM:** dashboard schedule-health card (late/at-risk/
+tracking/draft, baseline-derived, pills filter, rows deep-link).
 **Open:** dependency arrows on the Gantt, template create/export from a
 job, calendar view, client-portal schedule (Phase C), duration accretion
 (baseline vs actual per template item). BOARD-007 (comms rail) remains

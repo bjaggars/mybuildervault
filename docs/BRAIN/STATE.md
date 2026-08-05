@@ -336,4 +336,21 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   columns legitimately render them) — the failure capture itself proved
   the engine live: E2E items cascaded Aug 7 → Aug 11, correctly skipping
   the weekend. Robot issues #8/#9 closed. Session breakpoint here (§6b).
+- SCHEDULE HEALTH CARD 8/5 PM (Brice ask, same day): Dashboard widget
+  'schedule_health' (span 2, leads P1/P2/P4 personas; in the Customize
+  picker for saved layouts). Health vs PUBLISHED baseline: LATE (red) =
+  projected finish (max coalesce(actual_end,end_date)) past baseline
+  finish; AT RISK (amber) = finish holds but an incomplete item is behind
+  its baseline window; ON TRACK (green, shows days ahead); DRAFT dim.
+  Pills filter, rows deep-link /schedule?job= (Schedule honors the param).
+  Seed addendum #3 lights all colors on real rails: Anderson imported
+  −30wd, built through roof dry-in, insulation pushed 5wd w/ reason
+  ('material backorder') → LATE; Reyes −8wd, sitework open past its
+  window → AT RISK. Full seed re-proven END-TO-END on a fresh
+  shim+chain scratch DB: all prior prove-its exact, health prove-it
+  1/1/1/1 with anderson_slip 7 (cal days), reyes_slip 0. Path 9 extended:
+  dashboard card renders, pills visible, row navigates to /schedule.
+  AWAITING BRICE: run seed addendum #3 (schedule health stub) on
+  jaggars-dev, capture prove-it (late 1 · at_risk 1 · tracking 1 ·
+  draft_sched 1 · anderson_slip > 0 · reyes_slip 0).
 

@@ -132,7 +132,104 @@ function TicketStatsWidget({ shared, nav }) {
     </div>
   );
 }
+/* Schedule health — which builds are tracking, at risk, or late.
+   Health is computed against the PUBLISHED baseline (script 014):
+     late      projected finish (max coalesce(actual_end, end_date)) is past
+               the baseline finish — the schedule says you land late.
+     at risk   finish still holds, but an incomplete item is running behind
+               its own baseline window — the early warning before "late".
+     tracking  neither; shows days ahead when the field beat the plan.
+   Draft schedules sit dim at the bottom. Every pill and row is a door. */
+const HEALTH = {
+  late:     { label: 'Late',     fg: '#8F2730', bg: '#FBE9E9' },
+  at_risk:  { label: 'At risk',  fg: '#8A5A00', bg: '#FBF3E4' },
+  tracking: { label: 'On track', fg: '#1F6B3A', bg: '#E7F6EC' },
+  draft:    { label: 'Draft',    fg: '#5A6478', bg: '#EEEEEA' },
+};
+function ScheduleHealthWidget({ orgId, shared, nav }) {
+  const [items, setItems] = useState([]);
+  const [pick, setPick] = useState('');   // '' = all, or a HEALTH key
+  useEffect(() => {
+    if (!orgId) return;
+    let c = false;
+    supabase.from('schedule_items')
+      .select('job_id, status, start_date, end_date, actual_end, baseline_start, baseline_end')
+      .eq('org_id', orgId)
+      .then(({ data }) => { if (!c) setItems(data ?? []); });
+    return () => { c = true; };
+  }, [orgId]);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const dayDiff = (a, b) => Math.round((new Date(a + 'T00:00:00Z') - new Date(b + 'T00:00:00Z')) / 86400000);
+  const byJob = {};
+  items.forEach((i) => { (byJob[i.job_id] = byJob[i.job_id] ?? []).push(i); });
+  const rows = (shared.jobs ?? [])
+    .filter((j) => byJob[j.id]?.length)
+    .map((j) => {
+      const its = byJob[j.id];
+      const done = its.filter((i) => i.status === 'complete').length;
+      const fin = (arr) => arr.reduce((m, d) => (d && (!m || d > m) ? d : m), null);
+      const projFinish = fin(its.map((i) => i.actual_end ?? i.end_date));
+      const baseFinish = fin(its.map((i) => i.baseline_end));
+      let health, slip = null;
+      if (j.schedule_status !== 'published' || !baseFinish) health = 'draft';
+      else {
+        slip = projFinish && dayDiff(projFinish, baseFinish);
+        const behindWindow = its.some((i) => i.status !== 'complete' && i.baseline_end
+          && (i.baseline_end < today || (i.end_date && i.end_date > i.baseline_end)));
+        health = slip > 0 ? 'late' : behindWindow ? 'at_risk' : 'tracking';
+      }
+      return { id: j.id, name: j.name, health, slip, done, total: its.length, projFinish };
+    })
+    .sort((a, z) => ['late', 'at_risk', 'tracking', 'draft'].indexOf(a.health)
+                  - ['late', 'at_risk', 'tracking', 'draft'].indexOf(z.health));
+
+  const counts = Object.fromEntries(Object.keys(HEALTH).map((k) => [k, rows.filter((r) => r.health === k).length]));
+  const shown = pick ? rows.filter((r) => r.health === pick) : rows;
+  const fmtD = (d) => d ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : '—';
+  const pillText = (r) =>
+    r.health === 'late' ? `LATE +${r.slip}d`
+    : r.health === 'at_risk' ? 'AT RISK'
+    : r.health === 'tracking' ? (r.slip < 0 ? `ON TRACK · ${-r.slip}d ahead` : 'ON TRACK')
+    : 'DRAFT';
+
+  return (
+    <div style={{ padding: '2px 16px 14px' }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+        {Object.entries(HEALTH).map(([k, h]) => (
+          <button key={k} data-testid={`sched-health-pill-${k}`} onClick={() => setPick(pick === k ? '' : k)}
+            style={{ border: pick === k ? `2px solid ${h.fg}` : '1px solid var(--line)', background: h.bg, color: h.fg,
+              borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 800, cursor: 'pointer' }}>
+            {h.label} {counts[k]}
+          </button>
+        ))}
+      </div>
+      {shown.length === 0 && (
+        <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
+          {rows.length === 0 ? 'No schedules yet — import a template on the Schedule page.' : 'Nothing in this bucket.'}
+        </div>
+      )}
+      {shown.map((r) => {
+        const h = HEALTH[r.health];
+        return (
+          <div key={r.id} className="clickable" data-testid="sched-health-row" onClick={() => nav(`/schedule?job=${r.id}`)}
+            style={{ display: 'grid', gridTemplateColumns: '1fr auto 90px 80px', gap: 10, alignItems: 'center',
+              borderLeft: `4px solid ${h.fg}`, background: r.health === 'draft' ? 'transparent' : '#fff',
+              opacity: r.health === 'draft' ? 0.65 : 1,
+              borderRadius: '0 8px 8px 0', padding: '8px 12px', margin: '6px 0', cursor: 'pointer' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</div>
+            <span style={{ fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '2px 9px', background: h.bg, color: h.fg }}>{pillText(r)}</span>
+            <span style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{r.done}/{r.total} done</span>
+            <span style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{fmtD(r.projFinish)}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 const LOCAL_WIDGETS = [
+  { id: 'schedule_health', title: 'Schedule health', span: 2, component: ScheduleHealthWidget },
   { id: 'pipeline', title: 'Pipeline — one engine, both funnels', span: 1, component: PipelineWidget },
   { id: 'money_in_motion', title: 'Money in motion', span: 1, component: MoneyInMotionWidget },
   { id: 'needs_attention', title: 'Needs attention', span: 1, component: AttentionWidget },
@@ -153,7 +250,7 @@ export default function Dashboard({ orgId, orgName, role }) {
     let cancelled = false;
     (async () => {
       const [{ data: j }, { data: b }, { data: c }, { data: o }, { data: t }] = await Promise.all([
-        supabase.from('jobs').select('id, name, status, lifecycle').eq('org_id', orgId),
+        supabase.from('jobs').select('id, name, status, lifecycle, schedule_status').eq('org_id', orgId),
         supabase.from('v_job_budget').select('*').eq('org_id', orgId),
         supabase.from('conditions').select('id, text, type, trigger_date, status, jobs ( id, name )')
           .eq('org_id', orgId).in('status', ['open', 'triggered']).order('trigger_date', { ascending: true, nullsFirst: false }),
