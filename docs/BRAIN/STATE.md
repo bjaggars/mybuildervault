@@ -213,7 +213,13 @@ at first release.
   (1/1). Stub cost addendum RUN 8/5 AM, prove-it PASSED (15/4/396255.00) —
   margin board live with real forecast math. Dashboard widget-catalog shell
   SHIPPED @ cce1be9 all green (P1 default for owner seats, edit mode, seat
-  persistence, recharts burn chart). recharts DECIDED YES 8/4
+  persistence, recharts burn chart).
+- REPORTS SURFACE (BOARD-030 v1) SHIPPED 8/5 AM: 5-report role-filtered
+  catalog + Excel export (xlsx dep added) + print. Session PAT valid ~27 more
+  days (Brice 8/5) — next session may reuse; add Variables RW when rotating.
+  NEXT SESSION QUEUE: superintendent/work-order spine → estimate editor →
+  BOARD-014 ingestion. Console items parked: DNS wiring (then repoint
+  TEST_BASE_URL), jsh-brain graduation of design laws #11/#12. recharts DECIDED YES 8/4
   (Brice deferred to recommendation). Reports surface added as BOARD-030.
   Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
   persona switcher. Estimate editor + BOARD-014 follow.

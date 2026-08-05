@@ -80,3 +80,12 @@ test('job lifecycle: create, structure, status change', async ({ page }) => {
   await page.getByTestId('job-status').selectOption('design');
   await expect(page.getByTestId('job-status')).toHaveValue('design');
 });
+
+test('reports: run WIP summary, table renders', async ({ page }) => {
+  await login(page);
+  await page.getByTestId('nav-reports').click();
+  await expect(page.getByTestId('reports-title')).toBeVisible();
+  await page.getByTestId('report-pick').selectOption('wip_summary');
+  await page.getByTestId('report-run').click();
+  await expect(page.getByTestId('report-table')).toBeVisible();
+});

@@ -169,3 +169,9 @@ summary; Timesheet summary once time entries land (PERSONAS v2).
 **Depends:** 011 (cost basis) for cost reports; recharts DECIDED YES 8/4
 (Brice deferred to recommendation) — charts allowed inside reports too.
 **Sequence:** after dashboard shell, before or alongside estimate editor.
+**SHIPPED (v1) 2026-08-05 AM:** Reports surface live — role-filtered catalog of
+5 reports (WIP summary, Budget vs actual/allowances, Change order log, Job
+cost detail, Sales funnel & aging), generic table renderer, SheetJS Excel
+export, print mode. Golden path 7 covers it. OPEN: Brije-exact 3-column CO
+export format (needs their actual sample doc), timesheet report (awaits time
+entries), report scheduling/email (comms rail).

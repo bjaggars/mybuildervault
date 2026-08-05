@@ -9,6 +9,7 @@ import Settings from '../pages/Settings.jsx';
 import MissionControl from '../pages/MissionControl.jsx';
 import Jobs from '../pages/Jobs.jsx';
 import JobDetail from '../pages/JobDetail.jsx';
+import Reports from '../pages/Reports.jsx';
 
 // eslint-disable-next-line no-undef
 const BUILD = typeof __BUILD_INFO__ !== 'undefined' ? __BUILD_INFO__ : { sha: 'dev', at: '' };
@@ -138,6 +139,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
         <nav style={{ flex: 1 }}>
           <NavLink to="/" end style={navLink} data-testid="nav-dashboard">Dashboard</NavLink>
           <NavLink to="/jobs" style={navLink} data-testid="nav-jobs">Jobs</NavLink>
+          <NavLink to="/reports" style={navLink} data-testid="nav-reports">Reports</NavLink>
           {gates.tickets && <NavLink to="/tickets" style={navLink} data-testid="nav-tickets">Tickets</NavLink>}
           {gates.settings && <NavLink to="/settings" style={navLink} data-testid="nav-settings">Settings</NavLink>}
           {isStaff && <NavLink to="/mission-control" style={navLink} data-testid="nav-mission-control">Mission Control</NavLink>}
@@ -159,6 +161,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <Route path="/" element={<Dashboard orgId={activeOrgId} orgName={org?.name} role={active?.role} />} />
           <Route path="/jobs" element={<Jobs orgId={activeOrgId} role={active?.role} personId={personId} />} />
           <Route path="/jobs/:jobId" element={<JobDetail role={active?.role} personId={personId} />} />
+          <Route path="/reports" element={<Reports orgId={activeOrgId} role={active?.role} />} />
           <Route path="/tickets" element={gates.tickets ? <Tickets orgId={activeOrgId} /> : <Navigate to="/" replace />} />
           <Route path="/settings" element={gates.settings ? <Settings orgId={activeOrgId} role={active?.role} session={session} /> : <Navigate to="/" replace />} />
           <Route path="/mission-control" element={isStaff ? <MissionControl /> : <Navigate to="/" replace />} />
