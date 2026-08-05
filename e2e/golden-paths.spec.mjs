@@ -79,6 +79,10 @@ test('job lifecycle: create, structure, status change', async ({ page }) => {
   await expect(page.getByTestId('structure-row')).toContainText('Main House');
   await page.getByTestId('job-status').selectOption('design');
   await expect(page.getByTestId('job-status')).toHaveValue('design');
+  // Comms rail (BOARD-007): the panel renders on every job — empty state
+  // here (a fresh E2E job has no platform emails), stub data on jaggars-dev.
+  await expect(page.getByTestId('comms-panel')).toBeVisible();
+  await expect(page.getByTestId('comms-panel')).toContainText('platform emails on this job');
 });
 
 test('reports: run WIP summary, table renders', async ({ page }) => {

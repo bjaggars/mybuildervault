@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -19,6 +19,7 @@ export default function JobDetail({ role, personId }) {
   const [job, setJob] = useState(null);
   const [structures, setStructures] = useState([]);
   const [budget, setBudget] = useState(null);
+  const [comms, setComms] = useState([]);
   const [sLabel, setSLabel] = useState('');
   const [sKind, setSKind] = useState('house');
   const [busy, setBusy] = useState(false);
@@ -28,14 +29,17 @@ export default function JobDetail({ role, personId }) {
   const canStructures = ['owner', 'admin', 'pm'].includes(role);
 
   const load = async () => {
-    const [{ data: j }, { data: s }, { data: b }] = await Promise.all([
+    const [{ data: j }, { data: s }, { data: b }, { data: c }] = await Promise.all([
       supabase.from('jobs').select('*').eq('id', jobId).maybeSingle(),
       supabase.from('structures').select('*').eq('job_id', jobId).order('sort'),
       supabase.from('v_job_budget').select('*').eq('job_id', jobId).maybeSingle(),
+      supabase.from('comm_events').select('id, direction, subject, to_emails, from_email, created_at')
+        .eq('job_id', jobId).order('created_at', { ascending: false }).limit(200),
     ]);
     setJob(j ?? false);
     setStructures(s ?? []);
     setBudget(b ?? null);
+    setComms(c ?? []);
   };
   useEffect(() => { load(); }, [jobId]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -88,7 +92,7 @@ export default function JobDetail({ role, personId }) {
         {err && <span style={{ fontSize: 13, color: 'var(--bad)' }}>{err}</span>}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, flex: 1.4, overflow: 'hidden', marginBottom: 16 }}>
         {/* Structures */}
         <div style={{ ...card, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ fontWeight: 800, color: 'var(--navy)', marginBottom: 10 }}>Structures</div>
@@ -140,6 +144,90 @@ export default function JobDetail({ role, personId }) {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Comms — the job's platform-email record (BOARD-007 rail) */}
+      <CommsPanel comms={comms} card={card} input={input} />
+    </div>
+  );
+}
+
+/**
+ * Comms panel — the recorded lane made visible. Columnar grid per design
+ * law #15: click-to-sort on every header, a filter control per column,
+ * one-click Clear. Rows are written by the rail (service role) only.
+ */
+function CommsPanel({ comms, card, input }) {
+  const [sort, setSort] = useState({ key: 'created_at', dir: 'desc' });
+  const [f, setF] = useState({ date: '', direction: '', to: '', subject: '' });
+
+  const rows = useMemo(() => {
+    const shaped = comms.map((c) => ({
+      ...c,
+      date: new Date(c.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
+      to: c.direction === 'inbound' ? (c.from_email ?? '—') : (c.to_emails ?? []).join(', '),
+    }));
+    const filtered = shaped.filter((r) =>
+      (!f.date || r.date.toLowerCase().includes(f.date.toLowerCase()))
+      && (!f.direction || r.direction === f.direction)
+      && (!f.to || r.to.toLowerCase().includes(f.to.toLowerCase()))
+      && (!f.subject || (r.subject ?? '').toLowerCase().includes(f.subject.toLowerCase())));
+    const dir = sort.dir === 'asc' ? 1 : -1;
+    return [...filtered].sort((a, b) => {
+      const av = sort.key === 'created_at' ? a.created_at : String(a[sort.key] ?? '');
+      const bv = sort.key === 'created_at' ? b.created_at : String(b[sort.key] ?? '');
+      return av < bv ? -dir : av > bv ? dir : 0;
+    });
+  }, [comms, sort, f]);
+
+  const clear = () => setF({ date: '', direction: '', to: '', subject: '' });
+  const th = (key, label, flex) => (
+    <button onClick={() => setSort((s) => ({ key, dir: s.key === key && s.dir === 'asc' ? 'desc' : 'asc' }))}
+      style={{ flex, textAlign: 'left', border: 'none', background: 'none', padding: '4px 6px',
+               fontSize: 11.5, fontWeight: 800, color: 'var(--navy)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      {label}{sort.key === key ? (sort.dir === 'asc' ? ' ▲' : ' ▼') : ''}
+    </button>
+  );
+  const fi = { ...input, padding: '5px 8px', fontSize: 12 };
+  const hasFilter = Object.values(f).some(Boolean);
+
+  return (
+    <div data-testid="comms-panel" style={{ ...card, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 150 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+        <div style={{ fontWeight: 800, color: 'var(--navy)' }}>Comms</div>
+        <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{rows.length} of {comms.length} platform emails on this job</span>
+      </div>
+      <div style={{ display: 'flex' }}>
+        {th('created_at', 'Date', '0 0 150px')}{th('direction', 'Dir', '0 0 90px')}{th('to', 'To / From', '0 0 240px')}{th('subject', 'Subject', 1)}
+      </div>
+      <div style={{ display: 'flex', gap: 6, paddingBottom: 6, borderBottom: '2px solid var(--navy)' }}>
+        <input style={{ ...fi, flex: '0 0 144px' }} placeholder="filter…" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} />
+        <select style={{ ...fi, flex: '0 0 84px' }} value={f.direction} onChange={(e) => setF({ ...f, direction: e.target.value })}>
+          <option value="">all</option><option value="outbound">outbound</option><option value="inbound">inbound</option>
+        </select>
+        <input style={{ ...fi, flex: '0 0 234px' }} placeholder="filter…" value={f.to} onChange={(e) => setF({ ...f, to: e.target.value })} />
+        <input style={{ ...fi, flex: 1 }} placeholder="filter…" value={f.subject} onChange={(e) => setF({ ...f, subject: e.target.value })} />
+        {hasFilter && <button onClick={clear} style={{ ...fi, flex: '0 0 auto', background: '#fff', border: '1px solid var(--line)', borderRadius: 8, fontWeight: 700 }}>Clear</button>}
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
+        {comms.length === 0 && (
+          <div style={{ color: 'var(--ink-soft)', fontSize: 13, padding: '10px 6px' }}>
+            No platform emails on this job yet. Sends, replies (via the relay), and BCC-captured
+            mail all file here automatically — recording is structural, not a checkbox.
+          </div>
+        )}
+        {rows.map((r) => (
+          <div key={r.id} data-testid="comm-row" style={{ display: 'flex', alignItems: 'center', padding: '7px 6px', borderBottom: '1px solid var(--line)', fontSize: 13 }}>
+            <span style={{ flex: '0 0 150px', color: 'var(--ink-soft)' }}>{r.date}</span>
+            <span style={{ flex: '0 0 90px' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                background: r.direction === 'inbound' ? '#E7F0F9' : '#F4EDDA',
+                color: r.direction === 'inbound' ? '#27567F' : '#7A6414' }}>{r.direction}</span>
+            </span>
+            <span style={{ flex: '0 0 240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.to}</span>
+            <span style={{ flex: 1, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.subject}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

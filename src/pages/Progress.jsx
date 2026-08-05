@@ -42,9 +42,11 @@ const MODULES = [
     desc: '9 golden-path E2E robot runs, API smoke, and a 23-scenario behavioral smoke that rebuilds the entire database from scratch on every push.' },
   { module: 'Staff invites (magic link)', area: 'Access', status: 'complete', ref: 'shipped 8/5',
     desc: 'Passwordless one-time invite links for team seats; session persists per device. The pattern the sub portal will reuse.' },
+  { module: 'Comms rail', area: 'Comms', status: 'complete', ref: '016 · 8/5',
+    desc: 'The recorded lane for email: platform sends with reply relay, BCC capture, ticket auto-acks, branded auth emails, and the per-job Comms record. Activation awaits Resend/DNS console work.' },
   // ---------------- next ----------------
-  { module: 'Comms rail', area: 'Comms', status: 'next', ref: 'BOARD-007 · elevated',
-    desc: 'Email/SMS delivery spine: schedule shift notices, WO sent-to-sub messages (carrying the magic link), digest hooks. Unblocks sub loop + client notices.' },
+  { module: 'Schedule & WO notices', area: 'Comms', status: 'next', ref: 'BOARD-032 · unblocked',
+    desc: 'Ride the rail: schedule shift notices, WO sent-to-sub messages (carrying the magic link), digest hooks. Unblocks sub loop + client notices.' },
   { module: 'WO checklist templates', area: 'Field', status: 'next', ref: 'queued',
     desc: 'Every framing WO born with its 8 steps, every trade with its own — makes drift detection automatic instead of opt-in.' },
   { module: 'Gantt dependency arrows', area: 'Schedule', status: 'next', ref: 'BOARD-032',

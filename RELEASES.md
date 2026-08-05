@@ -22,8 +22,9 @@ Target: first deploy of mybuildervault.com.
 - Static compliance pages (privacy / terms / about)
 - CI / Smoke / E2E workflows; e2e-report + e2e-purge functions
 
-**Prod DB change scripts to run, in order:** 001, 002, 002-patch, 003, 005, 004, 006, 007, 008, 009, 010, 011
-(005 before 004 — 004 depends on the reconciled ticket_events shape).
+**Prod DB change scripts to run, in order:** 001, 002, 002-patch, 003, 005, 004, 006, 007, 008, 009, 010, 011, 012, 013, 014, 015, 016
+(005 before 004 — 004 depends on the reconciled ticket_events shape.
+Fresh-install path proven every push by the recalc-smoke CI job.)
 
 **Prod prerequisites before merge:**
 - DNS wired for mybuildervault.com (and .dev for TEST parity)

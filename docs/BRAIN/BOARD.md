@@ -1,5 +1,5 @@
 # MyBuilderVault — Board
-Last updated: 2026-08-04
+Last updated: 2026-08-05
 
 Active work items in priority order. Unstarted items have no assignee.
 Claude pushes to dev only. Main moves via release ritual after Brice approves.
@@ -65,12 +65,24 @@ Static gates + behavioral smokes + E2E robot. Mission Control (Quality + Release
 **Owner:** Claude
 **Effort:** 3-4 hours
 
-### BOARD-007 · Resend + ImprovMX + branded auth emails
+### BOARD-007 · Comms rail — Resend + ImprovMX + branded auth emails
 **What:** Per JSH doctrine — platform sends, reply relay, BCC capture. Domain setup,
 full-access keys per env, branded Supabase auth templates.
-**Dependency:** BOARD-004, BOARD-005
-**Owner:** Brice (Resend/ImprovMX accounts) + Claude (implementation)
-**Effort:** 2 hours
+**CODE SHIPPED 2026-08-05** (elevated by BOARD-032 — schedule notices depend on it).
+Copy-adapt from MRV per PATTERNS §1; full record in `docs/BRAIN/COMMS-RAIL.md`.
+Script 016 (comm_events, RLS at birth, service-role-only writes) + function
+family (_relay / send-email / inbound-log / ticket-notify) + branded auth
+template set + JobDetail Comms panel (law #15 full) + smoke-comms 14/14 in CI
++ golden path 6 extended. Ticket auto-acks WIRED (Concierge creation ack) —
+closes the 003/004 STATE open item; resolution ack awaits a ticket status UI.
+**OPEN — activation (Brice):** Resend domain + inbound on log.mybuildervault.com,
+RESEND_API_KEY + INBOUND_LOG_KEY env vars + redeploy, ImprovMX forwards,
+Supabase SMTP + template paste, run 016 on dev + seed addendum on jaggars-dev
+(COMMS-RAIL.md checklist). Functions degrade gracefully (503 / emailed:false)
+until then. **Open rulings:** R1 relay audience · R2 client visibility ·
+R3 resolution-ack wiring. **Follow-ups:** compose UI, schedule notices,
+report emails, BCC quote-splitting, contact thread view.
+**Owner:** Claude (implementation ✅) + Brice (activation)
 
 ---
 

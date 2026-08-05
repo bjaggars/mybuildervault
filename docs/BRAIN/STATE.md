@@ -1,5 +1,5 @@
 # MyBuilderVault — Current State
-Last updated: 2026-08-04
+Last updated: 2026-08-05
 
 ## Vision
 VISION.md (added 2026-08-03) defines the category claim and ten core theses.
@@ -381,4 +381,36 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   sort+filter, count pills as filters. 24 modules seeded from the script
   chain + surfaces. Maintenance rule added to README: shipping sessions
   update the table in the same commits.
+- COMMS RAIL EXECUTED 8/5 PM (BOARD-007, elevated by BOARD-032; fresh
+  session per §6b): copy-adapt from MRV per PATTERNS §1 — no §8 brief,
+  design record in COMMS-RAIL.md instead. Script 016 (comm_events: org/
+  job/contact/ticket linkage, RLS at birth, ZERO write policies — service
+  role is the only author; participant-visibility column scoped from
+  birth). Chain 001→016 proven fresh on scratch (recalc-smoke 23/23);
+  016 prove-it 1/t/1/0/4 — prove-it caught its own first-draft index
+  miscount (pkey matched the pattern; query corrected to _idx-only).
+  Functions: _relay (log.mybuildervault.com, party-aware, branded shell),
+  send-email (seat-verified, party fan-out, relay Reply-To, logs in the
+  same breath, job link validated), inbound-log (relay branch → INBOUND
+  log + forward to owner/admin w/ reply-to client; BCC branch → org by
+  seat email; always-200), ticket-notify (actor-less auto_response acks,
+  idempotent [auto:event] marker, graceful emailed:false without Resend)
+  — CLOSES the 003/004 auto-ack open item; Concierge wired for creation
+  acks. Branded auth template set at supabase/email-templates/ (4 + README).
+  JobDetail Comms panel (law #15 full). smoke-comms 14/14 NEW, in CI;
+  smoke-api +3 contract checks (503 = legitimate pre-config); golden
+  path 6 extended (comms panel visible). Seed comms addendum proven
+  END-TO-END on the fresh shim+chain scratch (all prior prove-its exact;
+  comms 4/3/1/1/1) + RLS spot-check (member reads 4, human insert DENIED,
+  stranger 0 — scratch needed explicit grants: Supabase default
+  privileges aren't in the shim, LEARNINGS #19). ACTIVATION IS BRICE'S:
+  Resend domain + inbound webhook, RESEND_API_KEY + INBOUND_LOG_KEY +
+  redeploy, ImprovMX, Supabase SMTP + template paste, run 016 + seed
+  addendum — checklist in COMMS-RAIL.md. RUN-pending: 016 on
+  mybuildervault-dev; comms seed addendum on jaggars-dev. One gate-fix en
+  route: the SQL insert-arity gate split array['a','b'] literals on their
+  inner comma (false positive on the comms seed) — splitter is now
+  bracket-aware; verifier verified (injected 3/2 and 2/3 bugs both fire,
+  legit array literal passes). Open rulings
+  R1-R3 in COMMS-RAIL.md. Schedule notices now UNBLOCKED (own session).
 

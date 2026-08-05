@@ -29,8 +29,9 @@ export default function Concierge({ orgId, personId }) {
   const file = async () => {
     if (!subject.trim()) { setErr('A short subject is required.'); return; }
     setErr(''); setBusy(true);
+    const ticketId = crypto.randomUUID();
     const { error } = await supabase.from('tickets').insert({
-      id: crypto.randomUUID(),
+      id: ticketId,
       org_id: orgId,
       opened_by: personId,
       subject: subject.trim(),
@@ -41,6 +42,16 @@ export default function Concierge({ orgId, personId }) {
     setBusy(false);
     if (error) { setErr(error.message); return; }
     setDone(true);
+    // System auto-ack rides the comms rail (BOARD-007) — best-effort by
+    // doctrine: an ack failure never blocks or un-does the filing.
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      fetch('/.netlify/functions/ticket-notify', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${session?.access_token ?? ''}` },
+        body: JSON.stringify({ ticketId, event: 'created' }),
+      }).catch(() => {});
+    } catch { /* best-effort */ }
   };
 
   const bubble = {

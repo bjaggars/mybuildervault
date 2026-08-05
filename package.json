@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "validate": "node scripts/predeploy-check.mjs && eslint src",
     "predeploy": "npm run validate && npm run build",
-    "smoke:recalc": "node scripts/smoke-recalc.mjs"
+    "smoke:recalc": "node scripts/smoke-recalc.mjs",
+    "smoke:comms": "node scripts/smoke-comms.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

@@ -59,6 +59,33 @@ check('e2e-purge rejects a bad shared key', async () => {
   if (r.status !== 401) throw new Error(`expected 401, got ${r.status}`);
 });
 
+// Comms rail (BOARD-007): 503 is the legitimate pre-config state (env vars
+// not yet installed on the site) — the contract is "never a 200 for an
+// unauthorized/unkeyed caller."
+check('send-email rejects unauthenticated (401 or 503 pre-config)', async () => {
+  const r = await fetch(`${BASE}/.netlify/functions/send-email`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ contactId: 'x', subject: 's', message: 'm' }),
+  });
+  if (![401, 503].includes(r.status)) throw new Error(`expected 401/503, got ${r.status}`);
+});
+
+check('inbound-log rejects a bad shared key (403 or 503 pre-config)', async () => {
+  const r = await fetch(`${BASE}/.netlify/functions/inbound-log?k=smoke-wrong-key`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  if (![403, 503].includes(r.status)) throw new Error(`expected 403/503, got ${r.status}`);
+});
+
+check('ticket-notify rejects unauthenticated (401 or 503 pre-config)', async () => {
+  const r = await fetch(`${BASE}/.netlify/functions/ticket-notify`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ ticketId: 'x', event: 'created' }),
+  });
+  if (![401, 503].includes(r.status)) throw new Error(`expected 401/503, got ${r.status}`);
+});
+
 const deadline = Date.now() + RETRY_MS;
 const run = async () => {
   let failures = [];

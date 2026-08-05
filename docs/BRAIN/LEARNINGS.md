@@ -1,5 +1,5 @@
 # MyBuilderVault — Learnings
-Last updated: 2026-08-03
+Last updated: 2026-08-05
 
 Hard-won lessons from building the Ocala portal. Each has a root cause and a rule.
 Cross-product lessons live in jsh-brain/DOCTRINE.md — these are MBV-specific.
@@ -249,3 +249,19 @@ transition. Green robots only prove the paths they walk.
    white screen.
 3. Every surface's golden path must render each of its tabs/views WITH
    data at least once — path 9 now ends on the Gantt tab with dated bars.
+
+---
+
+## 19. The scratch shim has no Supabase default privileges — grant before RLS assertions
+**Incident (8/5/26, comms session):** an RLS spot-check on the scratch chain
+database failed with `permission denied for table comm_events` before RLS
+ever evaluated. Real Supabase projects set default privileges (grants to
+anon/authenticated/service_role) at project creation, so every migrated
+table is grant-covered automatically; scripts/pg-shim.sql creates the roles
+but not the default privileges. Superuser sessions mask this entirely
+(superuser bypasses RLS and grants both).
+**Rule:** RLS assertions on the scratch database run as `set role
+authenticated` AFTER `grant usage on schema public` + `grant all on all
+tables in schema public to authenticated` — mirroring the platform, so the
+denial you then observe is RLS policy, not a missing grant. Candidate shim
+improvement: bake the default privileges into pg-shim.sql.

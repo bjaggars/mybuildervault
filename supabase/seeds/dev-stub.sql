@@ -852,3 +852,93 @@ select
   (select count(*) from v_schedule_item_progress p
      join builder_orgs o on o.id = p.org_id
     where o.slug = 'jaggars-dev' and p.from_checklist and p.status <> 'complete') as checklist_signals;
+
+-- ============================================================
+-- COMMS RAIL STUB (BOARD-007 addendum, 2026-08-05) — README #7:
+-- every new surface ships with stub data. Files a realistic email
+-- thread on the Anderson job (outbound update → inbound reply →
+-- BCC-captured note) plus a schedule-flavored notice on Lot 7, so
+-- the JobDetail Comms panel is visibly alive on the sandbox.
+-- Idempotent: skips if the thread already exists.
+-- ============================================================
+do $$
+declare
+  v_org      uuid;
+  v_anderson uuid;
+  v_job1     uuid;
+  v_job3     uuid;
+  v_brice    uuid;
+begin
+  select id into v_org from builder_orgs where slug = 'jaggars-dev';
+  if v_org is null then raise exception 'jaggars-dev org missing — run the sandbox seed first'; end if;
+  if exists (select 1 from comm_events where org_id = v_org and subject = 'Framing update — roof dry-in complete') then
+    raise notice 'comms stub already seeded — skipping';
+    return;
+  end if;
+
+  select id into v_anderson from contacts where org_id = v_org and display_name = 'The Anderson Family';
+  select id into v_job1 from jobs where org_id = v_org and name = 'Anderson Custom — Lot 4';
+  select id into v_job3 from jobs where org_id = v_org and name = 'Summercrest Lot 7 Spec';
+  select person_id into v_brice from org_members where org_id = v_org and role = 'owner' limit 1;
+  if v_anderson is null or v_job1 is null or v_job3 is null then
+    raise exception 'base stub rows missing — run the base seed blocks first';
+  end if;
+
+  -- Outbound platform send (staff-authored, party fan-out, relay reply-to)
+  insert into comm_events (org_id, job_id, contact_id, direction, kind, subject, body,
+                           to_emails, from_email, sent_by, created_at)
+  values (v_org, v_job1, v_anderson, 'outbound', 'email',
+          'Framing update — roof dry-in complete',
+          'Hi Rob & Dana, roof dry-in wrapped a day early. Windows and exterior doors are next on the board — selections deadline is holding.',
+          array['rob.anderson@example.com','dana.anderson@example.com'],
+          'share@mybuildervault.com', v_brice, now() - interval '3 days');
+
+  -- Inbound reply via the relay (client hit Reply; rail filed + forwarded)
+  insert into comm_events (org_id, job_id, contact_id, direction, kind, subject, body,
+                           to_emails, from_email, created_at)
+  values (v_org, v_job1, v_anderson, 'inbound', 'email',
+          'Re: Framing update — roof dry-in complete',
+          'From: dana.anderson@example.com
+That is great news! Quick question — can we still swap the lanai ceiling to tongue-and-groove?
+
+[Reply — auto-logged]',
+          array['reply@log.mybuildervault.com'],
+          'dana.anderson@example.com', now() - interval '3 days' + interval '2 hours');
+
+  -- BCC-captured note (staff mailed from their own inbox, BCC''d the logger)
+  insert into comm_events (org_id, job_id, contact_id, direction, kind, subject, body,
+                           to_emails, from_email, sent_by, created_at)
+  values (v_org, v_job1, v_anderson, 'outbound', 'email',
+          'Lanai ceiling — tongue-and-groove pricing',
+          'Dana — yes, still in the window. Pricing the T&G swap as a change order now; expect numbers by Friday.
+
+[BCC — auto-logged]',
+          array['dana.anderson@example.com'],
+          'brice@jaggars.dev', v_brice, now() - interval '2 days');
+
+  -- System notice on the spec job (the schedule-notice shape BOARD-032 named)
+  insert into comm_events (org_id, job_id, direction, kind, subject, body,
+                           to_emails, from_email, created_at)
+  values (v_org, v_job3, 'outbound', 'email',
+          'Schedule notice — slab pour moved to Monday',
+          'Concrete availability moved the Lot 7 slab pour from Friday to Monday. Downstream items recalculated automatically; framing start holds.',
+          array['field@jaggars.dev'],
+          'share@mybuildervault.com', now() - interval '1 day');
+
+  raise notice 'comms stub seeded';
+end $$;
+
+-- PROVE-IT (comms stub) — PASS on jaggars-dev:
+--   comm_total = 4 · anderson_thread = 3 · inbound = 1 ·
+--   system_sends = 1 · lot7_notice = 1
+select
+  (select count(*) from comm_events c join builder_orgs o on o.id = c.org_id
+    where o.slug = 'jaggars-dev') as comm_total,
+  (select count(*) from comm_events c join jobs j on j.id = c.job_id
+    where j.name = 'Anderson Custom — Lot 4') as anderson_thread,
+  (select count(*) from comm_events c join builder_orgs o on o.id = c.org_id
+    where o.slug = 'jaggars-dev' and c.direction = 'inbound') as inbound,
+  (select count(*) from comm_events c join builder_orgs o on o.id = c.org_id
+    where o.slug = 'jaggars-dev' and c.direction = 'outbound' and c.sent_by is null) as system_sends,
+  (select count(*) from comm_events c join jobs j on j.id = c.job_id
+    where j.name = 'Summercrest Lot 7 Spec') as lot7_notice;

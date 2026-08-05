@@ -77,13 +77,16 @@ migrations.forEach((f, i) => {
 // every .sql under supabase/ (migrations + seeds): for each INSERT, the count
 // of top-level expressions in every values tuple must equal the column count.
 function splitTop(str) {
+  // Depth counts parens AND square brackets — array['a','b'] literals carry
+  // top-level commas that are not tuple separators (comms-seed false
+  // positive, 8/5/26).
   const out = []; let cur = '', depth = 0, inq = false;
   for (let i = 0; i < str.length; i++) {
     const ch = str[i];
     if (inq) { cur += ch; if (ch === "'") { if (str[i + 1] === "'") { cur += "'"; i++; } else inq = false; } }
     else if (ch === "'") { inq = true; cur += ch; }
-    else if (ch === '(') { depth++; cur += ch; }
-    else if (ch === ')') { depth--; cur += ch; }
+    else if (ch === '(' || ch === '[') { depth++; cur += ch; }
+    else if (ch === ')' || ch === ']') { depth--; cur += ch; }
     else if (ch === ',' && depth === 0) { out.push(cur); cur = ''; }
     else cur += ch;
   }
