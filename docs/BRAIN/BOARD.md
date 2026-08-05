@@ -219,3 +219,24 @@ job, calendar view, client-portal schedule (Phase C), duration accretion
 (baseline vs actual per template item). BOARD-007 (comms rail) remains
 elevated: schedule notices depend on it.
 **Owner:** Claude (build ✅) + Brice (run scripts)
+
+---
+
+## BOARD-033 · Progress drift detection (the "25% done, week left" sniff test)
+**Origin:** Brice, 8/5/26 — IT PM practice: per-task % complete exposes
+items that are time-elapsed but work-behind before dates slip.
+**Research:** BT has per-item Progress % (self-reported) and a job-level
+percent-complete report that is just done/total; Doxel-class tools do
+production-rate tracking (percent vs schedule) at enterprise price.
+Residential truth: self-reported % is gamed ("90% done" syndrome).
+**Design (beyond parity — DERIVE, don't ask):**
+- expected_pct = elapsed workdays / duration_days (engine, automatic)
+- actual_pct   = linked WO checklist completion ratio (013 field truth);
+  manual override only for items with no checklisted WO
+- drift = expected − actual; threshold (e.g. 25 pts) → item flagged
+  'work-behind' → red segment on the health strip + at-risk contribution
+  in the job health calc, BEFORE any date moves
+- Surface: drift chip on Gantt bar + list column + health-card tooltip
+**Status:** captured, not scheduled. Depends on: nothing (013 + 014 live).
+**Owner:** Brice (green-light) → Claude
+
