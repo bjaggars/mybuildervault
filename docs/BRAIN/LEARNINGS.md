@@ -194,3 +194,37 @@ selects for enumerables — plus a one-click Clear. "Primary dimensions" was
 the first draft; ALL columns is the standard.
 A grid you cannot sort or filter is a screenshot, not a tool. Sibling to
 #11 (no voids) and #12 (every count is a door).
+
+---
+
+## 16. The migration chain is a product: prove fresh-install every push
+**Incident (8/5/26, schedule session):** the new recalc smoke's first step —
+applying the REAL chain 001→014 to an empty Postgres — failed at 006:
+`create or replace` cannot change a function's return type, and 006 changes
+grant_platform_owner from void (002) to text. Dev never saw it (002 ran long
+before 006), but the FIRST PROD RELEASE runs 001..NNN in order on an empty
+database and would have died mid-ritual.
+**Root cause:** every script was only ever proven against the accumulated
+dev state, never against the from-zero path prod will actually take.
+**Rule:** scripts/smoke-recalc.mjs applies scripts/pg-shim.sql (Supabase
+env shim: auth schema, auth.uid(), platform roles) + the full committed
+chain to a scratch database on EVERY push (CI job `recalc-smoke`). A chain
+that only applies incrementally is not release-ready. Fixed 006 with
+drop-then-create (idempotent; no-op in effect on dev).
+
+---
+
+## 17. Triggers steal the reasoned recalc — engine functions own their cascade
+**Incident (8/5/26):** first recalc-smoke run, scenario 3: shift_schedule_item
+updated start_date, the row trigger cascaded immediately with a NULL reason,
+and the function's own reasoned recalc then found nothing left to move —
+"one change, one reason" silently recorded no reason. 18/19, and exactly the
+kind of quiet failure the smoke exists for.
+**Rule:** engine functions (shift/import/publish) set a transaction-local
+GUC (`mbv.suppress_recalc`) before their writes; the cascade triggers stand
+down when it's set (and at pg_trigger_depth() > 1), so the ONE explicit
+recalc carries the reason — and import stops paying N trigger recalcs for
+N inserted rows. Direct table edits still cascade via trigger (reason null
+by design). Behavioral smokes on DB engines run BEFORE push, on the
+committed SQL, via the scratch-database harness — never on a JS mirror of
+the logic.

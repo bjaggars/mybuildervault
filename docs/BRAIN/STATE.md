@@ -288,3 +288,43 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   insert-arity gate (on-conflict/returning safe), verifier verified.
   STANDING RULE (Brice 8/5, BRAIN README #7): every new surface ships
   with stub data in the same session.
+- SCHEDULE ENGINE EXECUTED 8/5 PM (block 3, fresh session per §6b): script
+  014 written per the approved brief — schedule_items (manual_start
+  no-earlier-than, actual_start/end field dates, ignore_workdays override,
+  milestone), schedule_deps (FS+lag, constraint-widen-ready dep_type),
+  builder_orgs.workdays mask + org_excluded_dates, Day-N template catalog
+  (templates/items/deps), jobs.schedule_status draft|published,
+  schedule_events (one change one reason), recalc_schedule (topological
+  Kahn walk, workday math, effective end = coalesce(actual_end, end_date),
+  cycle raises), shift/import/publish fns (suppress-GUC own their reasoned
+  cascade, LEARNINGS #17), WO triggers (inherit dates on insert; completion
+  advances item + successors follow actual), selections FK + moving
+  decision deadline (010 await CLOSED).
+  BEHAVIORAL SMOKE BEFORE PUSH: scripts/smoke-recalc.mjs applies
+  scripts/pg-shim.sql + the REAL chain 001→014 to a scratch Postgres and
+  runs 19 scenarios — 19/19 green locally; added as CI job `recalc-smoke`
+  (postgres:16 service). Two real catches en route: 006 fresh-install
+  failure (LEARNINGS #16, fixed drop-then-create) and the trigger-steals-
+  the-reason bug (#17). Full dev-stub (base + field + schedule blocks)
+  also proven end-to-end on the scratch DB — schedule prove-it exactly
+  1/15/16/15/1/15/4/15/1/2/1/0.
+  SURFACES: /schedule (nav + route) — Gantt (drag → reason modal →
+  shift_schedule_item RPC; baseline ghost toggle; today line; weekend
+  shading; milestone diamonds; sticky label rail w/ dep counts), List
+  (#15 FULL: sort on all 10 headers, filter control on every column +
+  clear; add-item row; drawer: duration/visibility/weekend-override edits,
+  dep link/unlink w/ lag, reasoned shift, start/complete, delete, item
+  activity), Templates (#15 grid, expandable Day-N item list, import
+  template→job→start-date via RPC). Golden path 9 (schedule lifecycle
+  through the UI) added — 9 golden paths total.
+  STUB (README #7): Magnolia template (15 items, 16 deps, real
+  inspection/cure lags, 5 phases); Lot 7 imported mid-flight + PUBLISHED,
+  4 items field-complete (slab a day early → reasoned recalc), framing
+  in_progress, 2 linked WOs (dates inherited), 1 linked selection w/
+  moving deadline (paint − 10 workdays); Lot 9 imported, DRAFT. Seed
+  impersonates Brice via the auth GUC so the REAL engine fns run their
+  own role checks.
+  AWAITING BRICE: run 014 on mybuildervault-dev + the seed addendum on
+  jaggars-dev, capture both prove-its. devDependency added: pg (smoke
+  harness only). Open follow-ups on BOARD-032.
+

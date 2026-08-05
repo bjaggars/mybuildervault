@@ -39,3 +39,31 @@ jobs:
                   print(f"  {f}: PARSE FAILED — {e}"); failed = True
           sys.exit(1 if failed else 0)
           PY
+
+  recalc-smoke:
+    # Tier-2 behavioral smoke on the schedule engine (script 014): applies
+    # the REAL migration chain 001..NNN to a fresh Postgres (proving the
+    # first-prod-release path every push), then asserts topological cascade,
+    # workday math, baselines, field advancement, and cycle detection.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Recalc engine smoke (real chain, scratch database)
+        env:
+          DATABASE_URL: postgres://postgres:ci@localhost:5432/postgres
+        run: node scripts/smoke-recalc.mjs

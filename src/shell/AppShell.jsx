@@ -11,6 +11,7 @@ import Jobs from '../pages/Jobs.jsx';
 import JobDetail from '../pages/JobDetail.jsx';
 import Reports from '../pages/Reports.jsx';
 import Field from '../pages/Field.jsx';
+import Schedule from '../pages/Schedule.jsx';
 
 // eslint-disable-next-line no-undef
 const BUILD = typeof __BUILD_INFO__ !== 'undefined' ? __BUILD_INFO__ : { sha: 'dev', at: '' };
@@ -141,6 +142,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <NavLink to="/" end style={navLink} data-testid="nav-dashboard">Dashboard</NavLink>
           <NavLink to="/jobs" style={navLink} data-testid="nav-jobs">Jobs</NavLink>
           <NavLink to="/field" style={navLink} data-testid="nav-field">Field</NavLink>
+          <NavLink to="/schedule" style={navLink} data-testid="nav-schedule">Schedule</NavLink>
           <NavLink to="/reports" style={navLink} data-testid="nav-reports">Reports</NavLink>
           {gates.tickets && <NavLink to="/tickets" style={navLink} data-testid="nav-tickets">Tickets</NavLink>}
           {gates.settings && <NavLink to="/settings" style={navLink} data-testid="nav-settings">Settings</NavLink>}
@@ -164,6 +166,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <Route path="/jobs" element={<Jobs orgId={activeOrgId} role={active?.role} personId={personId} />} />
           <Route path="/jobs/:jobId" element={<JobDetail role={active?.role} personId={personId} />} />
           <Route path="/field" element={<Field orgId={activeOrgId} role={active?.role} personId={personId} />} />
+          <Route path="/schedule" element={<Schedule orgId={activeOrgId} role={active?.role} personId={personId} />} />
           <Route path="/reports" element={<Reports orgId={activeOrgId} role={active?.role} />} />
           <Route path="/tickets" element={gates.tickets ? <Tickets orgId={activeOrgId} /> : <Navigate to="/" replace />} />
           <Route path="/settings" element={gates.settings ? <Settings orgId={activeOrgId} role={active?.role} session={session} /> : <Navigate to="/" replace />} />

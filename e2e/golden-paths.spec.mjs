@@ -128,3 +128,59 @@ test('field spine: work order lifecycle, checklist, time entry approval', async 
   await qrow.getByTestId('te-approve').click();
   await expect(page.getByTestId('te-mine-row').filter({ hasText: jobName })).toContainText('approved');
 });
+
+test('schedule engine: items, dependency cascade, publish baseline, reasoned shift', async ({ page }) => {
+  await login(page);
+  // A job of our own — purge sweeps E2E- jobs and the cascade takes the schedule.
+  const jobName = `E2E-schedjob ${Date.now()}`;
+  await page.getByTestId('nav-jobs').click();
+  await page.getByTestId('job-name').fill(jobName);
+  await page.getByTestId('job-create').click();
+  await expect(page.getByTestId('job-detail-title')).toContainText(jobName);
+
+  await page.getByTestId('nav-schedule').click();
+  await expect(page.getByTestId('schedule-title')).toBeVisible();
+  await page.getByTestId('schedule-job').selectOption({ label: jobName });
+  await page.getByTestId('schedule-tab-list').click();
+
+  // Two items: A anchors on today, B has no date until it depends on A.
+  const today = new Date().toISOString().slice(0, 10);
+  await page.getByTestId('si-title').fill('E2E-si-A sitework');
+  await page.getByTestId('si-days').fill('2');
+  await page.getByTestId('si-start').fill(today);
+  await page.getByTestId('si-add').click();
+  const rowA = page.getByTestId('si-row').filter({ hasText: 'E2E-si-A' });
+  await expect(rowA).toBeVisible();
+
+  await page.getByTestId('si-title').fill('E2E-si-B framing');
+  await page.getByTestId('si-days').fill('3');
+  await page.getByTestId('si-add').click();
+  const rowB = page.getByTestId('si-row').filter({ hasText: 'E2E-si-B' });
+  await expect(rowB).toBeVisible();
+
+  // Link B ← A in the drawer; the DB recalc gives B computed dates.
+  await rowB.click();
+  await expect(page.getByTestId('si-drawer-title')).toContainText('E2E-si-B');
+  await page.getByTestId('si-dep-pred').selectOption({ label: 'E2E-si-A sitework' });
+  await page.getByTestId('si-dep-add').click();
+  await expect(page.getByTestId('si-dep-row')).toContainText('E2E-si-A');
+  await page.getByTestId('si-drawer-close').click();
+  await expect(rowB).not.toContainText('—');            // B start/end now computed
+  const bBefore = await rowB.textContent();
+
+  // Publish stamps the baseline and flips the job gate.
+  await page.getByTestId('schedule-publish').click();
+  await expect(page.getByTestId('schedule-status-badge')).toContainText('published');
+  await expect(rowB).toContainText('on plan');
+
+  // Reasoned shift on A from the drawer — cascade moves B, baseline holds.
+  const shifted = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  await rowA.click();
+  await expect(page.getByTestId('si-drawer-title')).toContainText('E2E-si-A');
+  await page.getByTestId('si-drawer-shift-date').fill(shifted);
+  await page.getByTestId('si-drawer-shift-reason').fill('E2E cascade check');
+  await page.getByTestId('si-drawer-shift').click();
+  await page.getByTestId('si-drawer-close').click();
+  await expect(rowB).not.toHaveText(bBefore);           // B followed the cascade
+  await expect(rowB).toContainText('+');                // slipped vs baseline
+});

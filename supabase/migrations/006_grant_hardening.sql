@@ -6,8 +6,15 @@
 -- on "No workspace yet" instead of Mission Control. Now: case-
 -- insensitive match, raises on zero matches, reports what it did.
 -- Run on: mybuildervault-dev. Prod via release ritual.
+-- FRESH-INSTALL FIX (2026-08-05, caught by the recalc smoke's
+-- full-chain apply): the 002 version returns void; `create or
+-- replace` cannot change a return type, so 006 failed on any
+-- database applying 001..NNN in order — which is exactly what
+-- the first PROD release will do. Drop-then-create. Idempotent;
+-- re-running on dev is a no-op in effect.
 -- ============================================================
 
+drop function if exists grant_platform_owner(text);
 create or replace function grant_platform_owner(p_email text)
 returns text language plpgsql security definer set search_path = public as $$
 declare

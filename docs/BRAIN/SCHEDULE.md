@@ -1,6 +1,7 @@
 # MyBuilderVault — Schedule Engine Step-Back Brief
 
-**Status: APPROVED — Brice, 2026-08-05, all 6 rulings as recommended**
+**Status: EXECUTED — script 014 + surfaces shipped 2026-08-05 (schedule session)**
+(was: APPROVED — Brice, 2026-08-05, all 6 rulings as recommended)
 (item↔WO separate FK-linked; FS+lag only; cascade in DB incl. WO-completion
 trigger; baseline columns at publish + schedule_events reasons; selections
 FK lands in 014; in-app notices until BOARD-007 comms rail, which this

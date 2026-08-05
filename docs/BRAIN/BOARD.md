@@ -199,6 +199,20 @@ engine = next named subsystem (own §8 step-back).
 014 scope (items, FS deps + lag, workday calendar, templates, draft→publish
 baseline, DB recalc engine, WO + selections linkage), 6 rulings open.
 **Gate:** CLEARED — brief APPROVED 8/5, all 6 rulings as recommended.
-Script 014 + surfaces execute in a FRESH session (§6b breakpoint taken at
-this gate). BOARD-007 (comms rail) elevated: schedule notices depend on it.
-**Owner:** Claude (brief ✅ 8/5) + Brice (rulings)
+**EXECUTED 8/5 (schedule session):** script 014 (items, FS deps + lag,
+workday calendar + excluded dates, Day-N templates, draft→publish
+baseline-at-publish, DB recalc engine + WO-completion trigger, WO +
+selections FK linkage) written and behaviorally PROVEN pre-push — 19/19
+recalc-smoke scenarios green against the real chain on a scratch Postgres
+(scripts/smoke-recalc.mjs, now a CI job). Surfaces shipped: /schedule
+Gantt (drag-cascade + reason modal + baseline toggle) · List (#15 full
+sort/filter, add item, drawer w/ deps + reasoned shift + activity) ·
+Templates (catalog + Day-N import). Magnolia stub schedule seeded
+(template 15 items/16 deps; Lot 7 published + field-advanced; Lot 9
+draft). Golden path 9 added. Awaiting Brice: run 014 on
+mybuildervault-dev + seed addendum, capture prove-its.
+**Open:** dependency arrows on the Gantt, template create/export from a
+job, calendar view, client-portal schedule (Phase C), duration accretion
+(baseline vs actual per template item). BOARD-007 (comms rail) remains
+elevated: schedule notices depend on it.
+**Owner:** Claude (build ✅) + Brice (run scripts)

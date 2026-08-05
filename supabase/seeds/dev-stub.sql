@@ -467,3 +467,185 @@ select
      where o.slug = 'jaggars-dev' and a.source = 'labor') as labor_actuals,
   (select coalesce(sum(a.amount),0) from actuals a join builder_orgs o on o.id = a.org_id
      where o.slug = 'jaggars-dev' and a.source = 'labor') as labor_total;
+
+-- ============================================================
+-- SCHEDULE STUB (script 014 session, 2026-08-05) — Magnolia jobs
+-- per standing rule (BRAIN README #7): every new surface ships
+-- with stub data in the same session.
+--   · "The Magnolia — Standard Build" template: 15 Day-N items,
+--     16 FS deps with real lags (inspection/cure), 5 phases.
+--   · Lot 7 Spec: imported mid-flight, PUBLISHED (baseline live),
+--     first two items field-complete → successors follow
+--     actual_end; 2 linked WOs (dates inherited); 1 linked
+--     selection with a moving decision deadline.
+--   · Lot 9 Spec: imported, left DRAFT (publish flow demo).
+-- Impersonates Brice via the auth GUC so the REAL engine
+-- functions (import_schedule_template / publish_schedule /
+-- recalc_schedule) run their own role checks — the seed uses the
+-- product's rails, not hand-rolled copies.
+-- Idempotent: bails if the template already exists.
+-- ============================================================
+do $$
+declare
+  v_org uuid; v_me uuid;
+  v_job7 uuid; v_job9 uuid;
+  v_tpl uuid;
+  t1 uuid; t2 uuid; t3 uuid; t4 uuid; t5 uuid; t6 uuid; t7 uuid; t8 uuid;
+  t9 uuid; t10 uuid; t11 uuid; t12 uuid; t13 uuid; t14 uuid; t15 uuid;
+  v_site uuid; v_found uuid; v_frame uuid; v_paint uuid;
+  v_wo_a uuid; v_wo_b uuid;
+begin
+  select id into v_org from builder_orgs where slug = 'jaggars-dev';
+  if v_org is null then raise exception 'jaggars-dev org missing — run the sandbox seed first'; end if;
+  select id into v_me from people where lower(email) = 'brice@jaggars.com';
+  select id into v_job7 from jobs where org_id = v_org and name = 'Summercrest Lot 7 Spec';
+  select id into v_job9 from jobs where org_id = v_org and name = 'Summercrest Lot 9 Spec';
+  if v_job7 is null or v_job9 is null then
+    raise exception 'Magnolia jobs missing — run the dev stub above first';
+  end if;
+
+  if exists (select 1 from schedule_templates
+              where org_id = v_org and name = 'The Magnolia — Standard Build') then
+    raise notice 'schedule stub already seeded — nothing to do';
+    return;
+  end if;
+
+  -- run as Brice so the engine functions'' own role checks pass
+  perform set_config('request.jwt.claim.sub', v_me::text, true);
+
+  -- ---------- template: 15 Day-N items, 5 phases ----------
+  insert into schedule_templates (org_id, name, build_style, notes, created_by)
+  values (v_org, 'The Magnolia — Standard Build', 'The Magnolia',
+          'Standard spec sequence; durations from Brije field averages', v_me)
+  returning id into v_tpl;
+
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Permitting complete', 'Pre-Construction', null, 0, 0, true, 1) returning id into t1;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Sitework & pad', 'Pre-Construction', 'sitework', 0, 3, false, 2) returning id into t2;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Underground plumbing', 'Pre-Construction', 'plumbing', 3, 2, false, 3) returning id into t3;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Foundation & slab pour', 'Shell', 'foundation_concrete', 5, 3, false, 4) returning id into t4;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Framing', 'Shell', 'framing', 10, 7, false, 5) returning id into t5;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Roof dry-in', 'Shell', 'roofing', 17, 3, false, 6) returning id into t6;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Windows & exterior doors', 'Shell', 'framing', 20, 2, false, 7) returning id into t7;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Electrical rough', 'Rough-Ins', 'electrical', 20, 4, false, 8) returning id into t8;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Plumbing top-out', 'Rough-Ins', 'plumbing', 20, 3, false, 9) returning id into t9;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'HVAC rough', 'Rough-Ins', 'hvac', 20, 3, false, 10) returning id into t10;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Insulation & drywall', 'Finishes', 'drywall', 25, 7, false, 11) returning id into t11;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Interior trim & cabinets', 'Finishes', 'trim', 32, 6, false, 12) returning id into t12;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Paint', 'Finishes', 'paint', 38, 4, false, 13) returning id into t13;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Flooring, tile & final MEP', 'Finishes', 'flooring', 42, 6, false, 14) returning id into t14;
+  insert into schedule_template_items (template_id, title, phase, discipline, day_offset, duration_days, milestone, sort)
+  values (v_tpl, 'Punch & certificate of occupancy', 'Closeout', 'punch_clean', 48, 3, false, 15) returning id into t15;
+
+  insert into schedule_template_deps (template_id, successor_item, predecessor_item, lag_days) values
+    (v_tpl, t2,  t1,  0),
+    (v_tpl, t3,  t2,  0),
+    (v_tpl, t4,  t3,  1),   -- underground inspection
+    (v_tpl, t5,  t4,  2),   -- slab cure
+    (v_tpl, t6,  t5,  0),
+    (v_tpl, t7,  t6,  0),
+    (v_tpl, t8,  t6,  0),
+    (v_tpl, t9,  t6,  0),
+    (v_tpl, t10, t6,  0),
+    (v_tpl, t11, t8,  1),   -- rough inspections
+    (v_tpl, t11, t9,  1),
+    (v_tpl, t11, t10, 1),
+    (v_tpl, t12, t11, 0),
+    (v_tpl, t13, t12, 0),
+    (v_tpl, t14, t13, 0),
+    (v_tpl, t15, t14, 0);
+
+  -- ---------- Lot 7: import mid-flight, publish, field-advance ----------
+  perform import_schedule_template(v_job7, v_tpl, (current_date - 15)::date);
+  perform publish_schedule(v_job7);
+
+  select id into v_site  from schedule_items where job_id = v_job7 and title = 'Sitework & pad';
+  select id into v_found from schedule_items where job_id = v_job7 and title = 'Foundation & slab pour';
+  select id into v_frame from schedule_items where job_id = v_job7 and title = 'Framing';
+  select id into v_paint from schedule_items where job_id = v_job7 and title = 'Paint';
+
+  -- field history: sitework + underground done on plan; slab done a day early
+  update schedule_items set status = 'complete',
+         actual_start = start_date, actual_end = end_date
+   where job_id = v_job7 and title in ('Permitting complete','Sitework & pad','Underground plumbing');
+  update schedule_items set status = 'complete',
+         actual_start = start_date, actual_end = end_date - 1
+   where id = v_found;
+  perform recalc_schedule(v_job7, 'Slab finished a day early — field update', v_me);
+  update schedule_items set status = 'in_progress', actual_start = start_date
+   where id = v_frame;
+
+  -- linked WOs inherit the item''s dates (wo_inherit_dates trigger)
+  insert into work_orders (id, org_id, job_id, kind, discipline, title, status,
+                           assignee_kind, schedule_item_id, created_by)
+  values (gen_random_uuid(), v_org, v_job7, 'work', 'framing',
+          'Frame Magnolia B — Lot 7', 'in_progress', 'discipline', v_frame, v_me)
+  returning id into v_wo_a;
+  insert into work_orders (id, org_id, job_id, kind, discipline, title, status,
+                           assignee_kind, schedule_item_id, created_by)
+  values (gen_random_uuid(), v_org, v_job7, 'work', 'paint',
+          'Interior paint package — Elevation B scheme', 'draft', 'discipline', v_paint, v_me)
+  returning id into v_wo_b;
+
+  -- linked selection: deadline = paint start − 10 workdays, and it MOVES
+  insert into selections (org_id, job_id, title, capture_kind, status,
+                          schedule_item_id, deadline_lag_days, notes, created_by)
+  values (v_org, v_job7, 'Interior paint colors — Elevation B',
+          'link', 'proposed', v_paint, 10,
+          'Deadline rides the schedule: 10 workdays before paint starts', v_me);
+  perform recalc_schedule(v_job7, null, v_me);
+
+  -- ---------- Lot 9: imported, left DRAFT (publish-flow demo) ----------
+  perform import_schedule_template(v_job9, v_tpl, (current_date + 30)::date);
+
+  raise notice 'schedule stub seeded';
+end $$;
+
+-- PROVE-IT (schedule stub) — PASS on jaggars-dev:
+--   tpl = 1 · tpl_items = 15 · tpl_deps = 16 · lot7_items = 15 ·
+--   lot7_published = 1 · lot7_baselines = 15 · lot7_complete = 4 ·
+--   lot9_items = 15 · lot9_draft = 1 · linked_wos = 2 ·
+--   sel_deadline = 1 · weekend_dates = 0
+select
+  (select count(*) from schedule_templates t join builder_orgs o on o.id = t.org_id
+     where o.slug = 'jaggars-dev' and t.name = 'The Magnolia — Standard Build') as tpl,
+  (select count(*) from schedule_template_items i
+     join schedule_templates t on t.id = i.template_id
+     join builder_orgs o on o.id = t.org_id where o.slug = 'jaggars-dev') as tpl_items,
+  (select count(*) from schedule_template_deps d
+     join schedule_templates t on t.id = d.template_id
+     join builder_orgs o on o.id = t.org_id where o.slug = 'jaggars-dev') as tpl_deps,
+  (select count(*) from schedule_items i join jobs j on j.id = i.job_id
+     where j.name = 'Summercrest Lot 7 Spec') as lot7_items,
+  (select count(*) from jobs where name = 'Summercrest Lot 7 Spec'
+     and schedule_status = 'published') as lot7_published,
+  (select count(*) from schedule_items i join jobs j on j.id = i.job_id
+     where j.name = 'Summercrest Lot 7 Spec' and i.baseline_start is not null) as lot7_baselines,
+  (select count(*) from schedule_items i join jobs j on j.id = i.job_id
+     where j.name = 'Summercrest Lot 7 Spec' and i.status = 'complete') as lot7_complete,
+  (select count(*) from schedule_items i join jobs j on j.id = i.job_id
+     where j.name = 'Summercrest Lot 9 Spec') as lot9_items,
+  (select count(*) from jobs where name = 'Summercrest Lot 9 Spec'
+     and schedule_status = 'draft') as lot9_draft,
+  (select count(*) from work_orders w join jobs j on j.id = w.job_id
+     where j.name = 'Summercrest Lot 7 Spec' and w.schedule_item_id is not null) as linked_wos,
+  (select count(*) from selections s join jobs j on j.id = s.job_id
+     where j.name = 'Summercrest Lot 7 Spec' and s.schedule_item_id is not null
+       and s.decision_deadline is not null) as sel_deadline,
+  (select count(*) from schedule_items i join jobs j on j.id = i.job_id
+     where j.name in ('Summercrest Lot 7 Spec','Summercrest Lot 9 Spec')
+       and i.ignore_workdays = false
+       and (extract(isodow from i.start_date) > 5 or extract(isodow from i.end_date) > 5)) as weekend_dates;
