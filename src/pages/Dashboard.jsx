@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { CATALOG, PERSONA_DEFAULTS, ROLE_PERSONA, card, sectionTitle } from '../dashboard/widgets.jsx';
 
 const STATUS_ORDER = ['lead','design','contract','permitting','planned','permitted',
                       'construction','listed','under_contract','closed_sold','warranty','closed'];
@@ -12,14 +13,6 @@ const STATUS_DOT = {
 const money = (n) => (n === null || n === undefined) ? '—'
   : Number(n).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
-const card = {
-  background: 'var(--cream-panel)', border: '1px solid var(--line)',
-  borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)',
-};
-const sectionTitle = {
-  fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase',
-  letterSpacing: 0.8, padding: '12px 16px 8px',
-};
 
 function Stat({ label, value, accent, to, onOpen, testid }) {
   const nav = useNavigate();
@@ -49,6 +42,102 @@ function Drawer({ title, onClose, children }) {
     </>
   );
 }
+
+const ctl = { border: '1px solid var(--line)', background: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, cursor: 'pointer' };
+
+const STATUS_DOT2 = STATUS_DOT;
+function PipelineWidget({ shared, nav }) {
+  const { statusCounts, maxCount } = shared;
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 12px' }}>
+      {statusCounts.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>No jobs yet.</div>}
+      {statusCounts.map(([st, n]) => (
+        <div key={st} className="clickable" onClick={() => nav('/jobs')}
+          style={{ display: 'grid', gridTemplateColumns: '110px 1fr 24px', gap: 10, alignItems: 'center', padding: '6px 4px', cursor: 'pointer' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>
+            <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 4, background: STATUS_DOT2[st], marginRight: 7 }} />
+            {st.replace('_', ' ')}
+          </span>
+          <div style={{ height: 8, borderRadius: 4, background: 'var(--cream)', overflow: 'hidden' }}>
+            <div style={{ width: `${(n / maxCount) * 100}%`, height: '100%', background: STATUS_DOT2[st], opacity: 0.75 }} />
+          </div>
+          <b style={{ fontSize: 13, color: 'var(--navy)', textAlign: 'right' }}>{n}</b>
+        </div>
+      ))}
+    </div>
+  );
+}
+function MoneyInMotionWidget({ shared, nav }) {
+  const { inMotion } = shared;
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 10px' }}>
+      {inMotion.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)', padding: '0 8px' }}>Appears when a job has an accepted contract.</div>}
+      {inMotion.map((b) => (
+        <div key={b.job_id} className="clickable" data-testid="motion-row" onClick={() => nav(`/jobs/${b.job_id}`)}
+          style={{ display: 'grid', gridTemplateColumns: '1fr 110px 90px', gap: 10, alignItems: 'center', padding: '8px 10px', borderRadius: 8, cursor: 'pointer' }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.name}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>baseline {money(b.contract_baseline)}</div>
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--navy)', textAlign: 'right' }}>{money(b.revised_price)}</div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '2px 8px',
+              background: b.delta > 0 ? '#FBE9E9' : b.delta < 0 ? '#E7F6EC' : '#EEEEEA',
+              color: b.delta > 0 ? '#8F2730' : b.delta < 0 ? '#1F6B3A' : '#5A6478' }}>
+              {b.delta > 0 ? '+' : ''}{money(b.delta)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+function AttentionWidget({ shared, nav }) {
+  const { conds, cos, coValue } = shared;
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 12px' }}>
+      {conds.length === 0 && cos.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Clear board.</div>}
+      {conds.map((c) => (
+        <div key={c.id} className="clickable" data-testid="attention-row" onClick={() => c.jobs && nav(`/jobs/${c.jobs.id}`)}
+          style={{ borderLeft: `3px solid ${c.status === 'triggered' ? 'var(--bad)' : 'var(--warn)'}`, padding: '7px 10px', margin: '6px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
+          <div style={{ fontSize: 12.5, color: 'var(--ink)', fontWeight: 600 }}>{c.text}</div>
+          <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>
+            {c.status === 'triggered' ? 'TRIGGERED' : c.type}
+            {c.trigger_date ? ` · ${new Date(c.trigger_date + 'T00:00:00').toLocaleDateString()}` : ''}
+            {c.jobs ? ` · ${c.jobs.name}` : ''}
+          </div>
+        </div>
+      ))}
+      {cos.map((o) => (
+        <div key={o.id} className="clickable" onClick={() => nav(`/jobs/${o.job_id}`)}
+          style={{ borderLeft: '3px solid var(--gold)', padding: '7px 10px', margin: '6px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
+          <div style={{ fontSize: 12.5, color: 'var(--ink)', fontWeight: 600 }}>CO: {o.title} — {money(coValue(o))}</div>
+          <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{o.status.replace('_', ' ')} · {o.jobs?.name}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+function TicketStatsWidget({ shared, nav }) {
+  const t = shared.tstats ?? {};
+  const cell = (label, v) => (
+    <div style={{ background: '#fff', borderRadius: 8, padding: '10px 12px' }}>
+      <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--navy)' }}>{v ?? 0}</div>
+      <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{label}</div>
+    </div>
+  );
+  return (
+    <div className="clickable" onClick={() => nav('/tickets')} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 10, padding: '2px 14px 14px', cursor: 'pointer' }}>
+      {cell('Open', t.open_tickets)}{cell('New 7d', t.new_7d)}{cell('Feature requests', t.feature_requests)}{cell('Avg hrs close', t.avg_hours_to_close ?? '—')}
+    </div>
+  );
+}
+const LOCAL_WIDGETS = [
+  { id: 'pipeline', title: 'Pipeline — one engine, both funnels', span: 1, component: PipelineWidget },
+  { id: 'money_in_motion', title: 'Money in motion', span: 1, component: MoneyInMotionWidget },
+  { id: 'needs_attention', title: 'Needs attention', span: 1, component: AttentionWidget },
+  { id: 'ticket_stats', title: 'Support health', span: 1, component: TicketStatsWidget },
+];
 
 export default function Dashboard({ orgId, orgName, role }) {
   const nav = useNavigate();
@@ -87,6 +176,45 @@ export default function Dashboard({ orgId, orgName, role }) {
   const triggered = conds.filter((c) => c.status === 'triggered');
   const coValue = (o) => (o.change_order_lines ?? []).reduce((s, l) => s + Number(l.price ?? 0), 0);
 
+  const shared = { jobs, budgets, conds, cos, tstats, active, statusCounts, maxCount, inMotion, triggered, coValue };
+  const registry = [...CATALOG, ...LOCAL_WIDGETS];
+  const persona = ROLE_PERSONA[role] ?? 'P2';
+  const defaults = PERSONA_DEFAULTS[persona] ?? PERSONA_DEFAULTS.P2;
+  const [layout, setLayout] = useState(defaults);
+  const [editing, setEditing] = useState(false);
+  const [prefsLoaded, setPrefsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!orgId) return;
+    let c = false;
+    (async () => {
+      const { data: sess } = await supabase.auth.getSession();
+      const uid = sess?.session?.user?.id;
+      if (!uid) return;
+      const { data } = await supabase.from('org_members').select('dashboard_prefs')
+        .eq('org_id', orgId).eq('person_id', uid).maybeSingle();
+      if (c) return;
+      const saved = data?.dashboard_prefs?.widgets;
+      if (!prefsLoaded && Array.isArray(saved) && saved.length) setLayout(saved.filter((id) => registry.some((w) => w.id === id)));
+      setPrefsLoaded(true);
+    })();
+    return () => { c = true; };
+  }, [orgId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const addWidget = (id) => setLayout((l) => [...l, id]);
+  const removeWidget = (id) => setLayout((l) => l.filter((x) => x !== id));
+  const moveWidget = (i, d) => setLayout((l) => {
+    const n = [...l]; const j = i + d;
+    if (j < 0 || j >= n.length) return l;
+    [n[i], n[j]] = [n[j], n[i]]; return n;
+  });
+  const resetLayout = () => setLayout(defaults);
+  const saveLayout = async () => {
+    setEditing(false);
+    try { await supabase.rpc('save_dashboard_prefs', { p_org: orgId, p_prefs: { widgets: layout } }); }
+    catch { /* script 012 not run yet — layout persists for this session only */ }
+  };
+
   return (
     <div style={{ flex: 1, padding: '22px 28px', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 14 }}>
       <div>
@@ -94,93 +222,45 @@ export default function Dashboard({ orgId, orgName, role }) {
         <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Your seat: {role ?? '…'}</div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
-        <Stat testid="stat-active-jobs" label="Active jobs" value={active.length} accent="var(--gold)" to="/jobs" />
-        <Stat testid="stat-open-tickets" label="Open tickets" value={tstats?.open_tickets ?? 0} accent="#1D4E89" to="/tickets" />
-        <Stat testid="stat-awaiting-cos" label="COs awaiting decision" value={cos.length} accent="#8A5A00" onOpen={() => setDrawer('cos')} />
-        <Stat testid="stat-conditions" label="Conditions watching" value={conds.length} accent={triggered.length ? 'var(--bad)' : '#1F6B3A'} onOpen={() => setDrawer('conditions')} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
+        {editing && (
+          <>
+            <select data-testid="widget-add" value="" onChange={(e) => { if (e.target.value) addWidget(e.target.value); }}
+              style={{ padding: '6px 10px', border: '1px solid var(--line)', borderRadius: 8, background: '#fff', fontSize: 12 }}>
+              <option value="">Add widget…</option>
+              {registry.filter((w) => !layout.includes(w.id)).map((w) => <option key={w.id} value={w.id}>{w.title}</option>)}
+            </select>
+            <button onClick={resetLayout} style={{ padding: '6px 12px', border: '1px solid var(--line)', borderRadius: 8, background: 'transparent', color: 'var(--ink-soft)', fontSize: 12 }}>Reset to default</button>
+          </>
+        )}
+        <button data-testid="dashboard-edit" onClick={() => (editing ? saveLayout() : setEditing(true))}
+          style={{ padding: '6px 14px', border: 'none', borderRadius: 8, background: editing ? 'var(--gold)' : 'var(--navy)', color: editing ? 'var(--navy-deep)' : 'var(--cream)', fontWeight: 700, fontSize: 12 }}>
+          {editing ? 'Done' : 'Customize'}
+        </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.4fr 1.4fr', gap: 14, flex: 1, overflow: 'hidden' }}>
-        {/* Pipeline */}
-        <div style={{ ...card, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={sectionTitle}>Pipeline — one engine, both funnels</div>
-          <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 14px' }}>
-            {statusCounts.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>No jobs yet.</div>}
-            {statusCounts.map(([s, n]) => (
-              <div key={s} className="clickable" onClick={() => nav('/jobs')}
-                style={{ display: 'grid', gridTemplateColumns: '110px 1fr 24px', gap: 10, alignItems: 'center', padding: '7px 4px', cursor: 'pointer' }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>
-                  <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 4, background: STATUS_DOT[s], marginRight: 7 }} />
-                  {s.replace('_', ' ')}
-                </span>
-                <div style={{ height: 8, borderRadius: 4, background: 'var(--cream)', overflow: 'hidden' }}>
-                  <div style={{ width: `${(n / maxCount) * 100}%`, height: '100%', background: STATUS_DOT[s], opacity: 0.75 }} />
-                </div>
-                <b style={{ fontSize: 13, color: 'var(--navy)', textAlign: 'right' }}>{n}</b>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, flex: 1, overflowY: 'auto', alignContent: 'start' }}>
+        {layout.map((id, i) => {
+          const w = registry.find((x) => x.id === id);
+          if (!w) return null;
+          const C = w.component;
+          return (
+            <div key={id} data-testid={`widget-${id}`} style={{ ...card, gridColumn: w.span === 2 ? '1 / -1' : 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={sectionTitle}>{w.title}</div>
+                {editing && (
+                  <div style={{ display: 'flex', gap: 4, padding: '8px 10px 0' }}>
+                    <button onClick={() => moveWidget(i, -1)} aria-label="up" style={ctl}>↑</button>
+                    <button onClick={() => moveWidget(i, 1)} aria-label="down" style={ctl}>↓</button>
+                    <button onClick={() => removeWidget(id)} aria-label="remove" style={{ ...ctl, color: 'var(--bad)' }}>✕</button>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Money in motion */}
-        <div style={{ ...card, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={sectionTitle}>Money in motion</div>
-          <div style={{ flex: 1, overflowY: 'auto', padding: '0 6px 10px' }}>
-            {inMotion.length === 0 && (
-              <div style={{ fontSize: 13, color: 'var(--ink-soft)', padding: '0 10px' }}>
-                Appears when a job has an accepted contract — baseline, approved changes, and variance, computed live.
-              </div>
-            )}
-            {inMotion.map((b) => (
-              <div key={b.job_id} className="clickable" data-testid="motion-row" onClick={() => nav(`/jobs/${b.job_id}`)}
-                style={{ display: 'grid', gridTemplateColumns: '1fr 110px 90px', gap: 10, alignItems: 'center', padding: '9px 10px', borderRadius: 8, cursor: 'pointer' }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>baseline {money(b.contract_baseline)}</div>
-                </div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--navy)', textAlign: 'right' }}>{money(b.revised_price)}</div>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '2px 8px',
-                    background: b.delta > 0 ? '#FBE9E9' : b.delta < 0 ? '#E7F6EC' : '#EEEEEA',
-                    color: b.delta > 0 ? '#8F2730' : b.delta < 0 ? '#1F6B3A' : '#5A6478' }}>
-                    {b.delta > 0 ? '+' : ''}{money(b.delta)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Needs attention */}
-        <div style={{ ...card, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={sectionTitle}>Needs attention</div>
-          <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 12px' }}>
-            {conds.length === 0 && cos.length === 0 && (
-              <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Clear board — no open conditions, no change orders waiting.</div>
-            )}
-            {conds.map((c) => (
-              <div key={c.id} className="clickable" data-testid="attention-row" onClick={() => c.jobs && nav(`/jobs/${c.jobs.id}`)}
-                style={{ borderLeft: `3px solid ${c.status === 'triggered' ? 'var(--bad)' : 'var(--warn)'}`, padding: '7px 10px', margin: '6px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
-                <div style={{ fontSize: 12.5, color: 'var(--ink)', fontWeight: 600 }}>{c.text}</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>
-                  {c.status === 'triggered' ? 'TRIGGERED' : c.type}
-                  {c.trigger_date ? ` · ${new Date(c.trigger_date + 'T00:00:00').toLocaleDateString()}` : ''}
-                  {c.jobs ? ` · ${c.jobs.name}` : ''}
-                </div>
-              </div>
-            ))}
-            {cos.map((o) => (
-              <div key={o.id} className="clickable" onClick={() => nav(`/jobs/${o.job_id}`)}
-                style={{ borderLeft: '3px solid var(--gold)', padding: '7px 10px', margin: '6px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
-                <div style={{ fontSize: 12.5, color: 'var(--ink)', fontWeight: 600 }}>CO: {o.title} — {money(coValue(o))}</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{o.status.replace('_', ' ')} · {o.jobs?.name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+              <C orgId={orgId} shared={shared} nav={nav} openDrawer={setDrawer} />
+            </div>
+          );
+        })}
       </div>
-
       {drawer === 'conditions' && (
         <Drawer title={`Conditions watching (${conds.length})`} onClose={() => setDrawer(null)}>
           {conds.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Nothing being watched.</div>}

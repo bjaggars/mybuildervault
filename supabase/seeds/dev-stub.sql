@@ -253,3 +253,34 @@ select
     where o.slug = 'jaggars-dev' and a.name = 'Well & Septic') as hidden_well_variance,
   (select count(*) from selections s join builder_orgs o on o.id = s.org_id
     where o.slug = 'jaggars-dev') as selections;
+
+-- ============================================================
+-- ADDENDUM (post-011): internal COSTS on the Anderson stub lines
+-- so the margin board computes real forecast + margin. Idempotent
+-- (only fills null costs). jaggars-dev ONLY.
+-- ============================================================
+update estimate_lines el
+   set cost = case when el.kind = 'allowance' then el.price
+                   else round(el.price * 0.78, 2) end
+  from estimates e
+ where e.id = el.estimate_id and el.cost is null
+   and e.job_id in (select j.id from jobs j join builder_orgs o on o.id = j.org_id
+                     where o.slug = 'jaggars-dev' and j.name = 'Anderson Custom — Lot 4');
+
+update change_order_lines cl
+   set cost = round(cl.price * 0.80, 2)
+  from change_orders co
+ where co.id = cl.change_order_id and cl.cost is null
+   and co.org_id = (select id from builder_orgs where slug = 'jaggars-dev');
+
+-- PROVE-IT · PASS: costed_lines = 15 · costed_co_lines = 4 · forecast > 0
+select
+  (select count(*) from estimate_lines el join estimates e on e.id = el.estimate_id
+    join builder_orgs o on o.id = e.org_id
+   where o.slug = 'jaggars-dev' and el.cost is not null) as costed_lines,
+  (select count(*) from change_order_lines cl join change_orders co on co.id = cl.change_order_id
+    join builder_orgs o on o.id = co.org_id
+   where o.slug = 'jaggars-dev' and cl.cost is not null) as costed_co_lines,
+  (select round(sum(el.cost), 2) from estimate_lines el join estimates e on e.id = el.estimate_id
+    join builder_orgs o on o.id = e.org_id
+   where o.slug = 'jaggars-dev' and e.status = 'accepted') as accepted_forecast_base;
