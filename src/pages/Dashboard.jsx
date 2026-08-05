@@ -133,18 +133,20 @@ function TicketStatsWidget({ shared, nav }) {
   );
 }
 /* Schedule health — which builds are tracking, at risk, or late.
-   Health is computed against the PUBLISHED baseline (script 014):
+   Dashboard-grade v2 (Brice, 8/5): solid stat tiles, per-item segment
+   strips, current-phase line, finish vs baseline. Health is computed
+   against the PUBLISHED baseline (script 014):
      late      projected finish (max coalesce(actual_end, end_date)) is past
                the baseline finish — the schedule says you land late.
      at risk   finish still holds, but an incomplete item is running behind
                its own baseline window — the early warning before "late".
      tracking  neither; shows days ahead when the field beat the plan.
-   Draft schedules sit dim at the bottom. Every pill and row is a door. */
+   Draft schedules sit dim at the bottom. Every tile and row is a door. */
 const HEALTH = {
-  late:     { label: 'Late',     fg: '#8F2730', bg: '#FBE9E9' },
-  at_risk:  { label: 'At risk',  fg: '#8A5A00', bg: '#FBF3E4' },
-  tracking: { label: 'On track', fg: '#1F6B3A', bg: '#E7F6EC' },
-  draft:    { label: 'Draft',    fg: '#5A6478', bg: '#EEEEEA' },
+  late:     { label: 'Late',     caption: 'past baseline',   fg: '#8F2730', tint: '#FBE9E9', txt: '#fff' },
+  at_risk:  { label: 'At risk',  caption: 'behind window',   fg: '#8A5A00', tint: '#FBF3E4', txt: '#fff' },
+  tracking: { label: 'On track', caption: 'holding baseline', fg: '#1F6B3A', tint: '#E7F6EC', txt: '#fff' },
+  draft:    { label: 'Draft',    caption: 'not published',   fg: '#5A6478', tint: '#EEEEEA', txt: '#5A6478' },
 };
 function ScheduleHealthWidget({ orgId, shared, nav }) {
   const [items, setItems] = useState([]);
@@ -153,8 +155,8 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
     if (!orgId) return;
     let c = false;
     supabase.from('schedule_items')
-      .select('job_id, status, start_date, end_date, actual_end, baseline_start, baseline_end')
-      .eq('org_id', orgId)
+      .select('job_id, title, status, sort, start_date, end_date, actual_end, baseline_start, baseline_end')
+      .eq('org_id', orgId).order('sort')
       .then(({ data }) => { if (!c) setItems(data ?? []); });
     return () => { c = true; };
   }, [orgId]);
@@ -171,6 +173,7 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
       const fin = (arr) => arr.reduce((m, d) => (d && (!m || d > m) ? d : m), null);
       const projFinish = fin(its.map((i) => i.actual_end ?? i.end_date));
       const baseFinish = fin(its.map((i) => i.baseline_end));
+      const now = its.find((i) => i.status === 'in_progress') ?? its.find((i) => i.status !== 'complete');
       let health, slip = null;
       if (j.schedule_status !== 'published' || !baseFinish) health = 'draft';
       else {
@@ -179,7 +182,8 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
           && (i.baseline_end < today || (i.end_date && i.end_date > i.baseline_end)));
         health = slip > 0 ? 'late' : behindWindow ? 'at_risk' : 'tracking';
       }
-      return { id: j.id, name: j.name, health, slip, done, total: its.length, projFinish };
+      return { id: j.id, name: j.name, health, slip, done, total: its.length,
+               projFinish, baseFinish, its, nowTitle: now?.title ?? null };
     })
     .sort((a, z) => ['late', 'at_risk', 'tracking', 'draft'].indexOf(a.health)
                   - ['late', 'at_risk', 'tracking', 'draft'].indexOf(z.health));
@@ -190,20 +194,35 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
   const pillText = (r) =>
     r.health === 'late' ? `LATE +${r.slip}d`
     : r.health === 'at_risk' ? 'AT RISK'
-    : r.health === 'tracking' ? (r.slip < 0 ? `ON TRACK · ${-r.slip}d ahead` : 'ON TRACK')
+    : r.health === 'tracking' ? (r.slip < 0 ? `${-r.slip}d AHEAD` : 'ON TRACK')
     : 'DRAFT';
+  const segColor = (r, i) =>
+    i.status === 'complete' ? HEALTH[r.health === 'draft' ? 'draft' : 'tracking'].fg
+    : i.status === 'in_progress' ? 'var(--gold)'
+    : (r.health !== 'draft' && i.baseline_end && i.baseline_end < today) ? HEALTH.late.tint
+    : '#E3E1D8';
 
   return (
     <div style={{ padding: '2px 16px 14px' }}>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
-        {Object.entries(HEALTH).map(([k, h]) => (
-          <button key={k} data-testid={`sched-health-pill-${k}`} onClick={() => setPick(pick === k ? '' : k)}
-            style={{ border: pick === k ? `2px solid ${h.fg}` : '1px solid var(--line)', background: h.bg, color: h.fg,
-              borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 800, cursor: 'pointer' }}>
-            {h.label} {counts[k]}
-          </button>
-        ))}
+      {/* stat tiles — solid, big-number, clickable filters */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 12 }}>
+        {Object.entries(HEALTH).map(([k, h]) => {
+          const selected = pick === k;
+          return (
+            <div key={k} className="clickable" data-testid={`sched-health-pill-${k}`}
+              onClick={() => setPick(selected ? '' : k)}
+              style={{ background: k === 'draft' ? h.tint : h.fg, color: k === 'draft' ? h.fg : h.txt,
+                borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
+                outline: selected ? '3px solid var(--gold)' : 'none',
+                opacity: pick && !selected ? 0.55 : 1 }}>
+              <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1 }}>{counts[k]}</div>
+              <div style={{ fontSize: 12, fontWeight: 800, marginTop: 4 }}>{h.label}</div>
+              <div style={{ fontSize: 10.5, opacity: 0.85 }}>{h.caption}</div>
+            </div>
+          );
+        })}
       </div>
+
       {shown.length === 0 && (
         <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
           {rows.length === 0 ? 'No schedules yet — import a template on the Schedule page.' : 'Nothing in this bucket.'}
@@ -211,16 +230,39 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
       )}
       {shown.map((r) => {
         const h = HEALTH[r.health];
+        const pct = Math.round((r.done / r.total) * 100);
         return (
           <div key={r.id} className="clickable" data-testid="sched-health-row" onClick={() => nav(`/schedule?job=${r.id}`)}
-            style={{ display: 'grid', gridTemplateColumns: '1fr auto 90px 80px', gap: 10, alignItems: 'center',
+            style={{ display: 'grid', gridTemplateColumns: '230px 1fr 96px 118px', gap: 12, alignItems: 'center',
               borderLeft: `4px solid ${h.fg}`, background: r.health === 'draft' ? 'transparent' : '#fff',
-              opacity: r.health === 'draft' ? 0.65 : 1,
-              borderRadius: '0 8px 8px 0', padding: '8px 12px', margin: '6px 0', cursor: 'pointer' }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</div>
-            <span style={{ fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '2px 9px', background: h.bg, color: h.fg }}>{pillText(r)}</span>
-            <span style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{r.done}/{r.total} done</span>
-            <span style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{fmtD(r.projFinish)}</span>
+              opacity: r.health === 'draft' ? 0.7 : 1,
+              borderRadius: '0 8px 8px 0', padding: '7px 12px', margin: '5px 0', cursor: 'pointer' }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</div>
+              <div style={{ fontSize: 11, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {r.nowTitle ? `now: ${r.nowTitle}` : 'complete'}
+              </div>
+            </div>
+            <div>
+              {/* per-item segment strip: green done · gold in progress · red-tint overdue · gray ahead */}
+              <div style={{ display: 'flex', gap: 2, height: 12, alignItems: 'stretch' }}>
+                {r.its.map((i) => (
+                  <div key={i.title + i.sort} title={`${i.title} — ${i.status.replace('_', ' ')}`}
+                    style={{ flex: 1, borderRadius: 2, background: segColor(r, i) }} />
+                ))}
+              </div>
+              <div style={{ fontSize: 10.5, color: 'var(--ink-soft)', marginTop: 3 }}>{r.done}/{r.total} items · {pct}%</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '3px 9px',
+                background: h.tint, color: h.fg, whiteSpace: 'nowrap' }}>{pillText(r)}</span>
+            </div>
+            <div style={{ textAlign: 'right', lineHeight: 1.25 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: r.health === 'late' ? h.fg : 'var(--navy)' }}>{fmtD(r.projFinish)}</div>
+              <div style={{ fontSize: 10.5, color: 'var(--ink-soft)' }}>
+                {r.health === 'draft' ? 'projected' : `baseline ${fmtD(r.baseFinish)}`}
+              </div>
+            </div>
           </div>
         );
       })}

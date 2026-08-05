@@ -354,4 +354,16 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   1/1/1/1/7/0 exact, matching the fresh-chain local proof to the digit.
   All three health colors live on dev. Nothing pending on the schedule
   engine or its dashboard card.
+- HEALTH CARD v2 8/5 PM (Brice: 'ugly, too much whitespace, be
+  dashboard-like — look at the incumbents'): researched BT/JobTread —
+  BT elevated Baseline to a first-class tab and an aftermarket sells
+  schedule-performance dashboards ON TOP of BT (their own at-a-glance is
+  weak = our opening); JobTread's signature is dense KPI tiles + progress
+  bars. Rebuilt: 4 SOLID stat tiles (big number, caption, click-filter,
+  gold ring on selected, others dim); rows carry a per-item SEGMENT STRIP
+  (green done / gold in-progress / red-tint overdue-vs-baseline / gray
+  ahead, item tooltip), 'now: <item>' current-phase line, done/total + %,
+  health pill, projected finish over baseline finish. Same testids —
+  path 9 untouched. Design note: whitespace is a void; the strip is data
+  where padding used to be.
 
