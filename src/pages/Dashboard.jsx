@@ -150,14 +150,24 @@ const HEALTH = {
 };
 function ScheduleHealthWidget({ orgId, shared, nav }) {
   const [items, setItems] = useState([]);
+  const [driftById, setDriftById] = useState({});
   const [pick, setPick] = useState('');   // '' = all, or a HEALTH key
   useEffect(() => {
     if (!orgId) return;
     let c = false;
-    supabase.from('schedule_items')
-      .select('job_id, title, status, sort, start_date, end_date, actual_end, baseline_start, baseline_end')
-      .eq('org_id', orgId).order('sort')
-      .then(({ data }) => { if (!c) setItems(data ?? []); });
+    (async () => {
+      const [{ data: si }, { data: dr }] = await Promise.all([
+        supabase.from('schedule_items')
+          .select('id, job_id, title, status, sort, start_date, end_date, actual_end, baseline_start, baseline_end')
+          .eq('org_id', orgId).order('sort'),
+        supabase.from('v_schedule_item_progress')
+          .select('item_id, expected_pct, actual_pct, drift, work_behind')
+          .eq('org_id', orgId).eq('work_behind', true),
+      ]);
+      if (c) return;
+      setItems(si ?? []);
+      setDriftById(Object.fromEntries((dr ?? []).map((d) => [d.item_id, d])));
+    })();
     return () => { c = true; };
   }, [orgId]);
 
@@ -180,7 +190,8 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
         slip = projFinish && dayDiff(projFinish, baseFinish);
         const behindWindow = its.some((i) => i.status !== 'complete' && i.baseline_end
           && (i.baseline_end < today || (i.end_date && i.end_date > i.baseline_end)));
-        health = slip > 0 ? 'late' : behindWindow ? 'at_risk' : 'tracking';
+        const workBehind = its.some((i) => driftById[i.id]);   // drift ≥ 25 (015)
+        health = slip > 0 ? 'late' : (behindWindow || workBehind) ? 'at_risk' : 'tracking';
       }
       return { id: j.id, name: j.name, health, slip, done, total: its.length,
                projFinish, baseFinish, its, nowTitle: now?.title ?? null };
@@ -197,10 +208,17 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
     : r.health === 'tracking' ? (r.slip < 0 ? `${-r.slip}d AHEAD` : 'ON TRACK')
     : 'DRAFT';
   const segColor = (r, i) =>
-    i.status === 'complete' ? HEALTH[r.health === 'draft' ? 'draft' : 'tracking'].fg
+    driftById[i.id] ? HEALTH.late.fg                     // work-behind (015): solid red
+    : i.status === 'complete' ? HEALTH[r.health === 'draft' ? 'draft' : 'tracking'].fg
     : i.status === 'in_progress' ? 'var(--gold)'
     : (r.health !== 'draft' && i.baseline_end && i.baseline_end < today) ? HEALTH.late.tint
     : '#E3E1D8';
+  const segTitle = (i) => {
+    const d = driftById[i.id];
+    return d
+      ? `${i.title} — WORK BEHIND: ${d.actual_pct}% done, ${d.expected_pct}% expected`
+      : `${i.title} — ${i.status.replace('_', ' ')}`;
+  };
 
   return (
     <div style={{ padding: '2px 16px 14px' }}>
@@ -247,7 +265,7 @@ function ScheduleHealthWidget({ orgId, shared, nav }) {
               {/* per-item segment strip: green done · gold in progress · red-tint overdue · gray ahead */}
               <div style={{ display: 'flex', gap: 2, height: 12, alignItems: 'stretch' }}>
                 {r.its.map((i) => (
-                  <div key={i.title + i.sort} title={`${i.title} — ${i.status.replace('_', ' ')}`}
+                  <div key={i.title + i.sort} title={segTitle(i)}
                     style={{ flex: 1, borderRadius: 2, background: segColor(r, i) }} />
                 ))}
               </div>

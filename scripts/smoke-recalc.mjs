@@ -270,6 +270,74 @@ async function main() {
      iso(p.start_date) === friday && iso(p.end_date) === addDays(friday, 2),
      `end ${iso(p.end_date)}, expected ${addDays(friday, 2)}`);
 
+  // ---------------------------------------------------------------
+  // 11. Progress drift (script 015): the sniff test is DERIVED.
+  //     expected from elapsed/duration, actual from WO checklists;
+  //     time-elapsed + work-behind flags BEFORE any date slips.
+  // ---------------------------------------------------------------
+  // D1: started 4 workdays ago, dur 5 → expected ~80-100; checklist 1/4 = 25 → behind.
+  const d1start = (await db.query(
+    `select sub_workdays($1, current_date, 4) d`, [ORG])).rows[0].d;
+  const D1 = await item('D1 drift behind', { duration: 5, start: iso(d1start), sort: 20 });
+  await db.query(`update schedule_items set status='in_progress', actual_start=start_date where id=$1`, [D1]);
+  const woD1 = (await db.query(
+    `insert into work_orders (id, org_id, job_id, kind, discipline, title, status, assignee_kind, schedule_item_id)
+     values (gen_random_uuid(), $1, $2, 'work', 'framing', 'D1 wo', 'in_progress', 'discipline', $3)
+     returning id`, [ORG, JOB, D1])).rows[0].id;
+  for (let i = 0; i < 4; i++) {
+    await db.query(`insert into work_order_items (work_order_id, label, sort, done)
+                    values ($1, 'step ' || $2::text, $3::int, $4)`, [woD1, i, i, i === 0]);
+  }
+  const p1 = (await db.query(
+    `select * from v_schedule_item_progress where item_id = $1`, [D1])).rows[0];
+  ok('drift: elapsed item with 1/4 checklist is work_behind',
+     p1.work_behind === true && Number(p1.actual_pct) === 25 && Number(p1.expected_pct) >= 60,
+     `expected ${p1.expected_pct}, actual ${p1.actual_pct}, behind ${p1.work_behind}`);
+
+  // D2: MID-window (started 2 workdays ago, dur 5 → expected ~40-60),
+  //     checklist 3/4 = 75 → ahead of pace, NOT behind. (First cut of
+  //     this scenario used the same window as D1 and correctly flagged:
+  //     expected 100 vs 75 IS the threshold — the view was right.)
+  const d2start = (await db.query(
+    `select sub_workdays($1, current_date, 2) d`, [ORG])).rows[0].d;
+  const D2 = await item('D2 drift on pace', { duration: 5, start: iso(d2start), sort: 21 });
+  await db.query(`update schedule_items set status='in_progress', actual_start=start_date where id=$1`, [D2]);
+  const woD2 = (await db.query(
+    `insert into work_orders (id, org_id, job_id, kind, discipline, title, status, assignee_kind, schedule_item_id)
+     values (gen_random_uuid(), $1, $2, 'work', 'framing', 'D2 wo', 'in_progress', 'discipline', $3)
+     returning id`, [ORG, JOB, D2])).rows[0].id;
+  for (let i = 0; i < 4; i++) {
+    await db.query(`insert into work_order_items (work_order_id, label, sort, done)
+                    values ($1, 'step ' || $2::text, $3::int, $4)`, [woD2, i, i, i < 3]);
+  }
+  const p2 = (await db.query(
+    `select * from v_schedule_item_progress where item_id = $1`, [D2])).rows[0];
+  ok('drift: checklist at pace is not flagged',
+     p2.work_behind === false && p2.from_checklist === true,
+     `expected ${p2.expected_pct}, actual ${p2.actual_pct}, behind ${p2.work_behind}`);
+
+  // D3: no checklist, no manual_pct → drift null, never flagged;
+  //     manual_pct fallback then engages the flag.
+  const D3 = await item('D3 no signal', { duration: 5, start: iso(d1start), sort: 22 });
+  await db.query(`update schedule_items set status='in_progress', actual_start=start_date where id=$1`, [D3]);
+  let p3 = (await db.query(
+    `select * from v_schedule_item_progress where item_id = $1`, [D3])).rows[0];
+  const noSignal = p3.work_behind === false && p3.drift === null;
+  await db.query(`update schedule_items set manual_pct = 10 where id = $1`, [D3]);
+  p3 = (await db.query(
+    `select * from v_schedule_item_progress where item_id = $1`, [D3])).rows[0];
+  ok('drift: silent without signal; manual_pct fallback flags',
+     noSignal && p3.work_behind === true && p3.from_checklist === false,
+     `noSignal ${noSignal}, then behind ${p3.work_behind} from_checklist ${p3.from_checklist}`);
+
+  // D4: completing the item clears everything to 100 / unflagged.
+  await db.query(`update schedule_items set status='complete', actual_end=current_date where id=$1`, [D1]);
+  const p4 = (await db.query(
+    `select * from v_schedule_item_progress where item_id = $1`, [D1])).rows[0];
+  ok('drift: complete item reads 100/100, never flagged',
+     Number(p4.expected_pct) === 100 && Number(p4.actual_pct) === 100 && p4.work_behind === false,
+     `expected ${p4.expected_pct}, actual ${p4.actual_pct}`);
+
   await db.end();
   console.log(`\nrecalc smoke: ${passed} passed, ${failed} failed`);
   process.exit(failed > 0 ? 1 : 0);

@@ -183,6 +183,8 @@ test('schedule engine: items, dependency cascade, publish baseline, reasoned shi
   await page.getByTestId('si-drawer-close').click();
   await expect(rowB).not.toHaveText(bBefore);           // B followed the cascade
   await expect(rowB).toContainText('+');                // slipped vs baseline
+  await expect(page.getByTestId('si-sort-prog')).toBeVisible();     // drift column (015)
+  await expect(page.getByTestId('si-filter-prog')).toBeVisible();   // #15: it filters too
 
   // Gantt renders WITH dated items — the exact transition that white-screened
   // when a hook sat below an early return (LEARNINGS #18). A crash here

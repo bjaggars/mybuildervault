@@ -237,6 +237,18 @@ Residential truth: self-reported % is gamed ("90% done" syndrome).
   'work-behind' → red segment on the health strip + at-risk contribution
   in the job health calc, BEFORE any date moves
 - Surface: drift chip on Gantt bar + list column + health-card tooltip
-**Status:** captured, not scheduled. Depends on: nothing (013 + 014 live).
-**Owner:** Brice (green-light) → Claude
+**Status:** EXECUTED 8/5 PM (green-lit same day). Script 015:
+count_workdays fn, schedule_items.manual_pct, v_schedule_item_progress
+(security_invoker; expected/actual/drift/work_behind, checklist-first
+actual, threshold 25). Smoked 23/23 (4 drift scenarios: behind flags,
+on-pace silent, no-signal silent then manual fallback flags, complete
+reads 100 — first cut of the on-pace scenario used end-of-window and
+the view CORRECTLY flagged it; the test moved, not the engine).
+Surfaces: health card (work-behind = solid-red segment + at-risk
+contribution + tooltip math), Gantt rail chip, List 'Prog' column
+(sort + behind/on-pace/no-signal filter per #15), drawer readout +
+manual % fallback. Drift stub: Anderson windows 1/6 + Reyes sitework
+1/5 flagged, Lot 7 framing 2/8 on pace unflagged (no false alarms).
+Awaiting Brice: run 015 + drift addendum, capture prove-its.
+**Owner:** Claude (build ✅) + Brice (run scripts)
 

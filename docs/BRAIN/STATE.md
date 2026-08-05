@@ -366,4 +366,10 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   health pill, projected finish over baseline finish. Same testids —
   path 9 untouched. Design note: whitespace is a void; the strip is data
   where padding used to be.
+- PROGRESS DRIFT EXECUTED 8/5 PM (BOARD-033, green-lit): script 015 +
+  smoke 23/23 + surfaces + drift stub, all proven pre-push on the
+  fresh-chain scratch DB (015 prove-it 1/1/1/4; stub 2/1/1/0/3).
+  Demo line: 'the incumbents ask your super for a percent — we compute
+  drift from the field checklists.' AWAITING BRICE: 015 on
+  mybuildervault-dev, then addendum #4 on jaggars-dev.
 

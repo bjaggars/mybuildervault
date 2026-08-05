@@ -743,3 +743,112 @@ select
   (select proj_finish - base_finish from health
     where name = 'Reyes Custom — Hilltop')                                   as reyes_slip
 from health;
+
+-- ============================================================
+-- DRIFT STUB (script 015 session, 2026-08-05) — checklists that
+-- light the progress-drift engine on the Magnolia sandbox:
+--   · Anderson 'Windows & exterior doors' (open, window passed):
+--     new WO with 1/6 checklist → WORK BEHIND (flagged).
+--   · Reyes 'Sitework & pad' (in progress past its window): new WO
+--     with 1/5 checklist → WORK BEHIND (flagged).
+--   · Lot 7 'Framing': existing 'Frame Magnolia B' WO gets an
+--     8-step checklist with 2 done — early in its window, ON PACE
+--     (NOT flagged; Lot 7 stays green, proving no false alarms).
+-- Idempotent: bails if the Anderson windows WO already exists.
+-- ============================================================
+do $$
+declare
+  v_org uuid; v_me uuid;
+  v_and uuid; v_rey uuid; v_lot7 uuid;
+  v_win uuid; v_site uuid;
+  v_wo_win uuid; v_wo_site uuid; v_wo_frame uuid;
+begin
+  select id into v_org from builder_orgs where slug = 'jaggars-dev';
+  select id into v_me  from people where lower(email) = 'brice@jaggars.com';
+  select id into v_and  from jobs where org_id = v_org and name = 'Anderson Custom — Lot 4';
+  select id into v_rey  from jobs where org_id = v_org and name = 'Reyes Custom — Hilltop';
+  select id into v_lot7 from jobs where org_id = v_org and name = 'Summercrest Lot 7 Spec';
+  select id into v_win  from schedule_items where job_id = v_and and title = 'Windows & exterior doors';
+  select id into v_site from schedule_items where job_id = v_rey and title = 'Sitework & pad';
+  if v_win is null or v_site is null then
+    raise exception 'schedule health stub missing — run the addendum above first';
+  end if;
+
+  if exists (select 1 from work_orders
+              where job_id = v_and and title = 'Window & exterior door install — Lot 4') then
+    raise notice 'drift stub already seeded — nothing to do';
+    return;
+  end if;
+
+  perform set_config('request.jwt.claim.sub', v_me::text, true);
+
+  -- Anderson: windows crew far behind (1/6)
+  insert into work_orders (id, org_id, job_id, kind, discipline, title, status,
+                           assignee_kind, schedule_item_id, created_by)
+  values (gen_random_uuid(), v_org, v_and, 'work', 'framing',
+          'Window & exterior door install — Lot 4', 'in_progress', 'discipline', v_win, v_me)
+  returning id into v_wo_win;
+  insert into work_order_items (work_order_id, label, sort, done) values
+    (v_wo_win, 'Verify openings vs plan',        1, true),
+    (v_wo_win, 'Set exterior doors',             2, false),
+    (v_wo_win, 'Set windows — front elevation',  3, false),
+    (v_wo_win, 'Set windows — rear elevation',   4, false),
+    (v_wo_win, 'Flash & seal all openings',      5, false),
+    (v_wo_win, 'QC walk with super',             6, false);
+
+  -- Reyes: sitework stalled (1/5)
+  insert into work_orders (id, org_id, job_id, kind, discipline, title, status,
+                           assignee_kind, schedule_item_id, created_by)
+  values (gen_random_uuid(), v_org, v_rey, 'work', 'sitework',
+          'Clear, grade & pad — Hilltop', 'in_progress', 'discipline', v_site, v_me)
+  returning id into v_wo_site;
+  insert into work_order_items (work_order_id, label, sort, done) values
+    (v_wo_site, 'Clear & grub lot',       1, true),
+    (v_wo_site, 'Rough grade',            2, false),
+    (v_wo_site, 'Cut drive & culvert',    3, false),
+    (v_wo_site, 'Build pad to elevation', 4, false),
+    (v_wo_site, 'Compaction test',        5, false);
+
+  -- Lot 7: framing checklist at pace (2/8, early in the window)
+  select id into v_wo_frame from work_orders
+   where job_id = v_lot7 and title = 'Frame Magnolia B — Lot 7';
+  if v_wo_frame is not null
+     and not exists (select 1 from work_order_items where work_order_id = v_wo_frame) then
+    insert into work_order_items (work_order_id, label, sort, done) values
+      (v_wo_frame, 'Layout & plates',          1, true),
+      (v_wo_frame, 'First-floor walls',        2, true),
+      (v_wo_frame, 'Second-floor system',      3, false),
+      (v_wo_frame, 'Second-floor walls',       4, false),
+      (v_wo_frame, 'Roof trusses set',         5, false),
+      (v_wo_frame, 'Sheathing & dry-in prep',  6, false),
+      (v_wo_frame, 'Backing & blocking',       7, false),
+      (v_wo_frame, 'Frame QC walk',            8, false);
+  end if;
+
+  raise notice 'drift stub seeded';
+end $$;
+
+-- PROVE-IT (drift stub) — PASS on jaggars-dev:
+--   flagged = 2 (Anderson windows, Reyes sitework) ·
+--   anderson_flag = 1 · reyes_flag = 1 · lot7_flagged = 0 ·
+--   checklist_signals = 3 (three items reading from checklists)
+select
+  (select count(*) from v_schedule_item_progress p
+     join builder_orgs o on o.id = p.org_id
+    where o.slug = 'jaggars-dev' and p.work_behind) as flagged,
+  (select count(*) from v_schedule_item_progress p
+     join schedule_items si on si.id = p.item_id
+     join jobs j on j.id = si.job_id
+    where j.name = 'Anderson Custom — Lot 4'
+      and si.title = 'Windows & exterior doors' and p.work_behind) as anderson_flag,
+  (select count(*) from v_schedule_item_progress p
+     join schedule_items si on si.id = p.item_id
+     join jobs j on j.id = si.job_id
+    where j.name = 'Reyes Custom — Hilltop'
+      and si.title = 'Sitework & pad' and p.work_behind) as reyes_flag,
+  (select count(*) from v_schedule_item_progress p
+     join jobs j on j.id = p.job_id
+    where j.name = 'Summercrest Lot 7 Spec' and p.work_behind) as lot7_flagged,
+  (select count(*) from v_schedule_item_progress p
+     join builder_orgs o on o.id = p.org_id
+    where o.slug = 'jaggars-dev' and p.from_checklist and p.status <> 'complete') as checklist_signals;

@@ -46,6 +46,7 @@ export default function Schedule({ orgId, role, personId }) {
   const [tab, setTab] = useState('gantt');
   const [items, setItems] = useState([]);
   const [deps, setDeps] = useState([]);
+  const [drift, setDrift] = useState({});   // item_id -> v_schedule_item_progress row (015)
   const [lastEvent, setLastEvent] = useState(null);
   const [drawer, setDrawer] = useState(null); // item id
   const [err, setErr] = useState('');
@@ -73,12 +74,14 @@ export default function Schedule({ orgId, role, personId }) {
   const load = async () => {
     if (!jobId) { setItems([]); setDeps([]); return; }
     setErr('');
-    const [{ data: si }, { data: sd }, { data: ev }, { data: j }] = await Promise.all([
+    const [{ data: si }, { data: sd }, { data: ev }, { data: j }, { data: pg }] = await Promise.all([
       supabase.from('schedule_items').select('*').eq('job_id', jobId).order('sort').order('created_at'),
       supabase.from('schedule_deps').select('*, predecessor:schedule_items!schedule_deps_predecessor_id_fkey ( id, title )'),
       supabase.from('schedule_events').select('*').eq('job_id', jobId).order('created_at', { ascending: false }).limit(1),
       supabase.from('jobs').select('id, name, schedule_status').eq('id', jobId).maybeSingle(),
+      supabase.from('v_schedule_item_progress').select('*').eq('job_id', jobId),
     ]);
+    setDrift(Object.fromEntries((pg ?? []).map((p) => [p.item_id, p])));
     const ids = new Set((si ?? []).map((x) => x.id));
     setItems(si ?? []);
     setDeps((sd ?? []).filter((d) => ids.has(d.successor_id)));
@@ -131,18 +134,18 @@ export default function Schedule({ orgId, role, personId }) {
       )}
       {err && <div style={{ fontSize: 13, color: 'var(--bad)', marginBottom: 8 }}>{err}</div>}
 
-      {tab === 'gantt' && <Gantt orgId={orgId} items={items} deps={deps} canShift={canShift} reload={load} setErr={setErr} openDrawer={setDrawer} />}
-      {tab === 'list' && <List orgId={orgId} jobId={jobId} personId={personId} items={items} deps={deps} canShift={canShift} canManage={canManage} reload={load} setErr={setErr} openDrawer={setDrawer} />}
+      {tab === 'gantt' && <Gantt orgId={orgId} items={items} deps={deps} drift={drift} canShift={canShift} reload={load} setErr={setErr} openDrawer={setDrawer} />}
+      {tab === 'list' && <List orgId={orgId} jobId={jobId} personId={personId} items={items} deps={deps} drift={drift} canShift={canShift} canManage={canManage} reload={load} setErr={setErr} openDrawer={setDrawer} />}
       {tab === 'templates' && <Templates orgId={orgId} jobs={jobs} canManage={canManage} reload={load} setErr={setErr} />}
 
-      {drawer && <ItemDrawer itemId={drawer} items={items} deps={deps} canShift={canShift} canManage={canManage}
+      {drawer && <ItemDrawer itemId={drawer} items={items} deps={deps} drift={drift} canShift={canShift} canManage={canManage}
                              close={() => setDrawer(null)} reload={load} setErr={setErr} />}
     </div>
   );
 }
 
 /* ---------------- Gantt: drag-cascade + baseline toggle ---------------- */
-function Gantt({ orgId, items, deps, canShift, reload, setErr, openDrawer }) {
+function Gantt({ orgId, items, deps, drift, canShift, reload, setErr, openDrawer }) {
   const [showBaseline, setShowBaseline] = useState(true);
   const [drag, setDrag] = useState(null); // { id, startX, delta }
   const [reasonFor, setReasonFor] = useState(null); // { id, newStart }
@@ -262,6 +265,12 @@ function Gantt({ orgId, items, deps, canShift, reload, setErr, openDrawer }) {
                   <span style={{ width: 8, height: 8, borderRadius: 2, background: col, flexShrink: 0 }} />
                   <span style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.title}</span>
                   {predCount[it.id] ? <span style={{ fontSize: 10, color: 'var(--ink-soft)' }}>⇐{predCount[it.id]}</span> : null}
+                  {drift?.[it.id]?.work_behind && (
+                    <span title={`work behind: ${drift[it.id].actual_pct}% done, ${drift[it.id].expected_pct}% expected`}
+                      style={{ fontSize: 9, fontWeight: 800, background: '#FBE9E9', color: '#8F2730', borderRadius: 4, padding: '1px 4px' }}>
+                      ⚠ {drift[it.id].actual_pct}%
+                    </span>
+                  )}
                   {!it.client_visible && <span title="internal only" style={{ fontSize: 10 }}>🔒</span>}
                 </div>
                 <div style={{ position: 'relative', width: nDays * dayW,
@@ -316,7 +325,7 @@ function Gantt({ orgId, items, deps, canShift, reload, setErr, openDrawer }) {
 }
 
 /* -------- List: LEARNINGS #15 — sort on EVERY header, filter EVERY column -------- */
-function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload, setErr, openDrawer }) {
+function List({ orgId, jobId, personId, items, deps, drift, canShift, canManage, reload, setErr, openDrawer }) {
   const [sort, setSort] = useState({ key: 'sort', dir: 'asc' });
   const [fTitle, setFTitle] = useState('');
   const [fPhase, setFPhase] = useState('');
@@ -327,6 +336,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
   const [fStatus, setFStatus] = useState('');
   const [fBase, setFBase] = useState('');
   const [fDeps, setFDeps] = useState('');
+  const [fProg, setFProg] = useState('');
   // add-item form
   const [nTitle, setNTitle] = useState('');
   const [nPhase, setNPhase] = useState('');
@@ -354,7 +364,10 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
         && (!fEnd || iso(i.end_date).includes(fEnd.trim()))
         && (!fStatus || i.status === fStatus)
         && (!fBase || (fBase === 'on_plan' ? s === 0 : fBase === 'slipped' ? (s ?? 0) > 0 : fBase === 'ahead' ? (s ?? 0) < 0 : s === null))
-        && (!fDeps || String(predCount[i.id] ?? 0) === fDeps.trim());
+        && (!fDeps || String(predCount[i.id] ?? 0) === fDeps.trim())
+        && (!fProg || (fProg === 'behind' ? !!drift?.[i.id]?.work_behind
+                     : fProg === 'on_pace' ? (drift?.[i.id]?.drift != null && !drift[i.id].work_behind)
+                     : drift?.[i.id]?.drift == null));
     });
     const val = (i) => {
       switch (sort.key) {
@@ -368,6 +381,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
         case 'status': return i.status;
         case 'baseline': return slip(i) ?? -9999;
         case 'deps': return predCount[i.id] ?? 0;
+        case 'prog': return drift?.[i.id]?.actual_pct ?? -1;
         default: return i.sort;
       }
     };
@@ -376,7 +390,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
       const c = x < y ? -1 : x > y ? 1 : 0;
       return sort.dir === 'asc' ? c : -c;
     });
-  }, [items, deps, sort, fTitle, fPhase, fDisc, fDays, fStart, fEnd, fStatus, fBase, fDeps]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items, deps, drift, sort, fTitle, fPhase, fDisc, fDays, fStart, fEnd, fStatus, fBase, fDeps, fProg]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const headerCell = (key, label) => (
     <span data-testid={`si-sort-${key}`} onClick={() => setSort((p) =>
@@ -386,7 +400,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
     </span>
   );
 
-  const clearFilters = () => { setFTitle(''); setFPhase(''); setFDisc(''); setFDays(''); setFStart(''); setFEnd(''); setFStatus(''); setFBase(''); setFDeps(''); };
+  const clearFilters = () => { setFTitle(''); setFPhase(''); setFDisc(''); setFDays(''); setFStart(''); setFEnd(''); setFStatus(''); setFBase(''); setFDeps(''); setFProg(''); };
 
   const addItem = async () => {
     setErr('');
@@ -406,7 +420,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
     reload();
   };
 
-  const grid = '46px 2fr 1fr 1fr 64px 96px 96px 1fr 90px 64px';
+  const grid = '46px 2fr 1fr 1fr 64px 96px 96px 1fr 90px 64px 86px';
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', gap: 12 }}>
       {canShift && (
@@ -426,7 +440,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
 
       <div style={{ ...card, flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 }}>
         <div style={{ display: 'grid', gridTemplateColumns: grid, gap: 8, padding: '10px 16px', borderBottom: '2px solid var(--navy)', fontSize: 11, fontWeight: 800, color: 'var(--navy)', textTransform: 'uppercase' }}>
-          {headerCell('sort', '#')}{headerCell('title', 'Title')}{headerCell('phase', 'Phase')}{headerCell('discipline', 'Discipline')}{headerCell('days', 'Days')}{headerCell('start', 'Start')}{headerCell('end', 'End')}{headerCell('status', 'Status')}{headerCell('baseline', 'Baseline Δ')}{headerCell('deps', 'Deps')}
+          {headerCell('sort', '#')}{headerCell('title', 'Title')}{headerCell('phase', 'Phase')}{headerCell('discipline', 'Discipline')}{headerCell('days', 'Days')}{headerCell('start', 'Start')}{headerCell('end', 'End')}{headerCell('status', 'Status')}{headerCell('baseline', 'Baseline Δ')}{headerCell('deps', 'Deps')}{headerCell('prog', 'Prog')}
         </div>
         {/* filter row — a control on EVERY column (#15) */}
         <div style={{ display: 'grid', gridTemplateColumns: grid, gap: 8, padding: '7px 16px', borderBottom: '1px solid var(--line)', background: '#fff', alignItems: 'center' }}>
@@ -452,6 +466,12 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
             <option value="unpublished">no baseline</option>
           </select>
           <input data-testid="si-filter-deps" style={filterCtl} placeholder="=" value={fDeps} onChange={(e) => setFDeps(e.target.value)} />
+          <select data-testid="si-filter-prog" style={filterCtl} value={fProg} onChange={(e) => setFProg(e.target.value)}>
+            <option value="">All</option>
+            <option value="behind">behind</option>
+            <option value="on_pace">on pace</option>
+            <option value="no_signal">no signal</option>
+          </select>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {rows.map((i) => {
@@ -471,6 +491,16 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
                   {s === null ? '—' : s === 0 ? 'on plan' : s > 0 ? `+${s}d` : `${s}d`}
                 </span>
                 <span style={{ color: 'var(--ink-soft)' }}>{predCount[i.id] ?? 0}</span>
+                <span>
+                  {drift?.[i.id]?.work_behind ? (
+                    <span title={`${drift[i.id].actual_pct}% done, ${drift[i.id].expected_pct}% expected`}
+                      style={{ fontSize: 11, fontWeight: 800, background: '#FBE9E9', color: '#8F2730', borderRadius: 6, padding: '2px 7px' }}>
+                      ⚠ {drift[i.id].actual_pct}%
+                    </span>
+                  ) : drift?.[i.id]?.drift != null ? (
+                    <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{drift[i.id].actual_pct}%</span>
+                  ) : <span style={{ color: 'var(--ink-soft)' }}>—</span>}
+                </span>
               </div>
             );
           })}
@@ -482,7 +512,7 @@ function List({ orgId, jobId, personId, items, deps, canShift, canManage, reload
 }
 
 /* ---------------- Item drawer: deps, shift, status, visibility ---------------- */
-function ItemDrawer({ itemId, items, deps, canShift, canManage, close, reload, setErr }) {
+function ItemDrawer({ itemId, items, deps, drift, canShift, canManage, close, reload, setErr }) {
   const it = items.find((x) => x.id === itemId);
   const myPreds = deps.filter((d) => d.successor_id === itemId);
   const [predSel, setPredSel] = useState('');
@@ -543,6 +573,25 @@ function ItemDrawer({ itemId, items, deps, canShift, canManage, close, reload, s
         <button data-testid="si-drawer-close" style={btnGhost} onClick={close}>Close</button>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 14, fontSize: 13 }}>
+        {(() => {
+          const p = drift?.[itemId];
+          if (!p || it.status === 'complete') return null;
+          const behind = p.work_behind;
+          return (
+            <div data-testid="si-drawer-drift" style={{ borderLeft: `4px solid ${behind ? '#8F2730' : 'var(--line)'}`,
+              background: behind ? '#FBE9E9' : 'var(--cream-panel)', borderRadius: '0 8px 8px 0', padding: '8px 12px', fontSize: 12.5 }}>
+              <b style={{ color: behind ? '#8F2730' : 'var(--navy)' }}>
+                {behind ? '⚠ Work behind schedule' : 'Progress'}
+              </b>
+              <div style={{ marginTop: 3 }}>
+                {p.drift == null
+                  ? `Expected ${p.expected_pct ?? '—'}% by today — no field signal yet (add a checklist to a linked WO, or set % below).`
+                  : `${p.actual_pct}% done vs ${p.expected_pct}% expected` +
+                    (p.from_checklist ? ` · from checklist ${p.checklist_done}/${p.checklist_total}` : ' · manual')}
+              </div>
+            </div>
+          );
+        })()}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <div><b>Start</b><br />{fmtShort(it.start_date)}</div>
           <div><b>End</b><br />{fmtShort(it.end_date)}</div>
@@ -565,6 +614,18 @@ function ItemDrawer({ itemId, items, deps, canShift, canManage, close, reload, s
                 <input data-testid="si-drawer-visible" type="checkbox" checked={it.client_visible} onChange={(e) => setField({ client_visible: e.target.checked })} />
                 client visible
               </label>
+              {!drift?.[itemId]?.from_checklist && it.status !== 'complete' && (
+                <label style={{ display: 'flex', gap: 4, alignItems: 'center' }} title="Manual fallback — checklists on linked WOs override this">
+                  % done
+                  <input data-testid="si-drawer-manual-pct" style={{ ...input, width: 58 }}
+                    defaultValue={it.manual_pct ?? ''} placeholder="—"
+                    onBlur={(e) => {
+                      const raw = e.target.value.trim();
+                      const v = raw === '' ? null : Math.max(0, Math.min(100, Number(raw) || 0));
+                      if (v !== it.manual_pct) setField({ manual_pct: v });
+                    }} />
+                </label>
+              )}
             </div>
 
             <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 8 }}>
