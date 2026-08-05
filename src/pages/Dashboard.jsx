@@ -21,19 +21,38 @@ const sectionTitle = {
   letterSpacing: 0.8, padding: '12px 16px 8px',
 };
 
-function Stat({ label, value, accent, to, testid }) {
+function Stat({ label, value, accent, to, onOpen, testid }) {
   const nav = useNavigate();
+  const clickable = to || onOpen;
   return (
-    <div className="clickable" data-testid={testid} onClick={() => to && nav(to)}
-      style={{ ...card, padding: '14px 18px', cursor: to ? 'pointer' : 'default', borderLeft: `3px solid ${accent ?? 'var(--gold)'}` }}>
+    <div className="clickable" data-testid={testid} onClick={() => onOpen ? onOpen() : (to && nav(to))}
+      style={{ ...card, padding: '14px 18px', cursor: clickable ? 'pointer' : 'default', borderLeft: `3px solid ${accent ?? 'var(--gold)'}` }}>
       <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--navy)' }}>{value ?? '—'}</div>
       <div style={{ fontSize: 12, color: 'var(--ink-soft)', marginTop: 1 }}>{label}</div>
     </div>
   );
 }
 
+function Drawer({ title, onClose, children }) {
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(28,43,74,0.35)', zIndex: 50 }} />
+      <div data-testid="detail-drawer" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 420, maxWidth: '92vw',
+        background: 'var(--cream-panel)', borderLeft: '1px solid var(--line)', boxShadow: '-6px 0 24px rgba(28,43,74,0.18)',
+        zIndex: 51, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: '1px solid var(--line)' }}>
+          <div style={{ fontWeight: 800, color: 'var(--navy)', fontSize: 15 }}>{title}</div>
+          <button data-testid="drawer-close" onClick={onClose} style={{ border: '1px solid var(--line)', background: '#fff', borderRadius: 8, padding: '4px 10px', fontSize: 13 }}>✕</button>
+        </div>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px' }}>{children}</div>
+      </div>
+    </>
+  );
+}
+
 export default function Dashboard({ orgId, orgName, role }) {
   const nav = useNavigate();
+  const [drawer, setDrawer] = useState(null); // 'conditions' | 'cos' | null
   const [jobs, setJobs] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [conds, setConds] = useState([]);
@@ -78,8 +97,8 @@ export default function Dashboard({ orgId, orgName, role }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
         <Stat testid="stat-active-jobs" label="Active jobs" value={active.length} accent="var(--gold)" to="/jobs" />
         <Stat testid="stat-open-tickets" label="Open tickets" value={tstats?.open_tickets ?? 0} accent="#1D4E89" to="/tickets" />
-        <Stat testid="stat-awaiting-cos" label="COs awaiting decision" value={cos.length} accent="#8A5A00" to="/jobs" />
-        <Stat testid="stat-conditions" label="Conditions watching" value={conds.length} accent={triggered.length ? 'var(--bad)' : '#1F6B3A'} to="/jobs" />
+        <Stat testid="stat-awaiting-cos" label="COs awaiting decision" value={cos.length} accent="#8A5A00" onOpen={() => setDrawer('cos')} />
+        <Stat testid="stat-conditions" label="Conditions watching" value={conds.length} accent={triggered.length ? 'var(--bad)' : '#1F6B3A'} onOpen={() => setDrawer('conditions')} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.4fr 1.4fr', gap: 14, flex: 1, overflow: 'hidden' }}>
@@ -161,6 +180,35 @@ export default function Dashboard({ orgId, orgName, role }) {
           </div>
         </div>
       </div>
+
+      {drawer === 'conditions' && (
+        <Drawer title={`Conditions watching (${conds.length})`} onClose={() => setDrawer(null)}>
+          {conds.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Nothing being watched.</div>}
+          {conds.map((c) => (
+            <div key={c.id} className="clickable" onClick={() => c.jobs && nav(`/jobs/${c.jobs.id}`)}
+              style={{ borderLeft: `3px solid ${c.status === 'triggered' ? 'var(--bad)' : 'var(--warn)'}`, padding: '9px 12px', margin: '7px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
+              <div style={{ fontSize: 13, color: 'var(--ink)', fontWeight: 600 }}>{c.text}</div>
+              <div style={{ fontSize: 11, color: 'var(--ink-soft)', marginTop: 2 }}>
+                {c.status === 'triggered' ? 'TRIGGERED' : c.type}
+                {c.trigger_date ? ` · ${new Date(c.trigger_date + 'T00:00:00').toLocaleDateString()}` : ''}
+                {c.jobs ? ` · ${c.jobs.name}` : ''}
+              </div>
+            </div>
+          ))}
+        </Drawer>
+      )}
+      {drawer === 'cos' && (
+        <Drawer title={`Change orders awaiting decision (${cos.length})`} onClose={() => setDrawer(null)}>
+          {cos.length === 0 && <div style={{ fontSize: 13, color: 'var(--ink-soft)' }}>None waiting.</div>}
+          {cos.map((o) => (
+            <div key={o.id} className="clickable" onClick={() => nav(`/jobs/${o.job_id}`)}
+              style={{ borderLeft: '3px solid var(--gold)', padding: '9px 12px', margin: '7px 0', background: '#fff', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}>
+              <div style={{ fontSize: 13, color: 'var(--ink)', fontWeight: 600 }}>{o.title} — {money(coValue(o))}</div>
+              <div style={{ fontSize: 11, color: 'var(--ink-soft)', marginTop: 2 }}>{o.status.replace('_', ' ')} · {o.jobs?.name}</div>
+            </div>
+          ))}
+        </Drawer>
+      )}
     </div>
   );
 }
