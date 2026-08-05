@@ -209,8 +209,7 @@ at first release.
   + dashboard_prefs + expanded org_members roles (estimator/selections/
   warranty/field/accounting/office) + expanded job_participants roles
   (architect/engineer/lender/owners_rep). Still pending Brice: run 011 (to
-  be pasted), approve recharts. Pending Brice: approve P1-P5, approve script 011
-  (cost basis on estimate/CO lines — unlocks true margin), approve recharts.
+  be pasted), approve recharts.
   Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
   persona switcher. Estimate editor + BOARD-014 follow.
 - DEV STUB DATA seeded on jaggars-dev sandbox 2026-08-04, prove-it PASSED
