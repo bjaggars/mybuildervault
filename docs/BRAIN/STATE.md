@@ -202,8 +202,14 @@ at first release.
   Golden path 6 (job lifecycle) proves the spine schema through the UI.
   e2e-purge widened to E2E- jobs (cascade sweeps the spine) + contacts.
   Next fronts (REORDERED 8/4 eve per Brice design feedback): PERSONAS.md
-  doctrine PROPOSED (awaiting approval) — persona-driven dashboards precede
-  the estimate editor. Pending Brice: approve P1-P5, approve script 011
+  doctrine v2 APPROVED by Brice 8/4 eve — full 28-persona catalog from domain
+  research (CORE/ADJACENT/RECORD tiers); work orders + time entries named
+  v1.x subsystems; warranty rides the ticket engine. Persona-driven
+  dashboards precede the estimate editor. Script 011 scope GREW: cost basis
+  + dashboard_prefs + expanded org_members roles (estimator/selections/
+  warranty/field/accounting/office) + expanded job_participants roles
+  (architect/engineer/lender/owners_rep). Still pending Brice: run 011 (to
+  be pasted), approve recharts. Pending Brice: approve P1-P5, approve script 011
   (cost basis on estimate/CO lines — unlocks true margin), approve recharts.
   Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
   persona switcher. Estimate editor + BOARD-014 follow.
