@@ -126,3 +126,13 @@ of Mission Control.
 **Rule:** Admin/one-shot functions raise on zero effect and RETURN a
 human-readable result. Case-insensitive email matching everywhere emails are
 compared. Fixed in script 006.
+
+---
+
+## 11. Design law: no voids — rows are columns, not two poles
+**Feedback (Brice, 2026-08-04):** list rows with content flush-left and a lone
+badge flush-right leave a dead gap across wide screens — "high school
+programming project." Rule: wide list rows are columnar grids filled with the
+information the user actually scans (client, location, status, recency), with
+a header row. Sibling law to "scrolling is not your friend"; candidate for
+graduation to jsh-brain PATTERNS.

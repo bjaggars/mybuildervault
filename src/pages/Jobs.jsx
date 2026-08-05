@@ -22,7 +22,7 @@ export default function Jobs({ orgId, role, personId }) {
 
   const load = async () => {
     const { data } = await supabase.from('jobs')
-      .select('id, name, lifecycle, status, updated_at')
+      .select('id, name, lifecycle, status, updated_at, contacts ( display_name ), lots ( address )')
       .eq('org_id', orgId).order('updated_at', { ascending: false }).limit(100);
     setRows(data ?? []);
   };
@@ -65,6 +65,9 @@ export default function Jobs({ orgId, role, personId }) {
       )}
 
       <div style={{ flex: 1, overflowY: 'auto', background: 'var(--cream-panel)', border: '1px solid var(--line)', borderRadius: 'var(--radius)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 2fr) 1.4fr 2fr 130px 100px', gap: 14, padding: '9px 16px', borderBottom: '2px solid var(--line)', fontSize: 11, fontWeight: 700, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5, position: 'sticky', top: 0, background: 'var(--cream-panel)' }}>
+          <span>Job</span><span>Client</span><span>Location</span><span>Status</span><span style={{ textAlign: 'right' }}>Updated</span>
+        </div>
         {rows === null && <div style={{ padding: 18, color: 'var(--ink-soft)' }}>Loading…</div>}
         {rows?.length === 0 && (
           <div style={{ padding: 18, color: 'var(--ink-soft)', fontSize: 14 }}>
@@ -75,12 +78,15 @@ export default function Jobs({ orgId, role, personId }) {
           const [bg, fg] = STATUS_COLORS[j.status] ?? STATUS_COLORS.closed;
           return (
             <div key={j.id} data-testid="job-row" onClick={() => nav(`/jobs/${j.id}`)}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: '1px solid var(--line)', cursor: 'pointer' }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
+              style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 2fr) 1.4fr 2fr 130px 100px', gap: 14, alignItems: 'center', padding: '11px 16px', borderBottom: '1px solid var(--line)', cursor: 'pointer' }}>
+              <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 700, color: 'var(--navy)', fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{j.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{j.lifecycle} · updated {new Date(j.updated_at).toLocaleDateString()}</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{j.lifecycle}</div>
               </div>
-              <span style={{ background: bg, color: fg, borderRadius: 6, padding: '2px 10px', fontSize: 11, fontWeight: 700 }}>{j.status.replace('_', ' ')}</span>
+              <div style={{ fontSize: 13, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{j.contacts?.display_name ?? <span style={{ color: 'var(--ink-soft)' }}>—</span>}</div>
+              <div style={{ fontSize: 13, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{j.lots?.address ?? '—'}</div>
+              <div><span style={{ background: bg, color: fg, borderRadius: 6, padding: '2px 10px', fontSize: 11, fontWeight: 700 }}>{j.status.replace('_', ' ')}</span></div>
+              <div style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{new Date(j.updated_at).toLocaleDateString()}</div>
             </div>
           );
         })}

@@ -52,15 +52,12 @@ export default function Tickets({ orgId }) {
         )}
         {rows?.map((t) => (
           <div key={t.id} data-testid="ticket-row"
-            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', borderBottom: '1px solid var(--line)' }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.subject}</div>
-              <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>
-                {typeLabels[t.type] ?? t.type} · via {t.channel} · L{t.level} · {new Date(t.created_at).toLocaleString()}
-              </div>
-            </div>
-            {badge(t.status.replace('_', ' '), ...(statusColors[t.status] ?? statusColors.closed))}
-            {t.priority !== 'normal' && badge(t.priority, '#FBE9E9', '#8F2730')}
+            style={{ display: 'grid', gridTemplateColumns: 'minmax(220px, 3fr) 110px 120px 110px 150px', gap: 14, alignItems: 'center', padding: '11px 16px', borderBottom: '1px solid var(--line)' }}>
+            <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.subject}</div>
+            <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{typeLabels[t.type] ?? t.type}</div>
+            <div>{badge(t.status.replace('_', ' '), ...(statusColors[t.status] ?? statusColors.closed))}{t.priority !== 'normal' && <span style={{ marginLeft: 6 }}>{badge(t.priority, '#FBE9E9', '#8F2730')}</span>}</div>
+            <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>via {t.channel} · L{t.level}</div>
+            <div style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{new Date(t.created_at).toLocaleDateString()}</div>
           </div>
         ))}
       </div>
