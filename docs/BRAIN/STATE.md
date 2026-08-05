@@ -184,7 +184,15 @@ at first release.
   change_order_lines derive-never-re-key; allowances w/ generated variance +
   builder-controlled variance_visible reveal via owner-rights
   v_client_allowances) RUN on dev 2026-08-04, prove-it PASSED (3/8/4/1/1).
-  Spine part 3 (010): selections + actuals + computed budget view.
+- 010 (selections accretive capture w/ deadline fields awaiting schedule FK;
+  actuals v1-light w/ allowance-sum sync trigger; v_job_budget computed view —
+  baseline + approved COs + allowance variance = revised_price;
+  approved_selections_total informational only, NOT summed into revised_price
+  to avoid double-count via allowance actuals — revisit with real Brije data)
+  WRITTEN 2026-08-04, pasted in chat, PENDING Brice run on dev. Prove-it:
+  new_tables=2, budget_view=1, capture_kinds=3, sel_statuses=3, alw_sync_trig=1.
+  FINANCIAL SPINE SCHEMA COMPLETE AT 010 — UI + estimate ingestion (BOARD-014)
+  are the next build fronts.
 
 ---
 
