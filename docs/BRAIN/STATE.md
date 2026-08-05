@@ -183,9 +183,7 @@ at first release.
 - 009 (change orders w/ Ocala 8-status workflow + per-job numbering trigger;
   change_order_lines derive-never-re-key; allowances w/ generated variance +
   builder-controlled variance_visible reveal via owner-rights
-  v_client_allowances) WRITTEN 2026-08-04, pasted in chat, PENDING Brice run
-  on dev. Prove-it: new_tables=3, co_statuses=8, alw_statuses=4,
-  client_view=1, co_numbering=1.
+  v_client_allowances) RUN on dev 2026-08-04, prove-it PASSED (3/8/4/1/1).
   Spine part 3 (010): selections + actuals + computed budget view.
 
 ---
