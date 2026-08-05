@@ -294,11 +294,15 @@ function Drawer({ woId, personId, onClose }) {
     setNewItem(''); load();
   };
   const toggle = async (it) => {
+    const next = !it.done;
+    // optimistic: flip locally first (field connections are slow; the
+    // checkbox must respond on tap), persist behind it, revert on error.
+    setItems((prev) => prev.map((p) => (p.id === it.id ? { ...p, done: next } : p)));
     const { error } = await supabase.from('work_order_items').update({
-      done: !it.done, done_by: !it.done ? personId : null,
-      done_at: !it.done ? new Date().toISOString() : null,
+      done: next, done_by: next ? personId : null,
+      done_at: next ? new Date().toISOString() : null,
     }).eq('id', it.id);
-    if (error) { setErr(error.message); return; }
+    if (error) { setErr(error.message); load(); return; }
     load();
   };
   const say = async () => {
