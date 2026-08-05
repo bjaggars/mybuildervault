@@ -273,6 +273,13 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   (Contents/Actions/Issues/Workflows RW). NEXT SESSION CANDIDATES: schedule
   engine step-back (§8) · sub acceptance portal surface · estimate editor ·
   BOARD-014 ingestion · Cloudinary photos on WO items + logs.
+- SCHEDULE ENGINE APPROVED 8/5 PM (SCHEDULE.md, BOARD-032): all 6 rulings
+  as recommended. NEXT SESSION = execute script 014 (items, FS deps + lag,
+  workday calendar, templates, draft→publish baseline, DB recalc engine,
+  WO + selections linkage) + Gantt/list surfaces (#15 grid treatment) +
+  Magnolia stub schedule + behavioral smokes on recalc + golden path 9.
+  Board sort/filter shipped @ 7b44ab7 (LEARNINGS #15). BOARD-007 comms
+  rail ELEVATED (schedule notices depend on it).
 - FIELD STUB SEEDED on jaggars-dev 8/5 PM, prove-it PASSED exactly
   (10/6/1/2/5/3/2/696.00) — 696.00 is the first trigger-posted labor cost
   (12 hrs × 58.00). Acceptance-event trigger proven live (Ocala Elite

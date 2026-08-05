@@ -198,6 +198,7 @@ engine = next named subsystem (own §8 step-back).
 (Buildertrend/JobTread/BuildPro), table stakes + next level named, proposed
 014 scope (items, FS deps + lag, workday calendar, templates, draft→publish
 baseline, DB recalc engine, WO + selections linkage), 6 rulings open.
-**Gate:** NO SCHEMA until Brice rules. Note: schedule notices depend on the
-comms rail — elevates BOARD-007.
+**Gate:** CLEARED — brief APPROVED 8/5, all 6 rulings as recommended.
+Script 014 + surfaces execute in a FRESH session (§6b breakpoint taken at
+this gate). BOARD-007 (comms rail) elevated: schedule notices depend on it.
 **Owner:** Claude (brief ✅ 8/5) + Brice (rulings)

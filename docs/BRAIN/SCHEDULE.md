@@ -1,6 +1,10 @@
 # MyBuilderVault — Schedule Engine Step-Back Brief
 
-**Status: PROPOSED — awaiting Brice rulings before any schema (DOCTRINE §8)**
+**Status: APPROVED — Brice, 2026-08-05, all 6 rulings as recommended**
+(item↔WO separate FK-linked; FS+lag only; cascade in DB incl. WO-completion
+trigger; baseline columns at publish + schedule_events reasons; selections
+FK lands in 014; in-app notices until BOARD-007 comms rail, which this
+elevates). Build authorized — script 014 in a fresh session.
 Authored 2026-08-05 (same-day follow-on to FIELD-SPINE.md; ruling #1 there
 named this subsystem). Research basis: Buildertrend schedule mechanics
 (predecessors/lag, baseline, cascade, sub confirmations, conflict detection,

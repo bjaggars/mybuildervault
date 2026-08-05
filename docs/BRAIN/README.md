@@ -21,7 +21,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 - `LEARNINGS.md` — hard-won lessons specific to this product
 - `JSH.md` — pointer to cross-product doctrine
 - `FIELD-SPINE.md` — field spine step-back brief (work orders/super/crew; APPROVED 8/5)
-- `SCHEDULE.md` — schedule engine step-back brief (PROPOSED)
+- `SCHEDULE.md` — schedule engine step-back brief (APPROVED 8/5; 014 pending)
 - `BRIJE-MEETING.md` — prep for the Brije leadership meeting (licensing conversation; Eric design-AI segment)
 
 ## Session protocol
