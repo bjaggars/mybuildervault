@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { resolveEntitlement, canSeeTicketQueue } from '../lib/entitlements';
 import Concierge from './Concierge.jsx';
@@ -13,6 +13,33 @@ import Reports from '../pages/Reports.jsx';
 import Field from '../pages/Field.jsx';
 import Schedule from '../pages/Schedule.jsx';
 
+// One page crashing must never white-screen the shell (LEARNINGS #18).
+// Keyed on pathname so navigating away retries cleanly.
+class PageBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  componentDidCatch(err) { console.error('Page crash:', err); }
+  render() {
+    if (this.state.err) {
+      return (
+        <div data-testid="page-crash" style={{ margin: 26, padding: '18px 20px',
+          background: 'var(--cream-panel)', border: '1px solid var(--line)',
+          borderRadius: 'var(--radius)', maxWidth: 640 }}>
+          <div style={{ fontWeight: 800, color: 'var(--navy)', marginBottom: 6 }}>
+            This page hit an error
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 10 }}>
+            {String(this.state.err?.message ?? this.state.err)}
+          </div>
+          <div style={{ fontSize: 13 }}>The rest of the app is fine — use the nav, or reload this page.</div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+
 // eslint-disable-next-line no-undef
 const BUILD = typeof __BUILD_INFO__ !== 'undefined' ? __BUILD_INFO__ : { sha: 'dev', at: '' };
 
@@ -24,6 +51,7 @@ const navLink = ({ isActive }) => ({
 });
 
 export default function AppShell({ session, memberships, activeOrgId, onSelectOrg }) {
+  const location = useLocation();
   const active = (memberships ?? []).find((m) => m.org_id === activeOrgId) ?? null;
   const org = active?.builder_orgs ?? null;
   const personId = session.user.id;
@@ -161,6 +189,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
 
       {/* Content */}
       <main style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <PageBoundary key={location.pathname}>
         <Routes>
           <Route path="/" element={<Dashboard orgId={activeOrgId} orgName={org?.name} role={active?.role} />} />
           <Route path="/jobs" element={<Jobs orgId={activeOrgId} role={active?.role} personId={personId} />} />
@@ -173,6 +202,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <Route path="/mission-control" element={isStaff ? <MissionControl /> : <Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </PageBoundary>
       </main>
 
       {gates.concierge && activeOrgId && <Concierge orgId={activeOrgId} personId={personId} />}

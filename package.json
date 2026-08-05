@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && node -e \"require('fs').writeFileSync('dist/build.json', JSON.stringify({sha:(process.env.COMMIT_REF||'local').slice(0,7), at:new Date().toISOString()}))\"",
     "preview": "vite preview",
-    "validate": "node scripts/predeploy-check.mjs",
+    "validate": "node scripts/predeploy-check.mjs && eslint src",
     "predeploy": "npm run validate && npm run build",
     "smoke:recalc": "node scripts/smoke-recalc.mjs"
   },
@@ -24,6 +24,8 @@
     "@playwright/test": "^1.46.0",
     "@vitejs/plugin-react": "^4.3.1",
     "esbuild": "^0.23.0",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "pg": "^8.22.0",
     "vite": "^5.4.0"
   }

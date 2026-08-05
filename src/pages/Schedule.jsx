@@ -151,10 +151,8 @@ function Gantt({ orgId, items, deps, canShift, reload, setErr, openDrawer }) {
     return m;
   }, [deps]);
 
-  if (dated.length === 0) {
-    return <div style={{ ...card, flex: 1 }}>No dated schedule items yet — import a template or add items in the List tab.</div>;
-  }
-  let min = dated[0].start_date, max = dated[0].end_date;
+  let min = dated[0]?.start_date ?? new Date().toISOString().slice(0, 10);
+  let max = dated[0]?.end_date ?? min;
   dated.forEach((i) => {
     const s = i.baseline_start && showBaseline && i.baseline_start < i.start_date ? i.baseline_start : i.start_date;
     const e = i.baseline_end && showBaseline && i.baseline_end > i.end_date ? i.baseline_end : i.end_date;
@@ -193,6 +191,10 @@ function Gantt({ orgId, items, deps, canShift, reload, setErr, openDrawer }) {
     window.addEventListener('mouseup', up);
     return () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
   }, [drag]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (dated.length === 0) {
+    return <div style={{ ...card, flex: 1 }}>No dated schedule items yet — import a template or add items in the List tab.</div>;
+  }
 
   const confirmShift = async () => {
     if (!reason.trim()) { setErr('One change, one reason — a shift reason is required.'); return; }

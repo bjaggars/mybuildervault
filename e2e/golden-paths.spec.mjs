@@ -183,4 +183,11 @@ test('schedule engine: items, dependency cascade, publish baseline, reasoned shi
   await page.getByTestId('si-drawer-close').click();
   await expect(rowB).not.toHaveText(bBefore);           // B followed the cascade
   await expect(rowB).toContainText('+');                // slipped vs baseline
+
+  // Gantt renders WITH dated items — the exact transition that white-screened
+  // when a hook sat below an early return (LEARNINGS #18). A crash here
+  // unmounts the whole tree, so the bars simply won't exist.
+  await page.getByTestId('schedule-tab-gantt').click();
+  await expect(page.getByTestId('gantt-row').first()).toBeVisible();
+  await expect(page.getByTestId('gantt-baseline-toggle')).toBeVisible();
 });

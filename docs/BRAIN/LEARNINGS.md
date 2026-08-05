@@ -228,3 +228,24 @@ N inserted rows. Direct table edits still cascade via trigger (reason null
 by design). Behavioral smokes on DB engines run BEFORE push, on the
 committed SQL, via the scratch-database harness — never on a JS mirror of
 the logic.
+
+---
+
+## 18. A hook below an early return white-screens the ENTIRE app
+**Incident (8/5/26, schedule session):** /schedule rendered blank — no nav,
+nothing — for Brice, while all 9 golden paths were green. Gantt had its
+"no dated items" early return sitting between useMemo and the drag
+useEffect. Mount with empty items → 5 hooks; Lot 7's items arrive → 6
+hooks; React throws on the order change and unmounts the WHOLE tree.
+The robot missed it because its first job had no schedule and it worked
+in the List tab — it never re-rendered the Gantt across the empty→dated
+transition. Green robots only prove the paths they walk.
+**Rules:**
+1. Hooks first, returns after — enforced statically now: eslint with
+   react-hooks/rules-of-hooks is part of `npm run validate` (scoped
+   config, errors only; proven to name this exact bug).
+2. The shell wears a PageBoundary (AppShell, keyed on pathname): a page
+   crash degrades to an in-place error card with working nav, never a
+   white screen.
+3. Every surface's golden path must render each of its tabs/views WITH
+   data at least once — path 9 now ends on the Gantt tab with dated bars.
