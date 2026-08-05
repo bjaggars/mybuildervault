@@ -59,6 +59,12 @@ const MODULES = [
     desc: 'Homeowners see published, client-visible schedule + selections + budget views. RLS read paths already shipped in 014 — this is the surface.' },
   { module: 'Entitlements & licensing', area: 'Platform', status: 'planned', ref: 'Brije licensing',
     desc: 'Feature gating per license tier — the machinery for Brije running MyBuilderVault as a licensee.' },
+  { module: 'Design Lobby (AI Design Center)', area: 'Design', status: 'planned', ref: 'BOARD-013 · VISION §7',
+    desc: 'The unifying immersive shell for the Brije design office: client enters a rendered lobby with doors to each studio. Gate: the BOARD-013 pipeline spike (plan→3D tooling, web engine vs pixel-streaming, SKU-mappable material libraries) — kill the riskiest unknown before any studio build.' },
+  { module: 'Bridgette\u2019s Studio (interior)', area: 'Design', status: 'planned', ref: 'ships first · VISION §7',
+    desc: 'Interior persona: walk the house you\u2019re buying, live finish/material/palette swaps tied to real SKUs (accretive selections), AI lookbooks + stills. First studio to ship — feeds selections and allowances directly.' },
+  { module: 'Eric\u2019s Studio (architectural)', area: 'Design', status: 'planned', ref: 'follows · VISION §7',
+    desc: 'Architectural persona: move walls, add rooms, massing — conversational design manipulation on plan_versions geometry (the 007 reserved slot). The design-AI segment of the Brije leadership meeting.' },
   { module: 'Production release', area: 'Platform', status: 'planned', ref: 'ritual ready',
     desc: 'First main-branch release: prod Supabase + domain, DB change scripts 001→current in order (fresh-install path already CI-proven), prod smoke.' },
 ];
