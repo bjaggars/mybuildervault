@@ -384,7 +384,7 @@ begin
      'Sleeves under drive before pour.', 'cancelled', 'discipline',
      current_date - 5, current_date - 5, v_me);
 
-  insert into work_orders (org_id, job_id, structure_id, cost_code_id, discipline, kind,
+  insert into work_orders (org_id, job_id, cost_code_id, discipline, kind,
                            title, scope, status, assignee_kind, assigned_person,
                            planned_start, planned_end, created_by)
   values (v_org, v_job2, v_code2, 'punch_clean', 'punch',
