@@ -238,7 +238,7 @@ begin
   raise notice 'stub data seeded: 5 jobs, flagship spine fully loaded';
 end $$;
 
--- PROVE-IT · PASS (jaggars-dev): jobs = 5 · budget_baseline = 486250.00 ·
+-- PROVE-IT · PASS (jaggars-dev): jobs = 5 · budget_baseline = 490250.00 ·
 --   revised > baseline · hidden_well_variance = 9400.00 · selections = 4
 select
   (select count(*) from jobs j join builder_orgs o on o.id = j.org_id
