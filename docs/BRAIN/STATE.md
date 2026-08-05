@@ -201,7 +201,12 @@ at first release.
   structures panel, computed budget card on v_job_budget w/ revised price).
   Golden path 6 (job lifecycle) proves the spine schema through the UI.
   e2e-purge widened to E2E- jobs (cascade sweeps the spine) + contacts.
-  Next fronts: estimate editor UI, then BOARD-014 ingestion.
+  Next fronts (REORDERED 8/4 eve per Brice design feedback): PERSONAS.md
+  doctrine PROPOSED (awaiting approval) — persona-driven dashboards precede
+  the estimate editor. Pending Brice: approve P1-P5, approve script 011
+  (cost basis on estimate/CO lines — unlocks true margin), approve recharts.
+  Then: owner (P1) dashboard w/ margin board + trends, PM (P2) evolution,
+  persona switcher. Estimate editor + BOARD-014 follow.
 - DEV STUB DATA seeded on jaggars-dev sandbox 2026-08-04, prove-it PASSED
   exactly (jobs=5, baseline=490250.00, revised=508000.00,
   hidden_well_variance=9400.00, selections=4) — first live proof of the
