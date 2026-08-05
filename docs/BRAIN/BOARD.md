@@ -175,3 +175,14 @@ cost detail, Sales funnel & aging), generic table renderer, SheetJS Excel
 export, print mode. Golden path 7 covers it. OPEN: Brije-exact 3-column CO
 export format (needs their actual sample doc), timesheet report (awaits time
 entries), report scheduling/email (comms rail).
+
+### BOARD-031 · Field spine — work orders / superintendent / crew (session 8/5 PM)
+**What:** The superintendent/work-order spine per PERSONAS v2 (#15/#16) and the
+v1.x subsystem call-out. Per DOCTRINE §8, session opened with the step-back
+brief — research across Buildertrend, JobTread, Raken, ServiceTitan, Hyphen
+BuildPro — delivered as `docs/BRAIN/FIELD-SPINE.md` (status PROPOSED) naming
+table stakes, the next level, proposed 013 scope, and 5 open rulings
+(schedule deferral, sub WO money, time→actuals, punch-as-WO-kind, weather).
+**Gate:** NO SCHEMA until Brice approves the brief. Then: script 013, super/
+crew surfaces, time entries if supported.
+**Owner:** Claude (brief ✅ delivered 8/5) + Brice (rulings)

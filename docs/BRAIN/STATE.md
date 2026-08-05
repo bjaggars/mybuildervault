@@ -246,3 +246,7 @@ scope) 2026-08-04. GitHub Actions secrets set: TEST_E2E_AGENT_EMAIL/PASSWORD,
 E2E_REPORT_SECRET; variables: TEST_BASE_URL, PROD_BASE_URL, TEST_SMOKE_SLUG
 (e2e-robot). PROD_E2E_* secrets deferred to first release.
 mybuildervault.app purchased and held in reserve (future PWA or marketing landing page).
+- FIELD SPINE SESSION OPENED 8/5 PM per DOCTRINE §8: step-back brief
+  delivered as docs/BRAIN/FIELD-SPINE.md (PROPOSED) — table stakes + next
+  level from Buildertrend/JobTread/Raken/ServiceTitan/BuildPro research;
+  5 rulings await Brice. Script 013 NOT WRITTEN — gated on brief approval.

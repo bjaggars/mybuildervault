@@ -20,6 +20,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 - `ROADMAP.md` — sequenced build plan with environments checklist
 - `LEARNINGS.md` — hard-won lessons specific to this product
 - `JSH.md` — pointer to cross-product doctrine
+- `FIELD-SPINE.md` — field spine step-back brief (work orders/super/crew; PROPOSED)
 - `BRIJE-MEETING.md` — prep for the Brije leadership meeting (licensing conversation; Eric design-AI segment)
 
 ## Session protocol
