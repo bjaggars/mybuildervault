@@ -71,6 +71,61 @@ migrations.forEach((f, i) => {
   if (n !== i + 1) errors.push(`Migration: "${f}" breaks the sequence — expected ${String(i + 1).padStart(3, '0')}.`);
 });
 
+// --- 4. SQL insert arity (quote-aware) ---------------------------------------
+// A column list claiming more slots than its values row feeds is invisible to
+// eyeballs and fatal at runtime (dev-stub punch-WO incident, 8/5/26). Scan
+// every .sql under supabase/ (migrations + seeds): for each INSERT, the count
+// of top-level expressions in every values tuple must equal the column count.
+function splitTop(str) {
+  const out = []; let cur = '', depth = 0, inq = false;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (inq) { cur += ch; if (ch === "'") { if (str[i + 1] === "'") { cur += "'"; i++; } else inq = false; } }
+    else if (ch === "'") { inq = true; cur += ch; }
+    else if (ch === '(') { depth++; cur += ch; }
+    else if (ch === ')') { depth--; cur += ch; }
+    else if (ch === ',' && depth === 0) { out.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  if (cur.trim()) out.push(cur);
+  return out;
+}
+function topTuples(str) {
+  const out = []; let depth = 0, inq = false, start = -1;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (inq) { if (ch === "'") { if (str[i + 1] === "'") i++; else inq = false; } }
+    else if (ch === "'") inq = true;
+    else if (ch === '(') { if (depth === 0) start = i; depth++; }
+    else if (ch === ')') { depth--; if (depth === 0) out.push(str.slice(start + 1, i)); }
+  }
+  return out;
+}
+const sqlDirs = ['supabase/migrations', 'supabase/seeds'];
+let sqlChecked = 0;
+for (const dir of sqlDirs) {
+  let files = [];
+  try { files = readdirSync(dir).filter((f) => f.endsWith('.sql')); } catch { continue; }
+  for (const f of files) {
+    const text = readFileSync(`${dir}/${f}`, 'utf8');
+    sqlChecked++;
+    const re = /insert into (\w+)\s*\(([^)]*)\)\s*values\s*([\s\S]*?);/gi;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const ncols = splitTop(m[2]).length;
+      // tuples end where ON CONFLICT / RETURNING begins — those clauses carry
+      // their own parens (006 false-positive lesson).
+      const valuesOnly = m[3].split(/\bon\s+conflict\b|\breturning\b/i)[0];
+      for (const tup of topTuples(valuesOnly)) {
+        const nv = splitTop(tup).length;
+        if (nv !== ncols) {
+          errors.push(`SQL arity: ${dir}/${f} insert into ${m[1]} — ${ncols} columns but a values tuple has ${nv} expressions (near "${tup.slice(0, 50).replace(/\n/g, ' ')}…")`);
+        }
+      }
+    }
+  }
+}
+
 // --- Report ------------------------------------------------------------------
 if (errors.length) {
   console.error(`\nPredeploy gate FAILED — ${errors.length} problem(s):\n`);
@@ -78,4 +133,4 @@ if (errors.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`Predeploy gate passed: ${sourceFiles.length} source files parsed, env contract clean, ${migrations.length} migration(s) in sequence.`);
+console.log(`Predeploy gate passed: ${sourceFiles.length} source files parsed, env contract clean, ${migrations.length} migration(s) in sequence, ${sqlChecked} SQL file(s) arity-clean.`);

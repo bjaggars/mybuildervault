@@ -273,3 +273,11 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   (Contents/Actions/Issues/Workflows RW). NEXT SESSION CANDIDATES: schedule
   engine step-back (§8) · sub acceptance portal surface · estimate editor ·
   BOARD-014 ingestion · Cloudinary photos on WO items + logs.
+- FIELD STUB SEEDED on jaggars-dev 8/5 PM, prove-it PASSED exactly
+  (10/6/1/2/5/3/2/696.00) — 696.00 is the first trigger-posted labor cost
+  (12 hrs × 58.00). Acceptance-event trigger proven live (Ocala Elite
+  Electric WO issued→accepted via event). One authoring bug en route
+  (punch WO 14 cols/13 values) → predeploy gained a quote-aware SQL
+  insert-arity gate (on-conflict/returning safe), verifier verified.
+  STANDING RULE (Brice 8/5, BRAIN README #7): every new surface ships
+  with stub data in the same session.
