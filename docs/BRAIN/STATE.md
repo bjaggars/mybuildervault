@@ -253,5 +253,16 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   spine: work_orders + items + events w/ acceptance-as-event trigger,
   daily_logs segmented + typed entries, time_entries w/ approval→actuals
   labor posting via org_members.labor_rate, discipline attr, actuals source
-  +labor) WRITTEN 8/5, pasted in chat — NOT RUN until Brice's prove-it row
-  lands (LEARNINGS #9). Surfaces + golden path 8 follow the prove-it.
+  +labor) RUN on dev 8/5 PM, prove-it PASSED (6/9/21/1/1/1/1/2/1) — after one
+  rolled-back attempt from a mangled chat paste (LEARNINGS #14: chat pastes
+  are generated from the committed file, never retyped).
+- FIELD SURFACES SHIPPED 8/5 PM: /field page — super Board (status-count
+  doors, columnar grid, create + advance, WO drawer w/ checklist + activity),
+  crew Today (direct + discipline-pool active WOs), Daily Log (segmented
+  staff/sub cards, typed entries, weather slot), Time (my entries + approval
+  queue; approval posts hours × labor_rate to actuals via 013 trigger).
+  Golden path 8 (WO lifecycle + checklist + time approval) added; purge
+  covered by E2E- job cascade. Open follow-ups: sub portal acceptance
+  surface (events-based), photo upload via Cloudinary on items/logs,
+  auto-assembled daily log draft (thesis 1), day/week date-window board
+  view — schedule engine remains the next named subsystem.

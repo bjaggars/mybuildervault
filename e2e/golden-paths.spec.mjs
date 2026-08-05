@@ -89,3 +89,42 @@ test('reports: run WIP summary, table renders', async ({ page }) => {
   await page.getByTestId('report-run').click();
   await expect(page.getByTestId('report-table')).toBeVisible();
 });
+
+test('field spine: work order lifecycle, checklist, time entry approval', async ({ page }) => {
+  const woTitle = `E2E-wo ${Date.now()}`;
+  await login(page);
+  // A job must exist for the WO — create one (purge sweeps E2E- jobs + cascade).
+  const jobName = `E2E-fieldjob ${Date.now()}`;
+  await page.getByTestId('nav-jobs').click();
+  await page.getByTestId('job-name').fill(jobName);
+  await page.getByTestId('job-create').click();
+  await expect(page.getByTestId('job-detail-title')).toContainText(jobName);
+  // Create a WO on the board, discipline pool.
+  await page.getByTestId('nav-field').click();
+  await expect(page.getByTestId('field-title')).toBeVisible();
+  await page.getByTestId('wo-title').fill(woTitle);
+  await page.getByTestId('wo-job').selectOption({ label: jobName });
+  await page.getByTestId('wo-create').click();
+  const row = page.getByTestId('wo-row').filter({ hasText: woTitle });
+  await expect(row).toBeVisible();
+  // Advance draft → issued, then open the drawer and work the checklist.
+  await row.getByTestId('wo-advance').selectOption('issued');
+  await expect(row).toContainText('issued');
+  await row.click();
+  await expect(page.getByTestId('wo-drawer-title')).toContainText(woTitle);
+  await page.getByTestId('woi-label').fill('Set forms');
+  await page.getByTestId('woi-add').click();
+  const item = page.getByTestId('woi-row').filter({ hasText: 'Set forms' });
+  await expect(item).toBeVisible();
+  await item.getByTestId('woi-check').check();
+  await page.getByTestId('wo-drawer-close').click();
+  // Time: log an entry, then approve it from the queue (robot is org admin).
+  await page.getByTestId('field-tab-time').click();
+  await page.getByTestId('te-job').selectOption({ label: jobName });
+  await page.getByTestId('te-hours').fill('3.5');
+  await page.getByTestId('te-add').click();
+  const qrow = page.getByTestId('te-queue-row').filter({ hasText: jobName });
+  await expect(qrow).toBeVisible();
+  await qrow.getByTestId('te-approve').click();
+  await expect(page.getByTestId('te-mine-row').filter({ hasText: jobName })).toContainText('approved');
+});

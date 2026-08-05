@@ -183,8 +183,10 @@ brief — research across Buildertrend, JobTread, Raken, ServiceTitan, Hyphen
 BuildPro — delivered as `docs/BRAIN/FIELD-SPINE.md` (status PROPOSED) naming
 table stakes, the next level, proposed 013 scope, and 5 open rulings
 (schedule deferral, sub WO money, time→actuals, punch-as-WO-kind, weather).
-**Gate:** CLEARED — brief APPROVED 8/5 (all 5 rulings as recommended).
-Script 013 (field spine) WRITTEN 8/5, pasted in chat, awaiting Brice run on
-mybuildervault-dev + prove-it capture. Then: super board, WO detail, crew
-Today view, daily log compose, time approval queue; golden path 8.
+**Gate:** CLEARED — brief APPROVED 8/5. Script 013 RUN on dev 8/5,
+prove-it PASSED (6/9/21/1/1/1/1/2/1). Surfaces SHIPPED same day: Board /
+Today / Daily Log / Time on /field, WO drawer, golden path 8.
+**Open:** sub acceptance portal surface, Cloudinary photos on items/logs,
+auto-assembled log draft (thesis 1), date-window board view. Schedule
+engine = next named subsystem (own §8 step-back).
 **Owner:** Claude (brief ✅ delivered 8/5) + Brice (rulings)
