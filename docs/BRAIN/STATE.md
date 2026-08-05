@@ -350,7 +350,8 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   shim+chain scratch DB: all prior prove-its exact, health prove-it
   1/1/1/1 with anderson_slip 7 (cal days), reyes_slip 0. Path 9 extended:
   dashboard card renders, pills visible, row navigates to /schedule.
-  AWAITING BRICE: run seed addendum #3 (schedule health stub) on
-  jaggars-dev, capture prove-it (late 1 · at_risk 1 · tracking 1 ·
-  draft_sched 1 · anderson_slip > 0 · reyes_slip 0).
+  RUN 8/5 PM (Brice, prove-it in chat): seed addendum #3 on jaggars-dev —
+  1/1/1/1/7/0 exact, matching the fresh-chain local proof to the digit.
+  All three health colors live on dev. Nothing pending on the schedule
+  engine or its dashboard card.
 
