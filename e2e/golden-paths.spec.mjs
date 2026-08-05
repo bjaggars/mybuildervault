@@ -65,3 +65,18 @@ test('mission control is invisible to a tenant seat', async ({ page }) => {
   await expect(page.getByTestId('dashboard-title')).toBeVisible();
   await expect(page.getByTestId('mc-title')).toHaveCount(0);
 });
+
+test('job lifecycle: create, structure, status change', async ({ page }) => {
+  const jobName = `E2E-job ${Date.now()}`;
+  await login(page);
+  await page.getByTestId('nav-jobs').click();
+  await expect(page.getByTestId('jobs-title')).toBeVisible();
+  await page.getByTestId('job-name').fill(jobName);
+  await page.getByTestId('job-create').click();
+  await expect(page.getByTestId('job-detail-title')).toContainText(jobName);
+  await page.getByTestId('structure-label').fill('Main House');
+  await page.getByTestId('structure-add').click();
+  await expect(page.getByTestId('structure-row')).toContainText('Main House');
+  await page.getByTestId('job-status').selectOption('design');
+  await expect(page.getByTestId('job-status')).toHaveValue('design');
+});

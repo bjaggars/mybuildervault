@@ -30,5 +30,16 @@ export const handler = async (event) => {
     .delete().eq('org_id', org.id).like('title', 'E2E-%').select('id');
   if (fErr) return ok({ error: fErr.message }, 500);
 
-  return ok({ ok: true, purged: (gone?.length ?? 0) + (frGone?.length ?? 0) });
+  // Jobs cascade their structures, events, estimates, COs, allowances,
+  // selections, actuals, participants — one delete sweeps the spine.
+  const { data: jGone, error: jErr } = await admin.from('jobs')
+    .delete().eq('org_id', org.id).like('name', 'E2E-%').select('id');
+  if (jErr) return ok({ error: jErr.message }, 500);
+
+  const { data: cGone, error: cErr } = await admin.from('contacts')
+    .delete().eq('org_id', org.id).like('display_name', 'E2E-%').select('id');
+  if (cErr) return ok({ error: cErr.message }, 500);
+
+  return ok({ ok: true, purged: (gone?.length ?? 0) + (frGone?.length ?? 0)
+                              + (jGone?.length ?? 0) + (cGone?.length ?? 0) });
 };
