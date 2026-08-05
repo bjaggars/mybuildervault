@@ -144,3 +144,22 @@ graduation to jsh-brain PATTERNS.
 through to the details behind the count. A number you can't open is a dead
 end. Applied to dashboard stat cards, pipeline rows, money-in-motion rows,
 attention items. Candidate for jsh-brain PATTERNS alongside #11.
+
+---
+
+## 13. The going-through-the-motions failure mode (SESSION-DEFINING — graduated to jsh-brain DOCTRINE)
+**Incident (8/4-8/5/26):** Dashboards and personas were built as the
+next-obvious-increment: five access-tier personas, a card-grammar dashboard,
+no customization. Brice forced a step-back; research grew the persona list
+5 → 28, surfaced work orders + time entries as missing subsystems, and
+exposed that dashboard customization — table stakes since the dawn of
+software — was absent from our design entirely.
+**Root cause:** local momentum. Building the increment the last increment
+implies, instead of asking what the best product on the market does and what
+the level beyond that looks like.
+**Doctrine (see jsh-brain):** (1) North star = most advanced platform on the
+market; incumbent parity is the FLOOR. (2) Step-back checkpoint at every new
+SURFACE or SUBSYSTEM boundary: domain research + incumbent table-stakes
+audit before design. (3) Rich UI is a requirement, not polish. (4) The
+trigger loop: when a design feels like filling in a template, stop — that
+feeling is the signal.
