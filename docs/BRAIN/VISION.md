@@ -121,7 +121,7 @@ touch-first) so the future sci-fi screen wall is satisfied by CSS the day
 Brije buys the hardware. The dedicated design office exists TODAY — empty,
 confirmed 2026-08-04.
 
-**The Design Lobby (Brice, 2026-08-04) — the unifying experience:**
+**The AI Design Center (Brice, 2026-08-04; named canonically 2026-08-05) — the unifying experience, entered through the lobby:**
 An immersive spatial shell: client enters a rendered "design lobby," sees
 doors — Architectural Design Center (Eric's room), Interior Design (Bridgette's
 room) — touches to enter. Eric's room: pick a plan from the wall, be immersed

@@ -77,7 +77,7 @@ template set + JobDetail Comms panel (law #15 full) + smoke-comms 14/14 in CI
 closes the 003/004 STATE open item; resolution ack awaits a ticket status UI.
 **OPEN — activation (Brice):** Resend domain + inbound on log.mybuildervault.com,
 RESEND_API_KEY + INBOUND_LOG_KEY env vars + redeploy, ImprovMX forwards,
-Supabase SMTP + template paste, run 016 on dev + seed addendum on jaggars-dev
+Supabase SMTP + template paste (016 + seed addendum RUN 8/5 PM, Brice-confirmed PASS)
 (COMMS-RAIL.md checklist). Functions degrade gracefully (503 / emailed:false)
 until then. **Open rulings:** R1 relay audience · R2 client visibility ·
 R3 resolution-ack wiring. **Follow-ups:** compose UI, schedule notices,
@@ -138,9 +138,9 @@ on mybuildervault-dev 2026-08-04, prove-it PASSED. Next: React scaffold +
 auth flows + CI copy (BOARD-006/009/010) in a fresh session.
 **Owner:** Claude (build) + Brice (run script 001 on dev Supabase)
 
-### BOARD-013 · Design Lobby pipeline evaluation (rescoped 2026-08-04)
+### BOARD-013 · AI Design Center pipeline evaluation (rescoped 2026-08-04; renamed per Brice 2026-08-05 — includes the lobby concept)
 **What:** Research spike (doctrine: kill riskiest unknown first). Target experience
-is now the Design Lobby (VISION thesis 7): one 3D scene layer serving walkthrough,
+is now the AI Design Center (VISION thesis 7; the lobby is its entry shell): one 3D scene layer serving walkthrough,
 wall-stretch, and live finish-swap. Evaluate: (a) plan→3D tooling (floor plan to
 modeled interior; feeds plan_versions.geometry), (b) rendering path — web engine
 (Three.js/Babylon) vs. Unreal pixel-streaming vs. hosted walkthrough platforms —

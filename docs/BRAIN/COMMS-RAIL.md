@@ -1,5 +1,5 @@
 # MyBuilderVault — Comms Rail (BOARD-007)
-Status: CODE SHIPPED 2026-08-05 · ACTIVATION pending Brice console work
+Status: CODE SHIPPED + SCRIPTS RUN 2026-08-05 · ACTIVATION pending Resend/DNS/SMTP console work (items 1-4)
 Pattern: copy-adapt from MyRealtyVault (jsh-brain PATTERNS §1, Rule of Three)
 
 No §8 step-back brief was opened for this subsystem: the comms rail is a
@@ -82,8 +82,8 @@ the MBV-specific adaptations instead.
 4. Supabase (mybuildervault-dev): custom SMTP → Resend
    (noreply@mybuildervault.com, sender name MyBuilderVault); paste the four
    templates per supabase/email-templates/README.md.
-5. Run script 016 on mybuildervault-dev; run the seed comms addendum on
-   jaggars-dev (both pasted in chat per §10).
+5. ~~Run script 016 on mybuildervault-dev; run the seed comms addendum on
+   jaggars-dev.~~ DONE 8/5 PM — Brice confirmed both PASSED in chat.
 
 ## Follow-ups (BOARD-007 tail)
 - Send-email compose UI (needs a job-participants surface to hang on).

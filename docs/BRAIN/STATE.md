@@ -406,8 +406,14 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   privileges aren't in the shim, LEARNINGS #19). ACTIVATION IS BRICE'S:
   Resend domain + inbound webhook, RESEND_API_KEY + INBOUND_LOG_KEY +
   redeploy, ImprovMX, Supabase SMTP + template paste, run 016 + seed
-  addendum — checklist in COMMS-RAIL.md. RUN-pending: 016 on
-  mybuildervault-dev; comms seed addendum on jaggars-dev. One gate-fix en
+  addendum — checklist in COMMS-RAIL.md. RUN 8/5 PM (Brice, confirmed in
+  chat as PASSED; expected prove-its 1/t/1/0/4 and 4/3/1/1/1 — numeric
+  rows not pasted this time, founder confirmation on the named PASS
+  conditions accepted): 016 on mybuildervault-dev; comms seed addendum on
+  jaggars-dev. comm_events live on dev; the Anderson thread + Lot 7
+  notice light the JobDetail Comms panel on the sandbox. Remaining
+  activation (Resend/DNS/SMTP console work) is the only gap between
+  "rail records" and "rail sends." One gate-fix en
   route: the SQL insert-arity gate split array['a','b'] literals on their
   inner comma (false positive on the comms seed) — splitter is now
   bracket-aware; verifier verified (injected 3/2 and 2/3 bugs both fire,
