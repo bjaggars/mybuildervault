@@ -330,4 +330,10 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   linked_wos/sel_deadline/weekend_dates, expected 1/2/1/0) off-screen in
   the capture, Brice confirming. devDependency added: pg (smoke
   harness only). Open follow-ups on BOARD-032.
+- GATE-GREEN 8/5 PM: 9/9 golden paths + Smoke + CI (incl. recalc-smoke)
+  all green @ 18c7733 on live dev. Path 9 first run exposed a TEST bug,
+  not a product bug (asserted absence of em-dash; empty phase/baseline
+  columns legitimately render them) — the failure capture itself proved
+  the engine live: E2E items cascaded Aug 7 → Aug 11, correctly skipping
+  the weekend. Robot issues #8/#9 closed. Session breakpoint here (§6b).
 
