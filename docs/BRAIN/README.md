@@ -44,3 +44,11 @@ Live at jaggars-ocala-build.netlify.app. The eat-our-own-dog-food proof and Eric
 React/Vite, JSH doctrine stack. Greenfield rebuild — not yet started as of 2026-08-03.
 
 The portal IS the UX reference. It is NOT the product.
+
+## Founder build map (dev-only surface)
+`src/pages/Progress.jsx` renders an owner-only "Build Progress" tab on dev
+hosts only (netlify.app/localhost hostname gate — self-retiring on the prod
+domain). Sessions that ship or start a module UPDATE ITS MODULES TABLE in
+the same commits as the work, so Brice's map never lies. BRAIN remains the
+source of truth; the tab is the view.
+

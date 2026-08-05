@@ -375,4 +375,10 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   2/1/1/0/3 exact. Drift engine live end to end — Anderson windows +
   Reyes sitework flagged from checklists, Lot 7 framing on pace
   unflagged. Nothing pending.
+- BUILD PROGRESS TAB 8/5 PM (Brice ask): owner-only + dev-host-only
+  (hostname gate, self-retiring in prod) /progress — module table with
+  status shading (green complete / gold next / neutral planned), full #15
+  sort+filter, count pills as filters. 24 modules seeded from the script
+  chain + surfaces. Maintenance rule added to README: shipping sessions
+  update the table in the same commits.
 

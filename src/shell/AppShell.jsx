@@ -12,6 +12,12 @@ import JobDetail from '../pages/JobDetail.jsx';
 import Reports from '../pages/Reports.jsx';
 import Field from '../pages/Field.jsx';
 import Schedule from '../pages/Schedule.jsx';
+import Progress from '../pages/Progress.jsx';
+
+// Founder-only build map, SELF-RETIRING in production: renders only on
+// dev hosts (netlify.app previews / localhost). The prod domain never
+// matches, so the tab vanishes there with zero config (Brice, 8/5/26).
+const isDevHost = /(\.netlify\.app)$|^localhost$|^127\./.test(window.location.hostname);
 
 // One page crashing must never white-screen the shell (LEARNINGS #18).
 // Keyed on pathname so navigating away retries cleanly.
@@ -171,6 +177,9 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <NavLink to="/jobs" style={navLink} data-testid="nav-jobs">Jobs</NavLink>
           <NavLink to="/field" style={navLink} data-testid="nav-field">Field</NavLink>
           <NavLink to="/schedule" style={navLink} data-testid="nav-schedule">Schedule</NavLink>
+          {isDevHost && active?.role === 'owner' && (
+            <NavLink to="/progress" style={navLink} data-testid="nav-progress">Build Progress</NavLink>
+          )}
           <NavLink to="/reports" style={navLink} data-testid="nav-reports">Reports</NavLink>
           {gates.tickets && <NavLink to="/tickets" style={navLink} data-testid="nav-tickets">Tickets</NavLink>}
           {gates.settings && <NavLink to="/settings" style={navLink} data-testid="nav-settings">Settings</NavLink>}
@@ -196,6 +205,7 @@ export default function AppShell({ session, memberships, activeOrgId, onSelectOr
           <Route path="/jobs/:jobId" element={<JobDetail role={active?.role} personId={personId} />} />
           <Route path="/field" element={<Field orgId={activeOrgId} role={active?.role} personId={personId} />} />
           <Route path="/schedule" element={<Schedule orgId={activeOrgId} role={active?.role} personId={personId} />} />
+          <Route path="/progress" element={isDevHost && active?.role === 'owner' ? <Progress /> : <Navigate to="/" replace />} />
           <Route path="/reports" element={<Reports orgId={activeOrgId} role={active?.role} />} />
           <Route path="/tickets" element={gates.tickets ? <Tickets orgId={activeOrgId} /> : <Navigate to="/" replace />} />
           <Route path="/settings" element={gates.settings ? <Settings orgId={activeOrgId} role={active?.role} session={session} /> : <Navigate to="/" replace />} />
