@@ -210,8 +210,8 @@ sort/filter, add item, drawer w/ deps + reasoned shift + activity) ·
 Templates (catalog + Day-N import). Magnolia stub schedule seeded
 (template 15 items/16 deps; Lot 7 published + field-advanced; Lot 9
 draft). Golden path 9 added. Script 014 RUN on
-mybuildervault-dev 8/5 PM (prove-it 7/4/4/2/2/2/1/1/1); seed RUN, tail
-columns pending Brice's confirm.
+mybuildervault-dev 8/5 PM (prove-it 7/4/4/2/2/2/1/1/1); seed RUN with full
+prove-it captured (1/15/16/15/1/15/4/15/1/2/1/0).
 **Open:** dependency arrows on the Gantt, template create/export from a
 job, calendar view, client-portal schedule (Phase C), duration accretion
 (baseline vs actual per template item). BOARD-007 (comms rail) remains

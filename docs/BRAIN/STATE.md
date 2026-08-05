@@ -326,9 +326,9 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   own role checks.
   RUN 8/5 PM (Brice, prove-its in chat): script 014 on mybuildervault-dev
   — 7/4/4/2/2/2/1/1/1 exact PASS. Seed addendum on jaggars-dev — visible
-  columns 1/15/16/15/1/15/4/15 exact PASS; tail columns (lot9_draft/
-  linked_wos/sel_deadline/weekend_dates, expected 1/2/1/0) off-screen in
-  the capture, Brice confirming. devDependency added: pg (smoke
+  columns 1/15/16/15/1/15/4/15 exact PASS; tail columns confirmed
+  by Brice 1/2/1/0 — full prove-it 1/15/16/15/1/15/4/15/1/2/1/0 exact,
+  incl. weekend_dates=0 (no workday leak on seeded data). devDependency added: pg (smoke
   harness only). Open follow-ups on BOARD-032.
 - GATE-GREEN 8/5 PM: 9/9 golden paths + Smoke + CI (incl. recalc-smoke)
   all green @ 18c7733 on live dev. Path 9 first run exposed a TEST bug,
