@@ -157,6 +157,10 @@ Shapespark viewer JS API (every swatch = normalized_product SKU, swaps emit
 selections events). Eric interim = pre-baked plan variants; Unreal pixel-streaming
 deferred to licensing-revenue scale. Per-plan content ~$500–2k outsourced.
 Rulings R1–R4 await Brice. Demo lead ~2 weeks from a modeling go.
+**8/5 PM:** vendor-sweep research FILED (DESIGN-CENTER-RESEARCH.md) — pick
+holds; API tier corrected to Plus $99/mo (Premium $249 recommended).
+**Ruling: money not a factor — best experience possible.** Meeting timing is
+Brice's; design center returns to normal queue order.
 
 ### BOARD-014 · Estimate ingestion (the on-ramp)
 **What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,

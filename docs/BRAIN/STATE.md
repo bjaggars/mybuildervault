@@ -427,4 +427,13 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   Per-plan content ~$500–2k. Rulings R1–R4 with Brice. Brije demo lead
   ~2 weeks from a modeling go. Naming unified same day: AI Design Center
   (canonical, per Brice) — lobby is the entry shell.
+  **8/5 PM:** vendor-sweep research FILED (DESIGN-CENTER-RESEARCH.md);
+  pick holds; API tier corrected to Shapespark Plus $99/mo (Premium $249
+  recommended for own-server kiosk). **Brice rulings: money not a factor
+  — best experience possible; meeting timing is his; design center
+  returns to normal queue order.** Unreal parametric reframed as a
+  when-ready parallel engineering track, not cost-deferred. LEARNINGS
+  #20 added (queue deviations need explicit sign-off). Yellow queue
+  (schedule/WO notices → checklist templates → Gantt arrows) resumes
+  next session.
 

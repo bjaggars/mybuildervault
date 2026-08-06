@@ -1,5 +1,9 @@
 # AI Design Center — Pipeline Spike (BOARD-013)
-Status: SPIKE RUN 2026-08-05 · RECOMMENDATION PROPOSED — awaiting Brice ruling
+Status: SPIKE RUN 2026-08-05 · RESEARCH FILED (see DESIGN-CENTER-RESEARCH.md)
+· RECOMMENDATION PROPOSED — sequencing decoupled from the Brije meeting
+(Brice owns meeting timing, 8/5 PM); build order resumes the normal queue.
+**RULING LOGGED (Brice, 8/5 PM): money is NOT a factor — optimize for the
+best possible experience.** Consequences folded in below.
 Scope: VISION thesis 7. The lobby is the entry shell; two studios (Bridgette
 interior / Eric architectural). Doctrine applied: kill the riskiest unknown
 first — the rendering pipeline, not the product code.
@@ -49,23 +53,32 @@ authoring. The honest options:
   separate baked scenes = doors in the lobby. Covers the architectural
   DEMO want at Phase-1 cost. "Pick a plan from the wall, walk the
   version with the bonus room" is 80% of the wow with 0% of the risk.
-- **(b) Later — Unreal + pixel streaming** for true parametric
-  wall-stretch: mature in 2026, hosted per-stream-hour (~$0.50–1.00/hr
-  per concurrent user; Vagon/Eagle 3D/Arcware class vendors; Eagle 3D
-  core plans bundle streaming minutes). For a single-screen design
-  office the streaming cost is trivial — the REAL cost is Unreal
-  content build (specialist skill, per-plan parametric logic). Commit
-  only when licensing revenue justifies it; the Phase-1 models remain
-  the asset base.
+- **(b) Unreal + pixel streaming** for true parametric wall-stretch:
+  mature in 2026; for one kiosk the streaming fee is trivial
+  (Arcware Core €89/mo @ ≤€0.10/min or Eagle Core $29/mo + $0.10/min —
+  see research doc). The constraint is the Unreal CONTENT BUILD:
+  specialist UE engineering, weeks–months. **Reframed under the
+  best-experience ruling:** no longer deferred on cost — this is now a
+  WHEN-READY engineering track. Recommended shape: ship Phase 1, then
+  commission the UE parametric build in parallel (external UE technical
+  artist) so Eric's true wall-stretch studio arrives as fast as the
+  engineering allows, not as budget allows. Sequencing stays risk-based:
+  variants first because they ship in weeks, not because Unreal costs
+  money.
 
 ## Costs (per-plan content + platform)
 - **Modeling per spec plan:** outsourced interior-complete model
-  ~$500–2,000 (market rate; outsourced arch firms quote $200+ per VIEW
-  for renders, so a full walkable model at low four figures is
-  consistent); in-house Blender ~20–40 hrs. Plan revisions = re-bake,
-  hours not days.
-- **Shapespark:** subscription from ~$19/mo (tier with API/custom
-  injection + scene count TO VERIFY in trial — 30-day trial available).
+  ~$500–2,000 market rate; in-house Blender ~20–40 hrs. Plan revisions =
+  re-bake, hours not days. Best-experience ruling: commission TOP-tier
+  outsourced modeling (photoreal furnishing/staging, disciplined UV +
+  material naming per the revision runbook) — the model is the experience.
+- **Shapespark (CORRECTED by vendor sweep):** the Viewer API + custom
+  HTML/JS injection live on **Plus, $99/mo** (50 slots, custom domain) —
+  NOT the $19 Starter, which cannot run the overlay. **Premium, $249/mo**
+  adds own-server hosting (the supported route to a local-network office
+  kiosk) + 150 slots. Per the best-experience ruling: **go Premium** —
+  own-server kiosk resilience, headroom for per-variant scenes if in-scene
+  swaps ever constrain quality.
 - **Authoring tools note (trap flagged):** Cedreo is the builder-friendly
   authoring darling (2-hr concept plans, $79–129/mo tiers) but is a
   CLOSED platform — VERIFY whether it exports 3D models at all; if not
@@ -74,7 +87,7 @@ authoring. The honest options:
 - **Pixel streaming (Phase 2b only):** per-stream-hour retail
   ~$0.50–1.00; content build is the dominant cost, not streaming.
 
-## Brije meeting demo math
+## Demo math (meeting timing is Brice's — no clock on this doc)
 ONE modeled plan → walkthrough with 3–4 swappable finish sets priced live
 against allowances IS the AI Design Center pitch, end to end: Eric sees
 the plan wall + a variant door (his studio, interim path), Bridgette sees
@@ -96,7 +109,8 @@ once a scene exists.
 ## Rulings needed (Brice)
 - **R1:** Approve the Phase-1 pipeline (Blender/SketchUp → Shapespark →
   MBV SKU overlay)?
-- **R2:** Plan #1 modeling: outsource (~$500–2k, ~2 wks) or in-house?
+- **R2:** Plan #1 modeling go: outsource top-tier (~2 wks lead once
+  commissioned; cost immaterial per ruling) or in-house?
 - **R3:** Eric interim = plan variants (recommended) vs committing Unreal
   now?
 - **R4:** Which Brije spec plan is the pilot (pick the best-seller)?

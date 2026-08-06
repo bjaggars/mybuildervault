@@ -20,7 +20,8 @@ the architecture for yours is already in place" — not a watered-down single st
 **Design-center segment readiness (spike 8/5):** the pitch demo is one modeled
 plan in a browser walkthrough with live SKU-priced finish swaps landing in
 selections — pipeline recommended in DESIGN-CENTER.md, ~2 weeks lead from a
-modeling go (ruling R2). Eric's segment shows plan-variant doors, not live
+modeling go (ruling R2). 8/5 PM: Brice owns meeting scheduling — no product
+deadline hangs on this doc; demo readiness follows the normal queue. Eric's segment shows plan-variant doors, not live
 wall-stretch — set that expectation in the room, promise the parametric studio
 as the licensing-tier roadmap.
 

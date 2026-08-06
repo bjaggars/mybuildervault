@@ -265,3 +265,10 @@ authenticated` AFTER `grant usage on schema public` + `grant all on all
 tables in schema public to authenticated` — mirroring the platform, so the
 denial you then observe is RLS policy, not a missing grant. Candidate shim
 improvement: bake the default privileges into pg-shim.sql.
+
+20. **Queue deviations need explicit sign-off (8/5).** Claude ran the
+    BOARD-013 spike ahead of the visible in-progress queue on a
+    meeting-clock judgment, flagged only in passing — Brice had to ask why.
+    The work was cheap and useful, the process wasn't: any deviation from
+    the visible queue gets a named call-out and Brice's go before
+    execution, not a one-liner in a delivery summary.
