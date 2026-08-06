@@ -17,6 +17,13 @@ Schedule the meeting only after MyBuilderVault has a demo-ready tenant at mybuil
 personas — see VISION.md thesis 7. Talking point: "Bridgette's Studio ships first;
 the architecture for yours is already in place" — not a watered-down single studio.
 
+**Design-center segment readiness (spike 8/5):** the pitch demo is one modeled
+plan in a browser walkthrough with live SKU-priced finish swaps landing in
+selections — pipeline recommended in DESIGN-CENTER.md, ~2 weeks lead from a
+modeling go (ruling R2). Eric's segment shows plan-variant doors, not live
+wall-stretch — set that expectation in the room, promise the parametric studio
+as the licensing-tier roadmap.
+
 ## MEETING REFRAME (2026-08-04, Brice) — read first
 This is the BRIJE LEADERSHIP MEETING, not "the Eric meeting." Audience:
 Brije owners and leadership (Wendy + Eric as owners; Micah likely present

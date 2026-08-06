@@ -151,6 +151,12 @@ outputs). Deliverable: recommended pipeline + per-plan content cost estimate for
 Brije's standard spec plans. Non-Anthropic tools expected — Claude orchestrates,
 doesn't render.
 **Owner:** Claude · **Effort:** 1-2 research sessions · **When:** before Studio build, not before core
+**SPIKE RUN 2026-08-05 (session 3):** recommendation PROPOSED in DESIGN-CENTER.md —
+Blender/SketchUp → Shapespark hosted walkthrough + MBV React overlay via the
+Shapespark viewer JS API (every swatch = normalized_product SKU, swaps emit
+selections events). Eric interim = pre-baked plan variants; Unreal pixel-streaming
+deferred to licensing-revenue scale. Per-plan content ~$500–2k outsourced.
+Rulings R1–R4 await Brice. Demo lead ~2 weeks from a modeling go.
 
 ### BOARD-014 · Estimate ingestion (the on-ramp)
 **What:** AI parse of Brije estimate (Excel/PDF) → structured base price, allowances,

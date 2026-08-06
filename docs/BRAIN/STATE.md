@@ -419,4 +419,12 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   bracket-aware; verifier verified (injected 3/2 and 2/3 bugs both fire,
   legit array literal passes). Open rulings
   R1-R3 in COMMS-RAIL.md. Schedule notices now UNBLOCKED (own session).
+- **BOARD-013 AI Design Center spike RUN (8/5 session 3, same session as
+  comms rail):** DESIGN-CENTER.md carries the recommendation — Shapespark
+  viewer JS API is the keystone (our React SKU overlay drives swaps, emits
+  selections events); Blender/SketchUp modeling in, baked web walkthrough
+  out; Eric interim = plan variants; Unreal pixel-streaming deferred.
+  Per-plan content ~$500–2k. Rulings R1–R4 with Brice. Brije demo lead
+  ~2 weeks from a modeling go. Naming unified same day: AI Design Center
+  (canonical, per Brice) — lobby is the entry shell.
 

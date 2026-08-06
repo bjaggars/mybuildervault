@@ -22,6 +22,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 - `JSH.md` — pointer to cross-product doctrine
 - `FIELD-SPINE.md` — field spine step-back brief (work orders/super/crew; APPROVED 8/5)
 - `SCHEDULE.md` — schedule engine step-back brief (APPROVED 8/5; 014 pending)
+- `DESIGN-CENTER.md` — BOARD-013 spike: AI Design Center pipeline recommendation + per-plan costs (PROPOSED 8/5; rulings R1–R4 pending)
 - `BRIJE-MEETING.md` — prep for the Brije leadership meeting (licensing conversation; Eric design-AI segment)
 - `COMMS-RAIL.md` — comms rail design record (BOARD-007; adaptations, rulings, activation checklist)
 
