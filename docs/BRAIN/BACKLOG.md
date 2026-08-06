@@ -7,6 +7,22 @@ Items graduate to BOARD when they're actively planned.
 ---
 
 ## Core Product (port from Ocala portal)
+- **Phase taxonomy — full lifecycle (Brice, 8/5/26, from Ocala Build command
+  center screenshot):** the reference phase strip is 13 phases and STARTS
+  BEFORE construction: Financing → Land Purchase → Design & Architecture →
+  Finishes & Selections → Permits & Approvals → Site Prep → Foundation →
+  Framing → Mechanical/Electrical → Insulation & Drywall → Finishes & Trim →
+  Inspections → Punch List & Close. GAP FLAGGED: the schedule engine (015)
+  and field spine cover the construction phases; the PRE-BUILD phases
+  (financing, land, design & architecture, selections, permits) are not yet
+  first-class in the product phase model. They map to the custom funnel
+  (VISION: "sales → design → contract"), Finishes & Selections ties directly
+  to the AI Design Center / accretive selections, and Permits & Approvals is
+  its own tracked workflow with authority dates. Schedule phase grouping
+  (schedule_items.phase) should adopt this taxonomy as the default seed so
+  jobs track the WHOLE build, not just sticks-and-bricks. Also note the
+  Ocala strip shows per-phase % complete — drift detection (033) reads
+  cleanly onto pre-con phases too (e.g. permits 50% with closing date fixed).
 - Dashboard with stat cards and clickable navigation
 - Timeline / Phases with steps and completion tracking
 - Budget with base price breakdown and change order rollup

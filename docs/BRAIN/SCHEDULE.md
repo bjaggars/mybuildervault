@@ -86,6 +86,11 @@ plus general dependency-scheduling norms (workday-based lag, ripple recalc).
 
 ## 4. Proposed scope for script 014 + surfaces (pending rulings)
 
+- **Phase taxonomy note (Brice, 8/5/26):** default phase seed should be the
+  Ocala 13-phase FULL-lifecycle strip (Financing → … → Punch List & Close),
+  incl. pre-construction phases — see BACKLOG "Phase taxonomy". Engine covers
+  construction today; pre-con phases are trackable items too (permits,
+  design, selections) and drift applies to them.
 - **schedule_items** — org/job, phase, title, discipline, duration_days
   (workdays), start/end (computed), sort, milestone, client_visible,
   status (pending|in_progress|complete), baseline_start/baseline_end
