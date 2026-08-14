@@ -443,5 +443,13 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   magic-link and Loop 3 client portal each need a §8 brief first. NOTE:
   PAT died mid-session (push rejected) — commits from LEARNINGS #21
   onward are LOCAL-ONLY until a fresh token arrives; next session pushes
-  the backlog first.
+  the backlog first. **8/14 (this session, continued):** backlog pushed
+  (fresh PAT); Walk Brief delivered per §14; **JOURNEY.md FILED** — the
+  ratified lead→warranty map (23 scenarios, stages A–E, three
+  through-threads). Strategic reveals: AI Design Center is a sales-funnel
+  asset (rows 7–9); unbuilt territory = stages A–C front door; 8/5 phase
+  taxonomy = stages A–C confirmed. **Build order re-cut is an OPEN JOINT
+  BRAINSTORM (Brice's word — we brainstorm, we don't argue)** — Loop 1
+  stands until the re-cut is ratified; do NOT open Loop 1 code before
+  that conversation resolves.
 

@@ -19,7 +19,13 @@ Corollaries:
 - Persona surfaces are designed from the narrative first ("what does this
   person wake up asking?" — PERSONAS.md), then the screens.
 
-## Loop order (APPROVED 8/5)
+## Loop order (APPROVED 8/5 — under joint re-cut 8/14)
+**8/14: JOURNEY.md filed** — the full lead→warranty map (23 scenarios,
+stages A–E). Loops below cover stages D–E; stages A–C (the front door:
+lead, paid design, contract/pre-con) are the unbuilt territory and the
+AI Design Center's journey position moved to the sales funnel (rows 7–9).
+Build order is being brainstormed together against the journey map —
+these loops stand until the re-cut is ratified.
 
 ### Loop 1 — Internal field dispatch (opens next session)
 *The super's morning:* Coffee, phone. Today view: every WO across his jobs,

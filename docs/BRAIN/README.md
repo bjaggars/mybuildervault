@@ -25,6 +25,7 @@ Distilled by: Claude (Sonnet 4.6) from Ocala portal chat history + codebase inve
 - `DESIGN-CENTER.md` — BOARD-013 spike: AI Design Center pipeline recommendation + per-plan costs (PROPOSED 8/5; rulings R1–R4 pending)
 - `DESIGN-CENTER-RESEARCH.md` — vendor sweep (filed 8/5): pick holds, API tier = Plus $99 (Premium recommended), Phase-2 streaming economics, incumbent landscape
 - `DAY-IN-THE-LIFE.md` — build doctrine (ADOPTED 8/5): delivery unit = walkable persona loop; loop order + narratives
+- `JOURNEY.md` — the custom-build journey map, lead→warranty (FILED 8/14, ratified): 23 scenarios, 5 stages, 3 through-threads; build order brainstorm OPEN
 - `PERSONAS.md` — persona doctrine v2 (APPROVED 8/4): 28 personas, CORE/ADJACENT/RECORD tiers, structural implications
 - `BRIJE-MEETING.md` — prep for the Brije leadership meeting (licensing conversation; Eric design-AI segment)
 - `COMMS-RAIL.md` — comms rail design record (BOARD-007; adaptations, rulings, activation checklist)
