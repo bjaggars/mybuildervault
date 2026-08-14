@@ -272,3 +272,8 @@ improvement: bake the default privileges into pg-shim.sql.
     The work was cheap and useful, the process wasn't: any deviation from
     the visible queue gets a named call-out and Brice's go before
     execution, not a one-liner in a delivery summary.
+
+21. **jsh-brain writes require Brice's go, per-write (8/5).** Parallel
+    product sessions share exactly one surface: jsh-brain. Before ANY
+    commit to jsh-brain, ask Brice first so he can confirm the other
+    session isn't mid-write. Product-repo BRAIN writes are unaffected.
