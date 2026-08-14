@@ -6,6 +6,12 @@ Claude pushes to dev only. Main moves via release ritual after Brice approves.
 
 ---
 
+## ⭐ BUILD ORDER DOCTRINE (8/5): DAY-IN-THE-LIFE LOOPS
+Delivery unit = walkable cross-persona loop (DAY-IN-THE-LIFE.md, ADOPTED).
+Loop 1 (internal field dispatch) opens next session and ABSORBS the yellow
+in-progress queue. Loop 2 (sub, §8 brief first) → Loop 3 (client, §8 brief
+first) → Loop 4 (office & money). main advances only by whole loops.
+
 ## 🔴 BLOCKING — Fix before Eric demo
 
 ### BOARD-001 · Fix Firebase Security Rules on Ocala portal

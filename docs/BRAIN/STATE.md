@@ -435,5 +435,13 @@ mybuildervault.app purchased and held in reserve (future PWA or marketing landin
   when-ready parallel engineering track, not cost-deferred. LEARNINGS
   #20 added (queue deviations need explicit sign-off). Yellow queue
   (schedule/WO notices → checklist templates → Gantt arrows) resumes
-  next session.
+  next session — RESTRUCTURED same evening: **Day-in-the-life doctrine
+  ADOPTED (Brice, 8/5 PM).** Delivery unit = walkable cross-persona loop;
+  DAY-IN-THE-LIFE.md carries the four loop narratives. Loop 1 (super day
+  view, crew mobile, WO notices, checklist templates, photos, Gantt
+  arrows) opens next session and ABSORBS the yellow queue. Loop 2 sub
+  magic-link and Loop 3 client portal each need a §8 brief first. NOTE:
+  PAT died mid-session (push rejected) — commits from LEARNINGS #21
+  onward are LOCAL-ONLY until a fresh token arrives; next session pushes
+  the backlog first.
 
